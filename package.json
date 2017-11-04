@@ -1,0 +1,14 @@
+{
+  "name": "rinon",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "discord.js": "github:hydrabolt/discord.js",
+    "sequelize": "^4.20.1",
+    "sqlite3": "^3.1.13"
+  }
+}
