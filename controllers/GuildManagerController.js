@@ -61,7 +61,7 @@ class GuildManagerController {
 	 * @return {(boolean|string[])} The missing permissions
 	 */
 	static missingPermissions(client, format = true) {
-		const requiredPerms = ['MANAGE_CHANNELS', 'MANAGE_EMOJIS', 'ADD_REACTIONS', 'EMBED_LINKS'];
+		const requiredPerms = ['ADD_REACTIONS', 'CREATE_INSTANT_INVITE', 'EMBED_LINKS', 'MANAGE_CHANNELS', 'MANAGE_EMOJIS'];
 		const missingPerms = client.permissions.missing(requiredPerms);
 
 		if (!missingPerms.length) return false;
@@ -81,7 +81,7 @@ class GuildManagerController {
 		return guild.createChannel('emoji-voting', 'text', {
 			overwrites: [
 				{ id: guild.id, deny: ['SEND_MESSAGES'] },
-				{ id: guild.roles.find('name', 'Rinon'), allow: ['SEND_MESSAGES'] },
+				{ id: guild.roles.find('name', 'Rinon'), allow: ['SEND_MESSAGES', 'CREATE_INSTANT_INVITE'] },
 			],
 		});
 	}

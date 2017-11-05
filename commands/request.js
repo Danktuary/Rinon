@@ -5,9 +5,10 @@ const { prefix } = require('../config');
 const request = {
 	name: 'request',
 	description: 'Make a request for a new emoji to be added!',
+	aliases: ['add', 'vote', 'poll'],
 	requiresInit: true,
 	execute(message, [name, url]) {
-		if (message.guild.emojis.size > 1) {
+		if (message.guild.emojis.size > 50) {
 			return message.reply([
 				'it seems like I can\'t add any more emojis to this server.',
 				`Want to check the other servers I\'m in? Use the \`${prefix}servers\` command!`,

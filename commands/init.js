@@ -5,7 +5,7 @@ const { prefix } = require('../config');
 const init = {
 	name: 'init',
 	description: 'Initialize and properly configure this guild, if applicable.',
-	execute(message) {
+	async execute(message) {
 		if (GuildManager.checkRequirements(message.guild).passed) {
 			return message.reply('already good to go!');
 		}
@@ -18,9 +18,8 @@ const init = {
 			].join('\n'));
 		}
 
-		GuildManager.createPollChannel(message.guild).then(() => {
-			message.channel.send(`Done! You can now use the \`${prefix}request\` command to create polls.`);
-		});
+		await GuildManager.createPollChannel(message.guild);
+		message.channel.send(`Done! You can now use the \`${prefix}request\` command to create polls.`);
 	},
 };
 
