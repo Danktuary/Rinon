@@ -1,17 +1,29 @@
+const Poll = require('../controllers/PollController');
+
+const { prefix } = require('../config');
+
 const request = {
 	name: 'request',
 	description: 'Make a request for a new emoji to be added!',
-	execute(message, args) {
-		// make this better later
+	requiresInit: true,
+	execute(message, [name, url]) {
+		if (message.guild.emojis.size > 1) {
+			return message.reply([
+				'it seems like I can\'t add any more emojis to this server.',
+				`Want to check the other servers I\'m in? Use the \`${prefix}servers\` command!`,
+			].join('\n'));
+		}
+
+		// not mine; find a better one later
 		const urlRegex = /(https?:\/\/)?(www.)?[^\s<>#%{}|\^~\[\]]+\.(png|jpg|jpeg|webp)$/;
 
-		if (!/^\w+$/.test(args[0])) {
+		if (!/^\w+$/.test(name)) {
 			return message.reply('only alphanumeric characters are allowed!');
-		} else if (!urlRegex.test(args[1])) {
+		} else if (!urlRegex.test(url)) {
 			return message.reply('invalid image URL.');
 		}
 
-		// poll.create(message, args);
+		Poll.create(message, [name, url]);
 	},
 };
 

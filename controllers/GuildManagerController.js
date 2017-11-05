@@ -20,23 +20,23 @@ class GuildManagerController {
 	 */
 	static checkRequirements(guild) {
 		const failures = [];
-		const requiredPerms = ['MANAGE_CHANNELS', 'MANAGE_EMOJIS', 'ADD_REACTIONS', 'EMBED_LINKS'];
-
 		const embed = new MessageEmbed().setColor('#e84a4a');
+		const missingPerms = this.missingPermissions(guild.me);
 
-		if (!guild.me.permissions.has(requiredPerms)) {
-			const missingPerms = guild.me.permissions.missing(requiredPerms);
-
+		if (missingPerms) {
 			failures.push({
 				title: 'Missing Permissions',
-				body: `I'm missing the following permissions: ${missingPerms.map(perm => `\`${perm}\``).join(', ')}`,
+				body: `I'm missing the following permissions: ${missingPerms}`,
 			});
 		}
 
 		if (!guild.channels.exists('name', 'emoji-voting')) {
 			failures.push({
 				title: 'Missing Voting Channel',
-				body: `A channel named \`emoji-voting\` doesn't exist here yet!\nUse the \`${prefix}init\` command to set it up.`,
+				body: [
+					'A channel named \`emoji-voting\` doesn\'t exist here yet!',
+					`Use the \`${prefix}init\` command to set it up.`,
+				].join('\n'),
 			});
 		}
 
@@ -54,10 +54,26 @@ class GuildManagerController {
 	}
 
 	/**
+	 * Return the missing permissions, if any
+	 *
+	 * @param {GuildMember} client A GuildMember instance of the client
+	 * @param {boolean} format Whether to format this or not
+	 * @return {(boolean|string[])} The missing permissions
+	 */
+	static missingPermissions(client, format = true) {
+		const requiredPerms = ['MANAGE_CHANNELS', 'MANAGE_EMOJIS', 'ADD_REACTIONS', 'EMBED_LINKS'];
+		const missingPerms = client.permissions.missing(requiredPerms);
+
+		if (!missingPerms.length) return false;
+		if (!format) return missingPerms;
+		return missingPerms.map(perm => `\`${perm}\``).join(', ');
+	}
+
+	/**
 	 * Create and properly configure an `emoji-voting` channel for the supplied Guild
 	 *
 	 * @param {Guild} guild The Guild to create the channel in
-	 * @return {Promise<GuildChannel>} The newly created GuildChannel
+	 * @return {(void|Promise<GuildChannel>)} The newly created GuildChannel
 	 */
 	static createPollChannel(guild) {
 		if (guild.channels.exists('name', 'emoji-voting')) return;

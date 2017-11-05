@@ -1,4 +1,4 @@
-const eval = {
+const evalCommand = {
 	name: 'eval',
 	description: 'Evaluate JavaScript.',
 	ownerOnly: true,
@@ -6,3 +6,5 @@ const eval = {
 		message.channel.send(eval(args.join(' ')), { code: 'js' });
 	},
 };
+
+module.exports = evalCommand;

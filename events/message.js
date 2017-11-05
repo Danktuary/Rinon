@@ -2,22 +2,21 @@ const GuildManager = require('../controllers/GuildManagerController');
 const { owners, prefix } = require('../config');
 
 const messageEvent = async (client, message) => {
-	if (!message.content.startsWith(prefix) || message.author.bot) return;
+	if (message.channel.type !== 'text' || !message.content.startsWith(prefix) || message.author.bot) return;
 
 	const args = message.content.slice(prefix.length).split(/\s+/);
 	const commandName = args.shift();
 
 	if (!client.commands.has(commandName)) return;
 
-	const guildStatus = GuildManager.checkRequirements(message.guild);
-
-	if (!guildStatus.passed && commandName !== 'init') {
-		return message.channel.send(guildStatus.message);
-	}
-
 	const command = client.commands.get(commandName);
 
-	if (command.ownerOnly && owners.includes(message.author.id)) {
+	if (command.requiresInit) {
+		const guildStatus = GuildManager.checkRequirements(message.guild);
+		if (!guildStatus.passed) return message.channel.send(guildStatus.message);
+	}
+
+	if (command.ownerOnly && !owners.includes(message.author.id)) {
 		return message.reply('only owners may execute that command.');
 	}
 
