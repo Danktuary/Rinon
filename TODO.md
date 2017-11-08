@@ -5,3 +5,7 @@ Things that may or may not be implemented.
 * Allow direct admin approval/denial
 * Channel to list all emojis maybe
 * Color roles cuz why not
+* commands/request.js: if no args, prompt them for input
+* commands/request.js: find a less ugly regex for link detection
+* Finish docblocks for controller classes (check any `@todo`s as well)
+* Implement autopulling (VPS)

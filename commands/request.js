@@ -18,7 +18,6 @@ const request = {
 			].join('\n'));
 		}
 
-		// TODO: if no args, prompt them for input
 		if (!name && !url) {
 			return message.reply(`you need to provide at least two values! The format would be \`${prefix}request <name> <url>\`.`);
 		}
