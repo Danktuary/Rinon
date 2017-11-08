@@ -8,10 +8,10 @@ const request = {
 	aliases: ['add', 'vote', 'poll'],
 	requiresInit: true,
 	execute(message, [name, url]) {
-		if (message.guild.emojis.size > 50) {
+		if (message.guild.emojis.size === 50) {
 			return message.reply([
 				'it seems like I can\'t add any more emojis to this server.',
-				`Want to check the other servers I\'m in? Use the \`${prefix}servers\` command!`,
+				`Want to check the other servers I\'m in? Use the \`${prefix}server\` command!`,
 			].join('\n'));
 		}
 

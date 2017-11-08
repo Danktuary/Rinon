@@ -3,7 +3,7 @@ const { MessageEmbed } = require('discord.js');
 const { prefix } = require('../config');
 
 /**
- * An object containing the state of the requirements check and the error message, if applicable
+ * An object containing the state of the requirements check and the error message (if applicable)
  *
  * @typedef {Object} RequirementCheck
  * @property {boolean} passed Whether the check was passed or not
@@ -56,13 +56,13 @@ class GuildManagerController {
 	/**
 	 * Return the missing permissions, if any
 	 *
-	 * @param {GuildMember} client A GuildMember instance of the client
+	 * @param {GuildMember} clientMember A GuildMember instance of the client
 	 * @param {boolean} format Whether to format this or not
 	 * @return {(boolean|string[])} The missing permissions
 	 */
-	static missingPermissions(client, format = true) {
+	static missingPermissions(clientMember, format = true) {
 		const requiredPerms = ['ADD_REACTIONS', 'CREATE_INSTANT_INVITE', 'EMBED_LINKS', 'MANAGE_CHANNELS', 'MANAGE_EMOJIS'];
-		const missingPerms = client.permissions.missing(requiredPerms);
+		const missingPerms = clientMember.permissions.missing(requiredPerms);
 
 		if (!missingPerms.length) return false;
 		if (!format) return missingPerms;
