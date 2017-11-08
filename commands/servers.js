@@ -2,7 +2,7 @@ const { Collection, MessageEmbed } = require('discord.js');
 
 const Poll = require('../controllers/PollController');
 
-const { prefix } = require('../config');
+const { colors, prefix } = require('../config');
 
 const servers = {
 	name: 'servers',
@@ -29,7 +29,7 @@ const servers = {
 
 				serverName = messages.first().content.match(serverNameRegex)[1];
 			} catch(error) {
-				return message.reply(`you didn't reply with a valid name! Try \`${prefix}servers Emoji Server 1\`.`);
+				return message.reply(`you didn't reply with a valid name in time! Try \`${prefix}servers Emoji Server 1\`.`);
 			}
 		}
 
@@ -72,15 +72,15 @@ const servers = {
 		const replyData = { content: [invite.url] };
 
 		if (!message.channel.permissionsFor(message.guild.me).has('EMBED_LINKS')) {
-			const fallbackText = Object.keys(guildData).map(data => {
-				const title = data.charAt(0).toUpperCase() + data.slice(1).toLowerCase();
-				return `**${title}**: ${guildData[data]}`;
+			const fallbackText = Object.entries(guildData).map(([type, data]) => {
+				const title = type.charAt(0).toUpperCase() + type.slice(1).toLowerCase();
+				return `**${title}**: ${data}`;
 			}).join('\n');
 
 			replyData.content.unshift(fallbackText);
 		} else {
 			replyData.embed = new MessageEmbed()
-				.setColor(16746911)
+				.setColor(colors.misc)
 				.setThumbnail(guild.iconURL());
 
 			for (const [type, data] of Object.entries(guildData)) {

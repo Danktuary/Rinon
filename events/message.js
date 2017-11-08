@@ -3,11 +3,12 @@ const { owners, prefix } = require('../config');
 
 const messageEvent = async (client, message) => {
 	if (message.channel.type !== 'text' || message.author.bot) return;
+	if (!message.guild.me.permissionsIn(message.channel).has('SEND_MESSAGES')) return;
 
 	const prefixRegex = new RegExp(`^(<@!?${client.user.id}>|${prefix})\s*`);
 	if (!prefixRegex.test(message.content)) return;
 
-	const matchedPrefix = message.content.match(prefixRegex)[1];
+	const [, matchedPrefix] = message.content.match(prefixRegex);
 
 	const args = message.content.slice(matchedPrefix.length).trim().split(/\s+/);
 	const commandName = args.shift();
