@@ -26,12 +26,10 @@ const messageEvent = async (client, message) => {
 		return message.reply('only owners may execute that command.');
 	}
 
-	try {
-		command.execute(message, args);
-	} catch(e) {
-		console.error(e);
+	command.execute(message, args).catch(error => {
+		console.error(error);
 		message.reply('something went wrong with executing that command.');
-	}
+	});
 };
 
 module.exports = messageEvent;

@@ -1,3 +1,5 @@
+const { get } = require('snekfetch');
+
 const Poll = require('../controllers/PollController');
 
 const { prefix } = require('../config');
@@ -8,7 +10,7 @@ const request = {
 	aliases: ['add', 'vote', 'poll'],
 	usage: '<name> <url>',
 	requiresInit: true,
-	execute(message, [name, url]) {
+	async execute(message, [name, url]) {
 		if (message.guild.emojis.size === 50) {
 			return message.reply([
 				'it seems like I can\'t add any more emojis to this server.',
@@ -29,6 +31,9 @@ const request = {
 		} else if (!urlRegex.test(url)) {
 			return message.reply('that doesn\'t seem like a valid image URL.');
 		}
+
+		const resposne = await get(url).catch(error => error);
+		if (!resposne.ok) return message.reply('that image link doesn\'t seem to work properly.');
 
 		Poll.create(message, [name, url]);
 	},

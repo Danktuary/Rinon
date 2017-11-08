@@ -93,7 +93,7 @@ class GuildManagerController {
 		return guild.createChannel('emoji-voting', 'text', {
 			overwrites: [
 				{ id: guild.id, deny: ['SEND_MESSAGES'] },
-				{ id: guild.roles.find('name', 'Rinon'), allow: ['SEND_MESSAGES', 'CREATE_INSTANT_INVITE'] },
+				{ id: guild.me.highestRole, allow: ['SEND_MESSAGES', 'CREATE_INSTANT_INVITE'] },
 			],
 		});
 	}

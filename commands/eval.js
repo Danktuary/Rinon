@@ -4,13 +4,13 @@ const evalCommand = {
 	name: 'eval',
 	description: 'Evaluate JavaScript.',
 	ownerOnly: true,
-	execute(message, args) {
+	async execute(message, args) {
 		const { client } = message;
-		const bot = client;
-		const msg = message;
+		const bot = client; // eslint-disable-line no-unused-vars
+		const msg = message; // eslint-disable-line no-unused-vars
 
 		try {
-			const regex = new RegExp(message.client.token);
+			const regex = new RegExp(client.token);
 			let evaled = eval(args.join(' '));
 
 			if (typeof evaled !== 'string') {
@@ -18,7 +18,7 @@ const evalCommand = {
 			}
 
 			if (regex.test(evaled)) {
-				evaled = evaled.replace(message.client.token, '[TOKEN]');
+				evaled = evaled.replace(client.token, '[TOKEN]');
 			}
 
 			return message.channel.send(evaled, { code: 'js' });

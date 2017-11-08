@@ -6,7 +6,7 @@ const help = {
 	aliases: ['commands'],
 	usage: '[command name]',
 	cooldown: 5,
-	execute(message, args) {
+	async execute(message, args) {
 		const { commands } = message.client;
 		const data = [];
 
