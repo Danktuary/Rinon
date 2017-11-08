@@ -15,12 +15,13 @@ class GuildManagerController {
 	/**
 	 * Check if the supplied Guild meets all requirements for the client to function properly
 	 *
-	 * @param {Guild} guild The Guild to check
+	 * @param {TextChannel} channel The channel to check in
+	 * @todo Refactor this to check for channel-wise perms and not just guild-wise
 	 * @return {RequirementCheck} Whether the Guild has passed or not
 	 */
-	static checkRequirements(guild) {
+	static checkRequirements(channel) {
+		const { guild } = channel;
 		const failures = [];
-		const embed = new MessageEmbed().setColor('#e84a4a');
 		const missingPerms = this.missingPermissions(guild.me);
 
 		if (missingPerms) {
@@ -41,13 +42,24 @@ class GuildManagerController {
 		}
 
 		if (failures.length) {
-			embed.addField('Execution Error', 'I can\'t execute that command because I haven\'t been properly configured yet!');
+			failures.unshift({
+				title: 'Execution Error',
+				body: 'I can\'t execute that command because I haven\'t been properly configured yet!',
+			});
 
-			for (const failure of failures) {
-				embed.addField(failure.title, failure.body);
+			let message;
+
+			if (!guild.me.permissionsIn(channel).has('EMBED_LINKS')) {
+				message = failures.map(failure => `**${failure.title}**: ${failure.body}`).join('\n\n');
+			} else {
+				message = new MessageEmbed().setColor('#e84a4a');
+
+				for (const failure of failures) {
+					message.addField(failure.title, failure.body);
+				}
 			}
 
-			return { passed: false, message: embed };
+			return { passed: false, message };
 		}
 
 		return { passed: true };

@@ -1,6 +1,6 @@
 const { MessageEmbed } = require('discord.js');
 
-const { emojis } = require('../config');
+const { colors, emojis } = require('../config');
 
 /**
  * An object containing the amount of approved, denied, and pending polls
@@ -31,10 +31,11 @@ class PollController {
 			.addField('Preview', previewEmoji);
 
 		try {
-			const sent = await message.guild.channels.find('name', 'emoji-voting').send(embed);
+			const channel = message.guild.channels.find('name', 'emoji-voting');
+			const sent = await channel.send(embed);
 			await sent.react(emojis.approve);
 			await sent.react(emojis.deny);
-			await message.react(emojis.approve).catch(() => null);
+			await message.channel.send(`Done! Others can now vote on your request in ${channel}.`);
 		} catch (error) {
 			console.error(error);
 		}
@@ -57,7 +58,7 @@ class PollController {
 
 		const embed = new MessageEmbed()
 			.setAuthor(embedData.author.name, embedData.author.iconURL)
-			.setColor(4445328)
+			.setColor(colors.approved)
 			.setThumbnail(url)
 			.setDescription(`Request approved! ${emoji}`);
 
@@ -75,7 +76,7 @@ class PollController {
 
 		const embed = new MessageEmbed()
 			.setAuthor(embedData.author.name, embedData.author.iconURL)
-			.setColor(14042180)
+			.setColor(colors.denied)
 			.setThumbnail(embedData.thumbnail.url)
 			.setDescription('Request denied. :(');
 
@@ -98,8 +99,8 @@ class PollController {
 
 		messages = messages.filter(message => message.embeds.length);
 		const pending = messages.filter(message => !message.embeds[0].color);
-		const approved = messages.filter(message => message.embeds[0].color && message.embeds[0].color === 4445328);
-		const denied = messages.filter(message => message.embeds[0].color && message.embeds[0].color === 14042180);
+		const approved = messages.filter(message => message.embeds[0].color && message.embeds[0].color === colors.approved);
+		const denied = messages.filter(message => message.embeds[0].color && message.embeds[0].color === colors.denied);
 
 		return {
 			approved: approved.size,

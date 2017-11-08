@@ -13,7 +13,7 @@ const messageEvent = async (client, message) => {
 	if (!command) return;
 
 	if (command.requiresInit) {
-		const guildStatus = GuildManager.checkRequirements(message.guild);
+		const guildStatus = GuildManager.checkRequirements(message.channel);
 		if (!guildStatus.passed) return message.channel.send(guildStatus.message);
 	}
 
