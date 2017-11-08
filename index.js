@@ -1,8 +1,8 @@
 const { Client } = require('discord.js');
-const { token } = require('./config');
 const client = new Client;
 
 const Bootstrap = require('./bootstrap');
+const { token } = require('./config');
 
 client.commands = Bootstrap.commands();
 Bootstrap.events(client);

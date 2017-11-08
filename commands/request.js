@@ -31,8 +31,8 @@ const request = {
 			return message.reply('that doesn\'t seem like a valid image URL.');
 		}
 
-		const resposne = await get(url).catch(error => error);
-		if (!resposne.ok) return message.reply('that image link doesn\'t seem to work properly.');
+		const response = await get(url).catch(error => error);
+		if (!response.ok) return message.reply('that image link doesn\'t seem to work properly.');
 
 		return Poll.create(message, [name, url]);
 	},
