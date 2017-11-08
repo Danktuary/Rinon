@@ -2,9 +2,14 @@ const GuildManager = require('../controllers/GuildManagerController');
 const { owners, prefix } = require('../config');
 
 const messageEvent = async (client, message) => {
-	if (message.channel.type !== 'text' || !message.content.startsWith(prefix) || message.author.bot) return;
+	if (message.channel.type !== 'text' || message.author.bot) return;
 
-	const args = message.content.slice(prefix.length).split(/\s+/);
+	const prefixRegex = new RegExp(`^(<@!?${client.user.id}> ?|${prefix})`);
+	if (!prefixRegex.test(message.content)) return;
+
+	const matchedPrefix = message.content.match(prefixRegex)[1];
+
+	const args = message.content.slice(matchedPrefix.length).split(/\s+/);
 	const commandName = args.shift();
 
 	const command = client.commands.get(commandName)
