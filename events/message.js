@@ -4,7 +4,7 @@ const { owners, prefix } = require('../config');
 const messageEvent = async (client, message) => {
 	if (message.channel.type !== 'text' || message.author.bot) return;
 
-	const prefixRegex = new RegExp(`^(<@!?${client.user.id}> ?|${prefix})`);
+	const prefixRegex = new RegExp(`^(<@!?${client.user.id}>|${prefix}) *?`);
 	if (!prefixRegex.test(message.content)) return;
 
 	const matchedPrefix = message.content.match(prefixRegex)[1];
