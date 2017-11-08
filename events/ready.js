@@ -1,5 +1,3 @@
-const ready = client => {
-	console.log(`Logged in as ${client.user.tag}!`);
-};
+const ready = client => console.log(`Logged in as ${client.user.tag}!`);
 
 module.exports = ready;

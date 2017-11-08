@@ -19,8 +19,14 @@ const servers = {
 			const filter = m => m.author.id === message.author.id && serverNameRegex.test(m.content);
 
 			try {
-				await message.channel.send('Which server would you like info about?');
-				const messages = await message.channel.awaitMessages(filter, { time: 15000, max: 1, errors: ['time'] });
+				await message.channel.send('Which server would you like info about? For example, `emoji server 1`.');
+
+				const messages = await message.channel.awaitMessages(filter, {
+					time: 15000,
+					max: 1,
+					errors: ['time'],
+				});
+
 				serverName = messages.first().content.match(serverNameRegex)[1];
 			} catch(error) {
 				return message.reply(`you didn't reply with a valid name! Try \`${prefix}servers Emoji Server 1\`.`);

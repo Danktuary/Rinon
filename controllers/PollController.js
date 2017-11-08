@@ -37,8 +37,8 @@ class PollController {
 			await sent.react(emojis.deny);
 			await message.channel.send(`Done! Others can now vote on your request in ${channel}.`);
 		} catch (error) {
-			await message.channel.send('There was an error trying to create the poll!');
 			console.error(error);
+			await message.channel.send('There was an error trying to create the poll!');
 		}
 
 		await previewEmoji.delete();
