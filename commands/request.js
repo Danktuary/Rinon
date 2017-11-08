@@ -22,7 +22,7 @@ const request = {
 		if (!/^\w+$/.test(name)) {
 			return message.reply('only alphanumeric characters are allowed!');
 		} else if (!urlRegex.test(url)) {
-			return message.reply('invalid image URL.');
+			return message.reply('that doesn\'t seem like a valid image URL.');
 		}
 
 		Poll.create(message, [name, url]);

@@ -12,8 +12,8 @@ const init = {
 			return message.reply('sorry, it looks like you don\'t have permission to do that!');
 		}
 
-		if (GuildManager.checkRequirements(message.guild).passed) {
-			return message.reply('already good to go!');
+		if (GuildManager.checkRequirements(message.channel).passed) {
+			return message.channel.send('I\'m already good to go!');
 		}
 
 		const missingPerms = GuildManager.missingPermissions(message.guild.me);
