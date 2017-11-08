@@ -7,6 +7,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "discord.js": "github:hydrabolt/discord.js"
+    "discord.js": "github:hydrabolt/discord.js",
+    "uws": "^8.14.1"
   }
 }
