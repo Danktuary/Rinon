@@ -6,6 +6,7 @@ const request = {
 	name: 'request',
 	description: 'Make a request for a new emoji to be added!',
 	aliases: ['add', 'vote', 'poll'],
+	usage: '<name> <url>',
 	requiresInit: true,
 	execute(message, [name, url]) {
 		if (message.guild.emojis.size === 50) {
