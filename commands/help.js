@@ -5,7 +5,6 @@ const help = {
 	description: 'List all of my commands or info about a specific command.',
 	aliases: ['commands'],
 	usage: '[command name]',
-	cooldown: 5,
 	async execute(message, args) {
 		const { commands } = message.client;
 		const data = [];
@@ -27,7 +26,7 @@ const help = {
 			if (command.usage) data.push(`**Usage:** \`${prefix}${command.name} ${command.usage}\``);
 		}
 
-		message.channel.send(data, { split: true })
+		return message.channel.send(data, { split: true })
 			.catch(() => null);
 	},
 };

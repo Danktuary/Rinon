@@ -41,7 +41,7 @@ class PollController {
 			await message.channel.send('There was an error trying to create the poll!');
 		}
 
-		await previewEmoji.delete();
+		return previewEmoji.delete();
 	}
 
 	/**
@@ -64,7 +64,7 @@ class PollController {
 			.setDescription(`Request approved! ${emoji}`);
 
 		await message.clearReactions();
-		message.edit(embed);
+		return message.edit(embed);
 	}
 
 	/**
@@ -82,7 +82,7 @@ class PollController {
 			.setDescription('Request denied. :(');
 
 		await message.clearReactions();
-		message.edit(embed);
+		return message.edit(embed);
 	}
 
 	/**

@@ -26,7 +26,7 @@ const init = {
 		}
 
 		await GuildManager.createPollChannel(message.guild);
-		message.channel.send(`Done! You can now use the \`${prefix}request\` command to create polls.`);
+		return message.channel.send(`Done! You can now use the \`${prefix}request\` command to create polls.`);
 	},
 };
 

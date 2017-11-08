@@ -34,7 +34,7 @@ const request = {
 		const resposne = await get(url).catch(error => error);
 		if (!resposne.ok) return message.reply('that image link doesn\'t seem to work properly.');
 
-		Poll.create(message, [name, url]);
+		return Poll.create(message, [name, url]);
 	},
 };
 
