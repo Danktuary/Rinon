@@ -1,4 +1,4 @@
-Things that may or may not be implemented.
+## Things that may or may not be implemented.
 
 * Handle message updates
 * Allow request cancelation
