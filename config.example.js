@@ -18,6 +18,21 @@ const config = {
 		denied: 14042180, // flat red
 		misc: 16746911, // rinon pink
 	},
+	disabledEvents: [
+		'GUILD_BAN_ADD',
+		'GUILD_BAN_REMOVE',
+		'CHANNEL_PINS_UPDATE',
+		'MESSAGE_DELETE_BULK',
+		'USER_UPDATE',
+		'USER_NOTE_UPDATE',
+		'USER_SETTINGS_UPDATE',
+		'PRESENCE_UPDATE',
+		'VOICE_STATE_UPDATE',
+		'TYPING_START',
+		'VOICE_SERVER_UPDATE',
+		'RELATIONSHIP_ADD',
+		'RELATIONSHIP_REMOVE',
+	],
 };
 
 module.exports = config;

@@ -6,8 +6,8 @@ const help = {
 	aliases: ['commands'],
 	usage: '[command name]',
 	async execute(message, args) {
-		const { commands } = message.client;
 		const data = [];
+		const { commands } = message.client;
 
 		if (!args.length) {
 			data.push('Here\'s a list of all my commands:');
@@ -26,8 +26,7 @@ const help = {
 			if (command.usage) data.push(`**Usage:** \`${prefix}${command.name} ${command.usage}\``);
 		}
 
-		return message.channel.send(data, { split: true })
-			.catch(() => null);
+		return message.channel.send(data, { split: true });
 	},
 };
 

@@ -10,18 +10,18 @@ const evalCommand = {
 		const msg = message; // eslint-disable-line no-unused-vars
 
 		try {
-			const regex = new RegExp(client.token);
-			let evaled = eval(args.join(' '));
+			const tokenRegex = new RegExp(client.token);
+			let evalResult = eval(args.join(' '));
 
-			if (typeof evaled !== 'string') {
-				evaled = inspect(evaled, false, 0);
+			if (typeof evalResult !== 'string') {
+				evalResult = inspect(evalResult, false, 0);
 			}
 
-			if (regex.test(evaled)) {
-				evaled = evaled.replace(client.token, '[TOKEN]');
+			if (tokenRegex.test(evalResult)) {
+				evalResult = evalResult.replace(client.token, '[TOKEN]');
 			}
 
-			return message.channel.send(evaled, { code: 'js' });
+			return message.channel.send(evalResult, { code: 'js' });
 		} catch (error) {
 			console.error(inspect(error));
 			return message.channel.send(error, { code: 'js' });
