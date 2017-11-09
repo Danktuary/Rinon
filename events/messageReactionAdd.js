@@ -8,7 +8,7 @@ const messageReactionAdd = (client, reaction, user) => {
 	if (!reaction.message.embeds.length || reaction.message.embeds[0].color) return;
 
 	const [, author] = reaction.message.embeds[0].description.match(/^`(\w+)#\d+`/);
-	const endAmount = (reaction.users.exists('username', author)) ? voteEndAmount + 1 : voteEndAmount;
+	const endAmount = (reaction.users.exists('username', author)) ? voteEndAmount + 2 : voteEndAmount + 1;
 
 	if (reaction.emoji.name === 'approve' && reaction.count >= endAmount) {
 		Poll.approve(reaction.message);
