@@ -4,6 +4,9 @@ const { Collection } = require('discord.js');
 
 const { paths } = require('./config');
 
+/**
+ * Initialize required aspects of the client
+ */
 class Bootstrap {
 
 	/**

@@ -13,6 +13,9 @@ const { colors, emojis } = require('../config');
  * @property {number} total The amount of total emoji requests
  */
 
+/**
+ * Manage emoji voting and related operations
+ */
 class PollController {
 
 	/**
@@ -20,6 +23,7 @@ class PollController {
 	 *
 	 * @param {Message} message The Message object used to create the request
 	 * @param {array} args The emoji name and URL to use in the poll
+	 * @return {Promise<Emoji>} The deleted preview emoji
 	 */
 	static async create(message, [name, url]) {
 		const previewEmoji = await message.guild.createEmoji(url, name);
@@ -48,6 +52,7 @@ class PollController {
 	 * Approve the emoji request, create the emoji, and close the poll
 	 *
 	 * @param {Message} message The poll Message object to approve/close
+	 * @return {Promise<Message>} The edited messaged
 	 */
 	static async approve(message) {
 		const embedData = message.embeds[0];
@@ -71,6 +76,7 @@ class PollController {
 	 * Approve the emoji request, create the emoji, and close the poll
 	 *
 	 * @param {Message} message The poll Message object to approve/close
+	 * @return {Promise<Message>} The edited messaged
 	 */
 	static async deny(message) {
 		const embedData = message.embeds[0];
@@ -100,8 +106,8 @@ class PollController {
 
 		messages = messages.filter(message => message.embeds.length);
 		const pending = messages.filter(message => !message.embeds[0].color);
-		const approved = messages.filter(message => message.embeds[0].color && message.embeds[0].color === colors.approved);
-		const denied = messages.filter(message => message.embeds[0].color && message.embeds[0].color === colors.denied);
+		const approved = messages.filter(message => message.embeds[0].color === colors.approved);
+		const denied = messages.filter(message => message.embeds[0].color === colors.denied);
 
 		return {
 			approved: approved.size,

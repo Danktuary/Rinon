@@ -10,6 +10,9 @@ const { prefix } = require('../config');
  * @property {(MessageEmbed|string)} [message] The error message if the check failed
  */
 
+/**
+ * Perform common operations on a guild
+ */
 class GuildManagerController {
 
 	/**
@@ -73,7 +76,11 @@ class GuildManagerController {
 	 * @return {(boolean|string[])} The missing permissions
 	 */
 	static missingPermissions(clientMember, format = true) {
-		const requiredPerms = ['ADD_REACTIONS', 'CREATE_INSTANT_INVITE', 'EMBED_LINKS', 'MANAGE_CHANNELS', 'MANAGE_EMOJIS'];
+		const requiredPerms = [
+			'ADD_REACTIONS', 'CREATE_INSTANT_INVITE', 'EMBED_LINKS',
+			'MANAGE_CHANNELS', 'MANAGE_EMOJIS',
+		];
+
 		const missingPerms = clientMember.permissions.missing(requiredPerms);
 
 		if (!missingPerms.length) return false;
