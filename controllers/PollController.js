@@ -1,6 +1,6 @@
 const { MessageEmbed } = require('discord.js');
 
-const { colors, emojis } = require('../config');
+const { colors, emojis, prefix } = require('../config');
 
 /**
  * An object containing the amount of approved, denied, and pending polls
@@ -55,8 +55,14 @@ class PollController {
 	 * @return {Promise<Message>} The edited messaged
 	 */
 	static async approve(message) {
-		const embedData = message.embeds[0];
+		if (message.guild.emojis.size === 50) {
+			return this.deny(message, [
+				'It seems like I can\'t add any more emojis to this server.',
+				`Want to check the other servers I'm in? Use the \`${prefix}server\` command!`,
+			].join('\n'));
+		}
 
+		const [embedData] = message.embeds;
 		const [, name] = embedData.description.match(/`(\w+)`\.$/);
 		const { url } = embedData.thumbnail;
 
@@ -76,16 +82,17 @@ class PollController {
 	 * Approve the emoji request, create the emoji, and close the poll
 	 *
 	 * @param {Message} message The poll Message object to approve/close
+	 * @param {string} [reason=Request denied :(] The reason for this request being denied
 	 * @return {Promise<Message>} The edited messaged
 	 */
-	static async deny(message) {
-		const embedData = message.embeds[0];
+	static async deny(message, reason = 'Request denied. :(') {
+		const [embedData] = message.embeds;
 
 		const embed = new MessageEmbed()
 			.setAuthor(embedData.author.name, embedData.author.iconURL)
 			.setColor(colors.denied)
 			.setThumbnail(embedData.thumbnail.url)
-			.setDescription('Request denied. :(');
+			.setDescription(reason);
 
 		await message.clearReactions();
 		return message.edit(embed);

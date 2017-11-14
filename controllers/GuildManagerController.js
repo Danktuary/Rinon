@@ -27,7 +27,7 @@ class GuildManagerController {
 		const failures = [];
 		const missingPerms = this.missingPermissions(guild.me);
 
-		if (missingPerms) {
+		if (missingPerms.length) {
 			failures.push({
 				title: 'Missing Permissions',
 				body: `I'm missing the following permissions: ${missingPerms}`,
@@ -72,18 +72,17 @@ class GuildManagerController {
 	 * Return the missing permissions, if any
 	 *
 	 * @param {GuildMember} clientMember A GuildMember instance of the client
-	 * @param {boolean} format Whether to format this or not
-	 * @return {(boolean|string[])} The missing permissions
+	 * @param {boolean} format Whether to format the permissions or not
+	 * @return {string[]} The missing permissions
 	 */
 	static missingPermissions(clientMember, format = true) {
 		const requiredPerms = [
 			'ADD_REACTIONS', 'CREATE_INSTANT_INVITE', 'EMBED_LINKS',
-			'MANAGE_CHANNELS', 'MANAGE_EMOJIS',
+			'MANAGE_CHANNELS', 'MANAGE_EMOJIS', 'MANAGE_MESSAGES',
 		];
 
 		const missingPerms = clientMember.permissions.missing(requiredPerms);
 
-		if (!missingPerms.length) return false;
 		if (!format) return missingPerms;
 		return missingPerms.map(perm => `\`${perm}\``).join(', ');
 	}
@@ -100,7 +99,7 @@ class GuildManagerController {
 		return guild.createChannel('emoji-voting', 'text', {
 			overwrites: [
 				{ id: guild.id, deny: ['SEND_MESSAGES'] },
-				{ id: guild.me.highestRole, allow: ['SEND_MESSAGES', 'CREATE_INSTANT_INVITE'] },
+				{ id: guild.me.highestRole, allow: ['SEND_MESSAGES', 'CREATE_INSTANT_INVITE', 'MANAGE_MESSAGES'] },
 			],
 		});
 	}

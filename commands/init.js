@@ -18,7 +18,7 @@ const init = {
 
 		const missingPerms = GuildManager.missingPermissions(message.guild.me);
 
-		if (missingPerms) {
+		if (missingPerms.length) {
 			return message.reply([
 				'I don\'t have enough permimssion to do that!',
 				`Contact an administrator and let them know I'm missing these permissions: ${missingPerms}`,
