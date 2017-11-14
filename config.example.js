@@ -1,7 +1,7 @@
 /* eslint-disable no-inline-comments */
 
 const config = {
-	prefix: '!',
+	prefix: '>',
 	token: 'your-token-goes-here',
 	owners: ['your-id-goes-here'],
 	voteEndAmount: 3,
