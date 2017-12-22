@@ -19,15 +19,29 @@ const request = {
 		}
 
 		if (!name && !url) {
-			return message.reply(`you need to provide at least two values! The format would be \`${prefix}request <name> <url>\`.`);
+			return message.reply([
+				'you need to provide either an emoji, a name and an image URL, or a name and an emoji!',
+				`For example: \`${prefix}request rinon https://i.imgur.com/7QeCxca.jpg\`.`,
+			]);
 		}
 
-		// not mine; find a better one later
-		const urlRegex = /(https?:\/\/)?(www.)?[^\s<>#%{}|\^~\[\]]+\.(png|jpg|jpeg|webp)$/;
+		// not my URL regex; find a better one later
+		const emojiRegex = /<a?:\w+:(\d+)>/;
+		const urlRegex = /(https?:\/\/)?(www.)?[^\s<>#%{}|\^~\[\]]+\.(png|jpg|jpeg|webp|gif)$/;
+
+		if (emojiRegex.test(name)) {
+			return message.channel.send('Emoji was sent first.');
+		}
 
 		if (!/^\w+$/.test(name)) {
 			return message.reply('only alphanumeric characters are allowed!');
-		} else if (!urlRegex.test(url)) {
+		}
+
+		if (emojiRegex.test(url)) {
+			url = `https://cdn.discordapp.com/emojis/${url.replace(/<:\w+:|>/g, '')}.png`;
+		}
+
+		if (!urlRegex.test(url)) {
 			return message.reply('that doesn\'t seem like a valid image URL.');
 		}
 
