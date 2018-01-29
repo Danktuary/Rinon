@@ -1,7 +1,6 @@
-const raw = async (client, event) => {
-	if (event.t !== 'MESSAGE_REACTION_ADD') return;
+const raw = async (client, { t: eventName, d: data }) => {
+	if (eventName !== 'MESSAGE_REACTION_ADD') return;
 
-	const { d: data } = event;
 	const channel = client.channels.get(data.channel_id);
 
 	if (!data.emoji.id || channel.messages.has(data.message_id)) return;
