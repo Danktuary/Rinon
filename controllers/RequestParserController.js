@@ -31,7 +31,7 @@ class RequestParserController {
 			const attachment = message.attachments.first();
 
 			if (attachment.size > (256 * 1000)) {
-				throw new Error('that file is too large! Please resize it and try again');
+				throw new Error('that file surpasses the 256kb file size limit! Please resize it and try again.');
 			}
 			else if (!attachment.width || !attachment.height) {
 				throw new Error('that doesn\'t seem like a valid image file.');

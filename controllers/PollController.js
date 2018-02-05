@@ -34,7 +34,7 @@ class PollController {
 			previewEmoji = await message.guild.emojis.create(url, name);
 		}
 		catch (error) {
-			return message.reply('that image is too large! Please resize it and try again.');
+			return message.reply('that file surpasses the 256kb file size limit! Please resize it and try again.');
 		}
 
 		const embed = new MessageEmbed()

@@ -40,7 +40,7 @@ const request = {
 			return message.reply('that image link doesn\'t seem to be working.');
 		}
 		else if (response.headers['content-length'] > (256 * 1000)) {
-			return message.reply('that file is too large! Please resize it and try again');
+			return message.reply('that file surpasses the 256kb file size limit! Please resize it and try again.');
 		}
 
 		return Poll.create(message, args);
