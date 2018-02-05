@@ -1,6 +1,8 @@
 const { MessageEmbed } = require('discord.js');
 
-const { colors, emojis, prefix } = require('../config');
+const GuildManager = require('./GuildManagerController');
+
+const { colors, emojis } = require('../config');
 
 /**
  * An object containing the amount of approved, denied, and pending polls
@@ -26,13 +28,20 @@ class PollController {
 	 * @return {Promise<Emoji>} The deleted preview emoji
 	 */
 	static async create(message, [name, url]) {
-		const previewEmoji = await message.guild.createEmoji(url, name);
+		let previewEmoji;
+
+		try {
+			previewEmoji = await message.guild.emojis.create(url, name);
+		}
+		catch (error) {
+			return message.reply('that image is too large! Please resize it and try again.');
+		}
 
 		const embed = new MessageEmbed()
 			.setAuthor(`Request by ${message.author.tag}`, message.author.displayAvatarURL())
 			.setThumbnail(url)
 			.setDescription(`\`${message.author.tag}\` wants to add an emoji with the name as \`${name}\`.`)
-			.addField('Preview', previewEmoji);
+			.addField('Preview', previewEmoji.toString());
 
 		try {
 			const channel = message.guild.channels.find('name', 'emoji-voting');
@@ -40,7 +49,8 @@ class PollController {
 			await sent.react(emojis.approve);
 			await sent.react(emojis.deny);
 			await message.channel.send(`Done! Others can now vote on your request in ${channel}.`);
-		} catch (error) {
+		}
+		catch (error) {
 			console.error(error);
 			await message.channel.send('There was an error trying to create the poll!');
 		}
@@ -55,18 +65,18 @@ class PollController {
 	 * @return {Promise<Message>} The edited messaged
 	 */
 	static async approve(message) {
-		if (message.guild.emojis.size === 50) {
-			return this.deny(message, [
-				'It seems like I can\'t add any more emojis to this server.',
-				`Want to check the other servers I'm in? Use the \`${prefix}server\` command!`,
-			].join('\n'));
-		}
-
 		const [embedData] = message.embeds;
 		const [, name] = embedData.description.match(/`(\w+)`\.$/);
 		const { url } = embedData.thumbnail;
 
-		const emoji = await message.guild.createEmoji(url, name);
+		try {
+			GuildManager.checkEmojiAmount(message.guild, url);
+		}
+		catch (error) {
+			return this.deny(message, error.message);
+		}
+
+		const emoji = await message.guild.emojis.create(url, name);
 
 		const embed = new MessageEmbed()
 			.setAuthor(embedData.author.name, embedData.author.iconURL)
@@ -74,7 +84,7 @@ class PollController {
 			.setThumbnail(url)
 			.setDescription(`Request approved! ${emoji}`);
 
-		await message.clearReactions();
+		await message.reactions.removeAll();
 		return message.edit(embed);
 	}
 
@@ -94,7 +104,7 @@ class PollController {
 			.setThumbnail(embedData.thumbnail.url)
 			.setDescription(reason);
 
-		await message.clearReactions();
+		await message.reactions.removeAll();
 		return message.edit(embed);
 	}
 

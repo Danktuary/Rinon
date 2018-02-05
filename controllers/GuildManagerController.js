@@ -54,7 +54,8 @@ class GuildManagerController {
 
 			if (!guild.me.permissionsIn(channel).has('EMBED_LINKS')) {
 				message = failures.map(failure => `**${failure.title}**: ${failure.body}`).join('\n\n');
-			} else {
+			}
+			else {
 				message = new MessageEmbed().setColor('#e84a4a');
 
 				for (const failure of failures) {
@@ -66,6 +67,38 @@ class GuildManagerController {
 		}
 
 		return { passed: true };
+	}
+
+	/**
+	 * @todo Update these docblocks
+	 */
+	static checkEmojiAmount(guild, emojiLink) {
+		const emojiAmount = GuildManagerController.emojiAmounts(guild);
+
+		const maxEmojisReply = [
+			'it seems like I can\'t add any more emojis to this server.',
+			`Want to check the other servers I\'m in? Use the \`${prefix}server\` command!`,
+		].join('\n');
+
+		if (emojiAmount.static + emojiAmount.animated === 100) {
+			throw new Error(maxEmojisReply);
+		}
+		else if (emojiLink.endsWith('.gif') && emojiAmount.animated === 50) {
+			throw new Error(maxEmojisReply.replace('emojis', 'animated emojis'));
+		}
+		else if (emojiLink.endsWith('.png') && emojiAmount.static === 50) {
+			throw new Error(maxEmojisReply.replace('emojis', 'static emojis'));
+		}
+	}
+
+	/**
+	 * @todo Update these docblocks
+	 */
+	static emojiAmounts(guild) {
+		return {
+			static: guild.emojis.filter(emoji => !emoji.animated).size,
+			animated: guild.emojis.filter(emoji => emoji.animated).size,
+		};
 	}
 
 	/**
@@ -90,16 +123,16 @@ class GuildManagerController {
 	/**
 	 * Create and properly configure an `emoji-voting` channel for the supplied Guild
 	 *
-	 * @param {Guild} guild The Guild to create the channel in
+	 * @param {Guild} guild The guild to create the channel in
 	 * @return {(void|Promise<GuildChannel>)} The newly created GuildChannel
 	 */
 	static createPollChannel(guild) {
 		if (guild.channels.exists('name', 'emoji-voting')) return;
 
-		return guild.createChannel('emoji-voting', 'text', {
+		return guild.channels.create('emoji-voting', {
 			overwrites: [
 				{ id: guild.id, deny: ['SEND_MESSAGES'] },
-				{ id: guild.me.highestRole, allow: ['SEND_MESSAGES', 'CREATE_INSTANT_INVITE', 'MANAGE_MESSAGES'] },
+				{ id: guild.me.roles.highest, allow: ['SEND_MESSAGES', 'CREATE_INSTANT_INVITE', 'MANAGE_MESSAGES'] },
 			],
 		});
 	}

@@ -7,9 +7,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "discord.js": "github:hydrabolt/discord.js",
-    "mysql2": "^1.5.1",
-    "sequelize": "^4.27.0",
-    "uws": "^8.14.1"
+    "discord.js": "hydrabolt/discord.js"
   }
 }
