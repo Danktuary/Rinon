@@ -22,7 +22,8 @@ const evalCommand = {
 			}
 
 			return message.channel.send(evalResult, { code: 'js' });
-		} catch (error) {
+		}
+		catch (error) {
 			console.error(inspect(error));
 			return message.channel.send(error, { code: 'js' });
 		}

@@ -12,7 +12,8 @@ const messageReactionAdd = (client, reaction, user) => {
 
 	if (reaction.emoji.id === emojis.approve && reaction.count >= endAmount) {
 		Poll.approve(reaction.message);
-	} else if (reaction.emoji.id === emojis.deny && reaction.count >= endAmount) {
+	}
+	else if (reaction.emoji.id === emojis.deny && reaction.count >= endAmount) {
 		Poll.deny(reaction.message);
 	}
 };

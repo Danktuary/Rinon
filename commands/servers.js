@@ -15,7 +15,8 @@ const servers = {
 
 		if (serverName.length && serverNameRegex.test(serverName.join(' '))) {
 			serverName = serverName.join(' ').match(serverNameRegex)[1];
-		} else {
+		}
+		else {
 			const filter = m => m.author.id === message.author.id && serverNameRegex.test(m.content);
 
 			try {
@@ -28,7 +29,9 @@ const servers = {
 				});
 
 				serverName = messages.first().content.match(serverNameRegex)[1];
-			} catch(error) {
+			}
+
+			catch(error) {
 				return message.reply(`you didn't reply with a valid name in time! Try \`${prefix}servers Emoji Server 1\`.`);
 			}
 		}
@@ -61,7 +64,8 @@ const servers = {
 
 		if (allInvites.size) {
 			invite = allInvites.first();
-		} else {
+		}
+		else {
 			if (!guild.me.permissionsIn(pollChannel).has('CREATE_INSTANT_INVITE')) {
 				return message.channel.send('Sorry, it looks like I\'m not allowed to create an invite to that server!');
 			}
@@ -78,7 +82,8 @@ const servers = {
 			}).join('\n');
 
 			replyData.content.unshift(fallbackText);
-		} else {
+		}
+		else {
 			replyData.embed = new MessageEmbed()
 				.setColor(colors.misc)
 				.setThumbnail(guild.iconURL());
