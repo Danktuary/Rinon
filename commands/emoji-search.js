@@ -51,7 +51,7 @@ const emojiSearch = {
 				content.push(`${emoji.name}: ${emoji} (Found in **${emoji.guild.name}**)`);
 			}
 
-			response = { content: content.join('\n') };
+			response = { content: content.join('\n'), split: '\n' };
 		}
 
 		return message.channel.send(response);
