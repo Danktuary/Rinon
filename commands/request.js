@@ -34,13 +34,8 @@ const request = {
 			].join('\n'));
 		}
 
-		try {
-			args = RequestParser.parse(message, args);
-			GuildManager.checkEmojiAmount(message.guild, args[1]);
-		}
-		catch (error) {
-			throw new Error(error.message);
-		}
+		args = RequestParser.parse(message, args);
+		GuildManager.checkEmojiAmount(message.guild, args[1]);
 
 		const imageData = await snekfetch.get(args[1]).catch(error => error);
 
