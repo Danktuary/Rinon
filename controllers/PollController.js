@@ -39,7 +39,7 @@ class PollController {
 
 		const embed = new MessageEmbed()
 			.setAuthor(`Request by ${message.author.tag}`, message.author.displayAvatarURL())
-			.setThumbnail(url)
+			.setThumbnail(previewEmoji.url)
 			.setDescription(`\`${message.author.tag}\` wants to add an emoji with the name as \`${name}\`.`)
 			.addField('Preview', previewEmoji.toString());
 
@@ -81,7 +81,7 @@ class PollController {
 		const embed = new MessageEmbed()
 			.setAuthor(embedData.author.name, embedData.author.iconURL)
 			.setColor(colors.approved)
-			.setThumbnail(url)
+			.setThumbnail(emoji.url)
 			.setDescription(`Request approved! ${emoji}`);
 
 		await message.reactions.removeAll();

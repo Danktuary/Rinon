@@ -21,7 +21,7 @@ class Bootstrap {
 		for (const commandFile of commandsFiles) {
 			const command = require(join(paths.commands, commandFile));
 
-			commands.set(basename(commandFile, '.js'), command);
+			commands.set(command.name, command);
 		}
 
 		return commands;

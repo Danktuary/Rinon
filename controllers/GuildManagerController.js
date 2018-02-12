@@ -76,7 +76,7 @@ class GuildManagerController {
 		const emojiAmount = GuildManagerController.emojiAmounts(guild);
 
 		const maxEmojisReply = [
-			'it seems like I can\'t add any more emojis to this server.',
+			'It seems like I can\'t add any more emojis to this server.',
 			`Want to check the other servers I\'m in? Use the \`${prefix}server\` command!`,
 		].join('\n');
 

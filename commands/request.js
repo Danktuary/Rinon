@@ -13,9 +13,23 @@ const request = {
 	usage: '<name or emoji> [url, emoji, or file]',
 	requiresInit: true,
 	async execute(message, args) {
+		try {
+			[message, args] = await this._parse(message, args);
+		}
+		catch (error) {
+			return message.channel.send(error.message);
+		}
+
+		return Poll.create(message, args);
+	},
+	/**
+	 * A "private" parse method to prevent code dupe
+	 * Used both in here and the `reverse-request.js` file
+	 */
+	async _parse(message, args) {
 		if (!args.length) {
-			return message.reply([
-				'you need to provide an emoji, a name and an emoji, a name and an image URL, or a name and an image file!',
+			throw new Error([
+				'You need to provide an emoji, a name and an emoji, a name and an image URL, or a name and an image file!',
 				`For example: \`${prefix}request rinon https://i.imgur.com/7QeCxca.jpg\`.`,
 			].join('\n'));
 		}
@@ -25,16 +39,16 @@ const request = {
 			GuildManager.checkEmojiAmount(message.guild, args[1]);
 		}
 		catch (error) {
-			return message.reply(error.message);
+			throw new Error(error.message);
 		}
 
 		const imageData = await snekfetch.get(args[1]).catch(error => error);
 
 		if (!imageData.ok) {
-			return message.reply('that image link doesn\'t seem to be working.');
+			throw new Error('That image link doesn\'t seem to be working.');
 		}
 		else if (imageData.headers['content-length'] > (256 * 1000)) {
-			return message.reply('that file surpasses the 256kb file size limit! Please resize it and try again.');
+			throw new Error('That file surpasses the 256kb file size limit! Please resize it and try again.');
 		}
 
 		const duplicatedEmojis = message.client.emojis.filter(emoji => {
@@ -57,18 +71,17 @@ const request = {
 					.then(responses => responses.first().content);
 
 				if (['yes', 'y'].includes(response.toLowerCase())) {
-					return message.channel.send('Got it; I\'ve cancelled your request.');
+					throw new Error('Got it; I\'ve cancelled your request.');
 				}
-				else {
-					await message.channel.send('Got it; I\'ll continue on with your original request.');
-				}
+
+				await message.channel.send('Got it; I\'ll continue on with your original request.');
 			}
 			catch (error) {
 				await message.reply('you didn\'t reply in time; I\'ll continue on with your original request.');
 			}
 		}
 
-		return Poll.create(message, args);
+		return [message, args, imageData];
 	},
 };
 
