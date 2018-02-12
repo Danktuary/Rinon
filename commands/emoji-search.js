@@ -8,11 +8,11 @@ const emojiSearch = {
 	aliases: ['emojisearch', 'emoji', 'search'],
 	usage: '<name>',
 	async execute(message, args) {
-		if (!args.length) {
-			return message.reply('you need to give me at least a name to search for!');
+		if (!args.length || args[0].length < 2) {
+			return message.reply('a search term must be at least 2 characters long!');
 		}
 
-		const name = args.join(' ').toLowerCase();
+		const name = args[0].toLowerCase();
 
 		if (!/^\w+$/.test(name)) {
 			return message.reply('only alphanumeric characters are allowed!');
@@ -23,7 +23,7 @@ const emojiSearch = {
 		});
 
 		if (!emojis.size) {
-			return message.channel.send('I can\'t find any emojis with that name!');
+			return message.channel.send('I couldn\'t find any emojis with that name!');
 		}
 
 		let response = '';
