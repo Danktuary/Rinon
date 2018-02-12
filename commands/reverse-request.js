@@ -10,12 +10,14 @@ const { colors, prefix } = require('../config');
 const reverseRequest = {
 	name: 'reverse-request',
 	description: 'Canvas thingamashit.',
+	usage: '<name or emoji> [url, emoji, or file]',
 	aliases: [
 		'add-reverse', 'addreverse',
 		'vote-request', 'voterequest',
 		'poll-reverse', 'pollreverse',
 		'reverse',
 	],
+	requiresInit: true,
 	async execute(message, args) {
 		let imageData;
 
