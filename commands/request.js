@@ -51,28 +51,26 @@ const request = {
 		});
 
 		if (duplicatedEmojis.size) {
+			await message.reply([
+				'I found these emojis with that same name: ',
+				duplicatedEmojis.map(emoji => emoji.toString()).join(' '),
+				'\nWould you like to continue with your request anyway?',
+			].join(''));
+
+			let response;
+			const options = { max: 1, time: 20000, errors: ['time'] };
+			const filter = m => ['yes', 'y', 'no', 'n'].includes(m.content.toLowerCase());
+
 			try {
-				await message.reply([
-					'It seems like I have other emojis with that same name!\n',
-					'Does your request match any of the following emojis: ',
-					duplicatedEmojis.map(emoji => emoji.toString()).join(' '),
-					'\nIf so, would you like to cancel your request?',
-				].join(''));
-
-				const options = { max: 1, time: 20000, errors: ['time'] };
-				const filter = m => ['yes', 'y', 'no', 'n'].includes(m.content.toLowerCase());
-
-				const response = await message.channel.awaitMessages(filter, options)
-					.then(responses => responses.first().content);
-
-				if (['yes', 'y'].includes(response.toLowerCase())) {
-					throw new Error('Got it; I\'ve cancelled your request.');
-				}
-
-				await message.channel.send('Got it; I\'ll continue on with your original request.');
+				response = await message.channel.awaitMessages(filter, options)
+					.then(responses => responses.first().content.toLowerCase());
 			}
 			catch (error) {
 				await message.reply('you didn\'t reply in time; I\'ll continue on with your original request.');
+			}
+
+			if (response && ['no', 'n'].includes(response)) {
+				throw new Error('Got it; I\'ve cancelled your request.');
 			}
 		}
 
