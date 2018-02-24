@@ -59,8 +59,8 @@ const request = {
 					'\nIf so, would you like to cancel your request?',
 				].join(''));
 
+				const options = { max: 1, time: 20000, errors: ['time'] };
 				const filter = m => ['yes', 'y', 'no', 'n'].includes(m.content.toLowerCase());
-				const options = { max: 1, time: 15000, errors: ['time'] };
 
 				const response = await message.channel.awaitMessages(filter, options)
 					.then(responses => responses.first().content);

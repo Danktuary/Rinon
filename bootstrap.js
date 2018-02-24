@@ -1,5 +1,5 @@
 const { readdirSync } = require('fs');
-const { basename, join } = require('path');
+const path = require('path');
 const { Collection } = require('discord.js');
 
 const { paths } = require('./config');
@@ -19,7 +19,7 @@ class Bootstrap {
 		const commandsFiles = readdirSync(paths.commands);
 
 		for (const commandFile of commandsFiles) {
-			const command = require(join(paths.commands, commandFile));
+			const command = require(path.join(paths.commands, commandFile));
 
 			commands.set(command.name, command);
 		}
@@ -36,9 +36,9 @@ class Bootstrap {
 		const eventsFiles = readdirSync(paths.events);
 
 		for (const eventFile of eventsFiles) {
-			const event = require(join(paths.events, eventFile));
+			const event = require(path.join(paths.events, eventFile));
 
-			client.on(basename(eventFile, '.js'), (...args) => {
+			client.on(path.basename(eventFile, '.js'), (...args) => {
 				return event(client, ...args);
 			});
 		}
