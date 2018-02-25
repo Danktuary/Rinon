@@ -1,10 +1,5 @@
-const snekfetch = require('snekfetch');
-
 const Poll = require('../controllers/PollController');
-const GuildManager = require('../controllers/GuildManagerController');
-const RequestParser = require('../controllers/RequestParserController');
-
-const { prefix } = require('../config');
+const RequestValidator = require('../controllers/RequestValidatorController');
 
 const request = {
 	name: 'request',
@@ -14,67 +9,13 @@ const request = {
 	requiresInit: true,
 	async execute(message, args) {
 		try {
-			[message, args] = await this._parse(message, args);
+			[message, args] = await RequestValidator.validate(message, args);
 		}
 		catch (error) {
-			return message.channel.send(error.message);
+			return message.channel.send(error.message || error);
 		}
 
 		return Poll.create(message, args);
-	},
-	/**
-	 * A "private" parse method to prevent code dupe
-	 * Used both in here and the `reverse-request.js` file
-	 */
-	async _parse(message, args) {
-		if (!args.length) {
-			throw new Error([
-				'You need to provide an emoji, a name and an emoji, a name and an image URL, or a name and an image file!',
-				`For example: \`${prefix}request rinon https://i.imgur.com/7QeCxca.jpg\`.`,
-			].join('\n'));
-		}
-
-		args = RequestParser.parse(message, args);
-		GuildManager.checkEmojiAmount(message.guild, args[1]);
-
-		const imageData = await snekfetch.get(args[1]).catch(error => error);
-
-		if (!imageData.ok) {
-			throw new Error('That image link doesn\'t seem to be working.');
-		}
-		else if (imageData.headers['content-length'] > (256 * 1000)) {
-			throw new Error('That file surpasses the 256kb file size limit! Please resize it and try again.');
-		}
-
-		const duplicatedEmojis = message.client.emojis.filter(emoji => {
-			return args[0].toLowerCase() === emoji.name.toLowerCase();
-		});
-
-		if (duplicatedEmojis.size) {
-			await message.reply([
-				'I found these emojis with that same name: ',
-				duplicatedEmojis.map(emoji => emoji.toString()).join(' '),
-				'\nWould you like to continue with your request anyway?',
-			].join(''));
-
-			let response;
-			const options = { max: 1, time: 20000, errors: ['time'] };
-			const filter = m => ['yes', 'y', 'no', 'n'].includes(m.content.toLowerCase());
-
-			try {
-				response = await message.channel.awaitMessages(filter, options)
-					.then(responses => responses.first().content.toLowerCase());
-			}
-			catch (error) {
-				await message.reply('you didn\'t reply in time; I\'ll continue on with your original request.');
-			}
-
-			if (response && ['no', 'n'].includes(response)) {
-				throw new Error('Got it; I\'ve cancelled your request.');
-			}
-		}
-
-		return [message, args, imageData];
 	},
 };
 

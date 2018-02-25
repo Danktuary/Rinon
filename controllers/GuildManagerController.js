@@ -38,7 +38,7 @@ class GuildManagerController {
 			failures.push({
 				title: 'Missing Voting Channel',
 				body: [
-					'A channel named \`emoji-voting\` doesn\'t exist here yet!',
+					'A channel named `emoji-voting` doesn\'t exist here yet!',
 					`Use the \`${prefix}init\` command to set it up.`,
 				].join('\n'),
 			});
@@ -77,7 +77,7 @@ class GuildManagerController {
 
 		const maxEmojisReply = [
 			'It seems like I can\'t add any more emojis to this server.',
-			`Want to check the other servers I\'m in? Use the \`${prefix}server\` command!`,
+			`Want to check the other servers I'm in? Use the \`${prefix}server\` command!`,
 		].join('\n');
 
 		if (emojiAmount.static + emojiAmount.animated === 100) {

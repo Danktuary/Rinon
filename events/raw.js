@@ -1,4 +1,4 @@
-const raw = async (client, { t: eventName, d: data }) => {
+const raw = async(client, { t: eventName, d: data }) => {
 	if (eventName !== 'MESSAGE_REACTION_ADD') return;
 
 	const channel = client.channels.get(data.channel_id);

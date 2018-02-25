@@ -1,14 +1,11 @@
-const fs = require('fs');
 const Canvas = require('canvas');
-const snekfetch = require('snekfetch');
-const { MessageEmbed } = require('discord.js');
 
 const Poll = require('../controllers/PollController');
-
-const { colors, prefix } = require('../config');
+const RequestValidator = require('../controllers/RequestValidatorController');
 
 const reverseRequest = {
 	name: 'reverse-request',
+	// left here as per Lewd's request
 	description: 'Canvas thingamashit.',
 	usage: '<name or emoji> [url, emoji, or file]',
 	aliases: [
@@ -22,11 +19,10 @@ const reverseRequest = {
 		let imageData;
 
 		try {
-			const { commands } = message.client;
-			[message, args, imageData] = await commands.get('request')._parse(message, args);
+			[message, args, imageData] = await RequestValidator.validate(message, args);
 		}
 		catch (error) {
-			return message.channel.send(error.message);
+			return message.channel.send(error.message || error);
 		}
 
 		const [name, url] = args;
@@ -37,7 +33,7 @@ const reverseRequest = {
 
 		const canvas = new Canvas(128, 128);
 		const ctx = canvas.getContext('2d');
-		
+
 		const image = new Canvas.Image();
 		image.src = imageData.body;
 
