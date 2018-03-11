@@ -82,7 +82,7 @@ class PollController {
 			.setAuthor(embedData.author.name, embedData.author.iconURL)
 			.setColor(colors.approved)
 			.setThumbnail(emoji.url)
-			.setDescription(`Request approved! ${emoji}`);
+			.setDescription(`\`${name}\` has been approved! ${emoji}`);
 
 		await message.reactions.removeAll();
 		return message.edit(embed);
@@ -92,17 +92,18 @@ class PollController {
 	 * Approve the emoji request, create the emoji, and close the poll
 	 *
 	 * @param {Message} message The poll Message object to approve/close
-	 * @param {string} [reason=Request denied :(] The reason for this request being denied
+	 * @param {string} [reason] The reason for this request being denied
 	 * @return {Promise<Message>} The edited messaged
 	 */
-	static async deny(message, reason = 'Request denied. :(') {
+	static async deny(message, reason) {
 		const [embedData] = message.embeds;
+		const [, name] = embedData.description.match(/`(\w+)`\.$/);
 
 		const embed = new MessageEmbed()
 			.setAuthor(embedData.author.name, embedData.author.iconURL)
 			.setColor(colors.denied)
 			.setThumbnail(embedData.thumbnail.url)
-			.setDescription(reason);
+			.setDescription(reason || `\`${name}\` was denied. :(`);
 
 		await message.reactions.removeAll();
 		return message.edit(embed);
