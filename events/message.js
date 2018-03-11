@@ -1,7 +1,7 @@
 const GuildManager = require('../controllers/GuildManagerController');
 const { owners, prefix } = require('../config');
 
-const messageEvent = async(client, message) => {
+const messageEvent = async (client, message) => {
 	if (message.channel.type !== 'text' || message.author.bot) return;
 	if (!message.guild.me.permissionsIn(message.channel).has('SEND_MESSAGES')) return;
 
