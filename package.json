@@ -13,7 +13,8 @@
   "dependencies": {
     "canvas": "^2.0.0-alpha.9",
     "discord.js": "github:hydrabolt/discord.js",
-    "eslint": "^4.18.1"
+    "eslint": "^4.18.1",
+    "sequelize": "^4.36.0"
   },
   "devDependencies": {
     "ava": "^1.0.0-beta.3"
