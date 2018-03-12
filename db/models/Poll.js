@@ -7,9 +7,9 @@ const Poll = (database, DataTypes) => {
 		author_id: DataTypes.STRING,
 		emoji_name: DataTypes.STRING,
 		image_url: DataTypes.STRING,
-		approved: {
-			type: DataTypes.BOOLEAN,
-			defaultValue: false,
+		status: {
+			type: DataTypes.ENUM('pending', 'approved', 'denied'),
+			defaultValue: 'pending',
 		},
 	}, {
 		underscored: true,
