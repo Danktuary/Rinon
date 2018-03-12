@@ -1,5 +1,5 @@
 const Poll = (database, DataTypes) => {
-	return database.define('Poll', {
+	return database.define('poll', {
 		message_id: {
 			type: DataTypes.STRING,
 			allowNull: false,

@@ -1,3 +1,4 @@
+// TODO: Maybe move this to the bootstrap file. I dunno.
 const fs = require('fs');
 const path = require('path');
 
@@ -11,10 +12,11 @@ const modelFiles = fs.readdirSync(__dirname).filter(file => {
 
 for (const modelFile of modelFiles) {
 	const model = database.import(modelFile);
-	models[model.name] = model;
+	const name = path.basename(modelFile, '.js');
+	models[name] = model;
 
-	if (models[model.name].associate) {
-		models[model.name].associate(models);
+	if (models[name].associate) {
+		models[name].associate(models);
 	}
 }
 
