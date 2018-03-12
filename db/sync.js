@@ -1,10 +1,10 @@
-const sequelize = require('./connection');
+const database = require('./connection');
 // eslint-disable-next-line no-unused-vars
 const models = require('./models/');
 
 const force = process.argv.includes('--force') || process.argv.includes('-f');
 
-sequelize.sync({ force }).then(() => {
+database.sync({ force }).then(() => {
 	console.log((force) ? 'Database forcefully synced.' : 'Database synced.');
-	sequelize.close();
+	database.close();
 }).catch(console.error);
