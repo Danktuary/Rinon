@@ -1,3 +1,6 @@
+/**
+ * @todo Use `field` instead of directly underscoring the names
+ */
 const Poll = (database, DataTypes) => {
 	return database.define('poll', {
 		message_id: {
