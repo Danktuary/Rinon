@@ -10,7 +10,6 @@ const Emoji = (database, DataTypes) => {
 		guild_id: {
 			type: DataTypes.STRING,
 			allowNull: false,
-			unique: true,
 		},
 	}, {
 		underscored: true,
