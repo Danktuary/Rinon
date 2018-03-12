@@ -4,6 +4,18 @@ const config = {
 	prefix: '>',
 	token: 'your-token-goes-here',
 	owners: ['your-id-goes-here'],
+	database: {
+		credentials: {
+			database: '',
+			username: '',
+			password: '',
+		},
+		options: {
+			host: 'localhost',
+			dialect: 'postgres',
+			logging: false,
+		},
+	},
 	voteEndAmount: 3,
 	paths: {
 		events: `${__dirname}/events`,
