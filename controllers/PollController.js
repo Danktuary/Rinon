@@ -1,6 +1,6 @@
 const { MessageEmbed } = require('discord.js');
 
-const { Poll } = require('../db/models/');
+const { Emoji, Poll } = require('../db/models/');
 const GuildManager = require('./GuildManagerController');
 
 const { colors, emojis } = require('../config');
@@ -89,7 +89,13 @@ class PollController {
 
 		const emoji = await message.guild.emojis.create(pollData.image_url, pollData.emoji_name);
 
-		await Poll.update({ status: 'approved' }, { where: { message_id: message.id } });
+		const pollEntry = await Poll.findOne({ where: { message_id: message.id } });
+		const emojiEntry = await Emoji.create({ emoji_id: emoji.id, guild_id: message.guild.id });
+
+		pollEntry.status = 'approved';
+
+		await pollEntry.setEmoji(emojiEntry);
+		await pollEntry.save();
 
 		const embed = new MessageEmbed()
 			.setColor(colors.approved)
@@ -108,18 +114,19 @@ class PollController {
 	 * @return {Promise<Message>} The edited messaged
 	 */
 	static async deny(message, reason) {
-		const pollData = await Poll.findOne({ where: { message_id: message.id } });
-		const author = message.client.users.get(pollData.author_id);
+		const pollEntry = await Poll.findOne({ where: { message_id: message.id } });
+		const author = message.client.users.get(pollEntry.author_id);
 
+		pollEntry.status = 'denied';
+
+		await pollEntry.save();
 		await message.reactions.removeAll();
-
-		await Poll.update({ status: 'denied' }, { where: { message_id: message.id } });
 
 		const embed = new MessageEmbed()
 			.setColor(colors.denied)
 			.setAuthor(author.username, author.displayAvatarURL())
-			.setThumbnail(pollData.image_url)
-			.setDescription(reason || `\`${pollData.emoji_name}\` was denied. :(`);
+			.setThumbnail(pollEntry.image_url)
+			.setDescription(reason || `\`${pollEntry.emoji_name}\` was denied. :(`);
 
 		return message.edit(embed);
 	}
@@ -127,6 +134,7 @@ class PollController {
 	/**
 	 * Fetch the emoji poll statistics for a channel
 	 *
+	 * @todo Move this to a different class, possibly make it rely on the DB instead
 	 * @param {TextChannel} channel The `emoji-voting` channel
 	 * @return {PollStats} The statistics for the channel
 	 */
