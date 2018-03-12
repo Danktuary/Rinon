@@ -14,10 +14,6 @@ for (const modelFile of modelFiles) {
 	const model = database.import(modelFile);
 	const name = path.basename(modelFile, '.js');
 	models[name] = model;
-
-	if (models[name].associate) {
-		models[name].associate(models);
-	}
 }
 
 module.exports = models;

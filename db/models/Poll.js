@@ -25,10 +25,6 @@ const Poll = (database, DataTypes) => {
 			defaultValue: 'pending',
 			allowNull: false,
 		},
-		emoji_id: {
-			type: DataTypes.STRING,
-			unique: true,
-		},
 	}, {
 		underscored: true,
 	});

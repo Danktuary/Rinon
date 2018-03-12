@@ -1,6 +1,10 @@
 const database = require('./connection');
-// eslint-disable-next-line no-unused-vars
 const models = require('./models/');
+
+const { Poll, Emoji } = models;
+
+Poll.hasOne(Emoji);
+Emoji.belongsTo(Poll);
 
 const force = process.argv.includes('--force') || process.argv.includes('-f');
 
