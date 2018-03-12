@@ -1,4 +1,7 @@
 const { Client } = require('discord.js');
+
+require('./db/');
+
 const { disabledEvents, token } = require('./config');
 
 const client = new Client({ disabledEvents });
