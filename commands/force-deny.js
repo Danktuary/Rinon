@@ -4,7 +4,7 @@ const RequestSearch = require('../controllers/RequestSearchController');
 const forceDeny = {
 	name: 'force-deny',
 	description: 'Deny an emoji request, regardless of how many votes it has.',
-	aliases: ['forcedeny'],
+	aliases: ['forcedeny', 'fd'],
 	usage: '<emoji name> or <message ID>',
 	ownerOnly: true,
 	async execute(message, args) {

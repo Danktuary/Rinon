@@ -4,7 +4,7 @@ const RequestSearch = require('../controllers/RequestSearchController');
 const forceApprove = {
 	name: 'force-approve',
 	description: 'Approve an emoji request, regardless of how many votes it has.',
-	aliases: ['forceapprove'],
+	aliases: ['forceapprove', 'fa'],
 	usage: '<emoji name> or <message ID>',
 	ownerOnly: true,
 	async execute(message, args) {
