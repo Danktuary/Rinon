@@ -16,4 +16,9 @@ for (const modelFile of modelFiles) {
 	models[name] = model;
 }
 
+const { Poll, Emoji } = models;
+
+Poll.hasOne(Emoji);
+Emoji.belongsTo(Poll);
+
 module.exports = models;

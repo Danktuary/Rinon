@@ -1,10 +1,5 @@
 const database = require('./connection');
-const models = require('./models/');
-
-const { Poll, Emoji } = models;
-
-Poll.hasOne(Emoji);
-Emoji.belongsTo(Poll);
+require('./models/');
 
 const force = process.argv.includes('--force') || process.argv.includes('-f');
 
