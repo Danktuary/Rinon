@@ -1,6 +1,3 @@
-/**
- * @todo Use `field` instead of directly underscoring the names
- */
 const Emoji = (database, DataTypes) => {
 	return database.define('emoji', {
 		emojiID: {
