@@ -20,7 +20,7 @@ const rename = {
 		});
 
 		if (message.author.id !== pollEntry.authorID) {
-
+			// ...
 		}
 	},
 };
