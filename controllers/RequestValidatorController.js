@@ -82,6 +82,10 @@ class RequestValidatorController {
 		return [message, [emojiName, imageLink], imageData];
 	}
 
+	/**
+	 * @todo Update these docblocks
+	 * @todo Remove the 2nd parameter since it's unused
+	 */
 	static _allMightBlobBlock(name, imageLink, imageData) {
 		const canvas = new Canvas.createCanvas(390, 309);
 		const ctx = canvas.getContext('2d');
