@@ -28,8 +28,8 @@ const migrate = {
 			const author = message.client.users.find('username', username);
 
 			let data = {
-				message_id: m.id,
-				author_id: author.id,
+				messageID: m.id,
+				authorID: author.id,
 				status: embed.color === colors.approved ? 'approved' : 'denied',
 				created_at: m.createdAt,
 				updated_at: m.editedAt,
@@ -38,16 +38,17 @@ const migrate = {
 			if (embed.color === colors.approved) {
 				const [, animated, emojiName, emojiID] = embed.description.match(emojiRegex);
 
+				// TODO: emojiID is no longer on the Poll model; need to make a new row in the Emoji model
 				data = Object.assign(data, {
-					emoji_name: emojiName,
-					image_url: `${baseEmojiURL}/${emojiID}.${animated ? 'gif' : 'png'}`,
-					emoji_id: emojiID,
+					emojiName,
+					imageURL: `${baseEmojiURL}/${emojiID}.${animated ? 'gif' : 'png'}`,
+					emojiID,
 				});
 			}
 			else {
 				data = Object.assign(data, {
-					emoji_name: 'placeholder',
-					image_url: 'placeholder',
+					emojiName: 'placeholder',
+					imageURL: 'placeholder',
 				});
 			}
 

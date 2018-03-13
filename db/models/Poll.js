@@ -3,20 +3,24 @@
  */
 const Poll = (database, DataTypes) => {
 	return database.define('poll', {
-		message_id: {
+		messageID: {
+			field: 'message_id',
 			type: DataTypes.STRING,
 			allowNull: false,
 			unique: true,
 		},
-		author_id: {
+		authorID: {
+			field: 'author_id',
 			type: DataTypes.STRING,
 			allowNull: false,
 		},
-		emoji_name: {
+		emojiName: {
+			field: 'emoji_name',
 			type: DataTypes.STRING,
 			allowNull: false,
 		},
-		image_url: {
+		imageURL: {
+			field: 'image_url',
 			type: DataTypes.STRING,
 			allowNull: false,
 		},

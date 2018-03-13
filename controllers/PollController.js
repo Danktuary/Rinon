@@ -49,10 +49,10 @@ class PollController {
 			const sent = await channel.send(embed);
 
 			await Poll.create({
-				message_id: sent.id,
-				author_id: message.author.id,
-				emoji_name: name,
-				image_url: url,
+				messageID: sent.id,
+				authorID: message.author.id,
+				emojiName: name,
+				imageURL: url,
 			});
 
 			await sent.react(emojis.approve);
@@ -75,11 +75,11 @@ class PollController {
 	 * @return {Promise<Message>} The edited messaged
 	 */
 	static async approve(message) {
-		const pollData = await Poll.findOne({ where: { message_id: message.id } });
-		const author = message.client.users.get(pollData.author_id);
+		const pollData = await Poll.findOne({ where: { messageID: message.id } });
+		const author = message.client.users.get(pollData.authorID);
 
 		try {
-			GuildManager.checkEmojiAmount(message.guild, pollData.image_url);
+			GuildManager.checkEmojiAmount(message.guild, pollData.imageURL);
 		}
 		catch (error) {
 			return this.deny(message, error.message);
@@ -87,10 +87,10 @@ class PollController {
 
 		await message.reactions.removeAll();
 
-		const emoji = await message.guild.emojis.create(pollData.image_url, pollData.emoji_name);
+		const emoji = await message.guild.emojis.create(pollData.imageURL, pollData.emojiName);
 
-		const pollEntry = await Poll.findOne({ where: { message_id: message.id } });
-		const emojiEntry = await Emoji.create({ emoji_id: emoji.id, guild_id: message.guild.id });
+		const pollEntry = await Poll.findOne({ where: { messageID: message.id } });
+		const emojiEntry = await Emoji.create({ emojiID: emoji.id, guildID: message.guild.id });
 
 		pollEntry.status = 'approved';
 
@@ -100,8 +100,8 @@ class PollController {
 		const embed = new MessageEmbed()
 			.setColor(colors.approved)
 			.setAuthor(author.username, author.displayAvatarURL())
-			.setThumbnail(pollData.image_url)
-			.setDescription(`\`${pollData.emoji_name}\` has been approved! ${emoji}`);
+			.setThumbnail(pollData.imageURL)
+			.setDescription(`\`${pollData.emojiName}\` has been approved! ${emoji}`);
 
 		return message.edit(embed);
 	}
@@ -114,8 +114,8 @@ class PollController {
 	 * @return {Promise<Message>} The edited messaged
 	 */
 	static async deny(message, reason) {
-		const pollEntry = await Poll.findOne({ where: { message_id: message.id } });
-		const author = message.client.users.get(pollEntry.author_id);
+		const pollEntry = await Poll.findOne({ where: { messageID: message.id } });
+		const author = message.client.users.get(pollEntry.authorID);
 
 		pollEntry.status = 'denied';
 
@@ -125,8 +125,8 @@ class PollController {
 		const embed = new MessageEmbed()
 			.setColor(colors.denied)
 			.setAuthor(author.username, author.displayAvatarURL())
-			.setThumbnail(pollEntry.image_url)
-			.setDescription(reason || `\`${pollEntry.emoji_name}\` was denied. :(`);
+			.setThumbnail(pollEntry.imageURL)
+			.setDescription(reason || `\`${pollEntry.emojiName}\` was denied. :(`);
 
 		return message.edit(embed);
 	}

@@ -3,11 +3,13 @@
  */
 const Emoji = (database, DataTypes) => {
 	return database.define('emoji', {
-		emoji_id: {
+		emojiID: {
+			field: 'emoji_id',
 			type: DataTypes.STRING,
 			primaryKey: true,
 		},
-		guild_id: {
+		guildID: {
+			field: 'guild_id',
 			type: DataTypes.STRING,
 			allowNull: false,
 		},
