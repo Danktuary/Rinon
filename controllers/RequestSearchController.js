@@ -5,6 +5,7 @@ class RequestSearchController {
 
 	/**
 	 * @todo Update these docblocks
+	 * @todo Refactor this to rely on the database instead of message fetching
 	 */
 	static async search(guild, searchTerm) {
 		const pollChannel = guild.channels.find('name', 'emoji-voting');
