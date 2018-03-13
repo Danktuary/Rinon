@@ -114,13 +114,13 @@ class PollController {
 	 * @return {Promise<Message>} The edited messaged
 	 */
 	static async deny(message, reason) {
+		await message.reactions.removeAll();
+
 		const pollEntry = await Poll.findOne({ where: { messageID: message.id } });
 		const author = message.client.users.get(pollEntry.authorID);
 
 		pollEntry.status = 'denied';
-
 		await pollEntry.save();
-		await message.reactions.removeAll();
 
 		const embed = new MessageEmbed()
 			.setColor(colors.denied)
