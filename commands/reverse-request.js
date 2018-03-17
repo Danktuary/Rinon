@@ -31,7 +31,7 @@ const reverseRequest = {
 			return message.reply('sorry, but I can only reverse PNG images!');
 		}
 
-		const canvas = new Canvas(128, 128);
+		const canvas = new Canvas.createCanvas(128, 128);
 		const ctx = canvas.getContext('2d');
 
 		const image = new Canvas.Image();
