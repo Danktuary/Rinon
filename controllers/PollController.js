@@ -75,9 +75,6 @@ class PollController {
 	 * @return {Promise<Message>} The edited messaged
 	 */
 	static async approve(message) {
-		return;
-		// return (console.log('Message obj:', message), console.log('Message ID:', message.id));
-
 		const pollData = await Poll.findOne({ where: { messageID: message.id } });
 		const author = message.client.users.get(pollData.authorID);
 
