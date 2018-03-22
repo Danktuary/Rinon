@@ -74,6 +74,15 @@ test('it returns an array with the name and link if supplied', t => {
 	);
 });
 
+test('it strips out colons (:) if a request name starts and ends with one', t => {
+	const emoji = [':AiSmug:', 'https://i.imgur.com/8jGJzmd.png'];
+
+	t.deepEqual(
+		RequestTransformer.transform({}, emoji),
+		['AiSmug', 'https://i.imgur.com/8jGJzmd.png']
+	);
+});
+
 test('it throws an error if non-alphanumeric characters are used in a name', t => {
 	const emoji = ['Ai*@(#$&', 'https://i.imgur.com/8jGJzmd.png'];
 

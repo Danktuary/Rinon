@@ -16,7 +16,12 @@ class RequestTransformerController {
 		if (emojiRegex.test(args[0])) {
 			return RequestTransformerController.fromEmoji(args[0]);
 		}
-		else if (!wordsOnlyRegex.test(args[0])) {
+
+		if (/^:\w+:$/.test(args[0])) {
+			args[0] = args[0].replace(/:/g, '');
+		}
+
+		if (!wordsOnlyRegex.test(args[0])) {
 			throw new RangeError('Only alphanumeric characters are allowed!');
 		}
 		else if (emojiRegex.test(args[1])) {
