@@ -28,13 +28,17 @@ class RequestValidatorController {
 		const [emojiName, imageLink] = RequestTransformer.transform(message, args);
 		GuildManager.checkEmojiAmount(message.guild, imageLink);
 
+		if (emojiName.length < 2 || emojiName.length > 32) {
+			throw new RangeError('An emoji name needs to be between 2 and 32 characters long.');
+		}
+
 		const imageData = await snekfetch.get(imageLink).catch(error => error);
 
 		if (!imageData.ok) {
 			throw new Error('That image link doesn\'t seem to be working.');
 		}
 		else if (imageData.headers['content-length'] > (256 * 1000)) {
-			throw new Error('That file surpasses the 256kb file size limit! Please resize it and try again.');
+			throw new RangeError('That file surpasses the 256kb file size limit! Please resize it and try again.');
 		}
 
 		if (/^a?blob/.test(emojiName) && !blobRegex.test(emojiName)) {
