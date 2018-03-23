@@ -7,7 +7,9 @@ const RequestTransformer = require('../controllers/RequestTransformerController'
 
 const { prefix } = require('../config');
 
-const blobRegex = /^a?blob[a-z]+$/;
+const blobInitRegex = /^a?b(lo|ol)b/;
+const blobRegex = /^a?b(lo|ol)b[a-z]+$/;
+const gifRegex = /\.gif(\?v=\d+)?$/;
 
 /**
  * @todo Update these docblocks
@@ -38,12 +40,11 @@ class RequestValidatorController {
 			throw new Error('That image link doesn\'t seem to be working.');
 		}
 		else if (imageData.headers['content-length'] > (256 * 1024)) {
-			console.log('in the controller');
 			throw new RangeError('That file surpasses the 256kb file size limit! Please resize it and try again.');
 		}
 
-		if (/^a?blob/.test(emojiName) && !blobRegex.test(emojiName)) {
-			if (imageLink.endsWith('.gif')) {
+		if (blobInitRegex.test(emojiName) && !blobRegex.test(emojiName)) {
+			if (gifRegex.test(imageLink)) {
 				const imgsPath = [__dirname, '..', 'assets', 'imgs'];
 
 				throw {
