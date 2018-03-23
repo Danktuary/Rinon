@@ -7,7 +7,7 @@ const RequestTransformer = require('../controllers/RequestTransformerController'
 
 const { prefix } = require('../config');
 
-const blobRegex = /^blob[a-z]+$/;
+const blobRegex = /^a?blob[a-z]+$/;
 
 /**
  * @todo Update these docblocks
@@ -37,7 +37,8 @@ class RequestValidatorController {
 		if (!imageData.ok) {
 			throw new Error('That image link doesn\'t seem to be working.');
 		}
-		else if (imageData.headers['content-length'] > (256 * 1000)) {
+		else if (imageData.headers['content-length'] > (256 * 1024)) {
+			console.log('in the controller');
 			throw new RangeError('That file surpasses the 256kb file size limit! Please resize it and try again.');
 		}
 
