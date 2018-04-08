@@ -7,7 +7,7 @@ const RequestTransformer = require('../controllers/RequestTransformerController'
 
 const { prefix } = require('../config');
 
-const blobInitRegex = /^a?b(lo|ol)b/;
+const blobInitRegex = /^a?b(lo|ol)b/i;
 const blobRegex = /^a?b(lo|ol)b[a-z]+$/;
 const gifRegex = /\.gif(\?v=\d+)?$/;
 
