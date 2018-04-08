@@ -1,21 +1,27 @@
 const { MessageEmbed } = require('discord.js');
 
+const RequestTransformer = require('../controllers/RequestTransformerController');
+
 const { colors, prefix } = require('../config');
+
+const wordsOnlyRegex = /^\w+$/;
+const emojiRegex = /<(a)?:(\w+):(\d+)>/;
 
 const emojiSearch = {
 	name: 'emoji-search',
 	description: 'Search for an emoji across all servers by name!',
 	aliases: ['emojisearch', 'emoji', 'search'],
 	usage: '<name>',
-	async execute(message, args) {
-		if (!args.length || args[0].length < 2) {
+	async execute(message, [name]) {
+		if (!name || name.length < 2) {
 			return message.reply('a search term must be at least 2 characters long!');
 		}
 
-		const name = args[0].toLowerCase();
-
-		if (!/^\w+$/.test(name)) {
-			return message.reply('only alphanumeric characters are allowed!');
+		try {
+			name = this.transformInput(name);
+		}
+		catch (error) {
+			return message.reply(error.message);
 		}
 
 		const emojis = message.client.emojis.filter(emoji => {
@@ -55,6 +61,25 @@ const emojiSearch = {
 		}
 
 		return message.channel.send(response);
+	},
+	/**
+	 * @todo Try to decrease the amount of code dupe here
+	 */
+	transformInput(name) {
+		if (emojiRegex.test(name)) {
+			const [transformedName] = RequestTransformer.fromEmoji(name);
+			return transformedName.toLowerCase();
+		}
+
+		if (/^:\w+:$/.test(name)) {
+			name = name.replace(/:/g, '');
+		}
+
+		if (!wordsOnlyRegex.test(name)) {
+			throw new Error('only alphanumeric characters are allowed!');
+		}
+
+		return name.toLowerCase();
 	},
 };
 
