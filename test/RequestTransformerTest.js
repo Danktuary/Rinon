@@ -1,6 +1,6 @@
 const test = require('ava');
 
-const RequestTransformer = require('../../controllers/RequestTransformerController');
+const RequestTransformer = require('../controllers/RequestTransformerController');
 
 const baseEmojiURL = 'https://cdn.discordapp.com/emojis';
 
