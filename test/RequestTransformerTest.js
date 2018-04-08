@@ -69,7 +69,7 @@ test('it returns an array with the name and link if supplied', t => {
 	const emoji = ['AiSmug', 'https://i.imgur.com/8jGJzmd.png'];
 
 	t.deepEqual(
-		RequestTransformer.transform({}, emoji),
+		RequestTransformer.transform(emoji),
 		['AiSmug', 'https://i.imgur.com/8jGJzmd.png']
 	);
 });
@@ -78,7 +78,7 @@ test('it strips out colons (:) if a request name starts and ends with one', t =>
 	const emoji = [':AiSmug:', 'https://i.imgur.com/8jGJzmd.png'];
 
 	t.deepEqual(
-		RequestTransformer.transform({}, emoji),
+		RequestTransformer.transform(emoji),
 		['AiSmug', 'https://i.imgur.com/8jGJzmd.png']
 	);
 });
@@ -86,7 +86,7 @@ test('it strips out colons (:) if a request name starts and ends with one', t =>
 test('it throws an error if non-alphanumeric characters are used in a name', t => {
 	const emoji = ['Ai*@(#$&', 'https://i.imgur.com/8jGJzmd.png'];
 
-	const error = t.throws(() => RequestTransformer.transform({}, emoji), RangeError);
+	const error = t.throws(() => RequestTransformer.transform(emoji), RangeError);
 
 	t.is(error.message, 'Only alphanumeric characters are allowed!');
 });
@@ -94,7 +94,7 @@ test('it throws an error if non-alphanumeric characters are used in a name', t =
 test('it throws an error if a non-proper link is used', t => {
 	const emoji = ['someName', 'probably not a link'];
 
-	const error = t.throws(() => RequestTransformer.transform({}, emoji), Error);
+	const error = t.throws(() => RequestTransformer.transform(emoji), Error);
 
 	t.is(error.message, 'That doesn\'t seem like a valid image URL.');
 });

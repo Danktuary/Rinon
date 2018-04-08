@@ -1,3 +1,5 @@
+const { Collection } = require('discord.js');
+
 const baseEmojiURL = 'https://cdn.discordapp.com/emojis';
 
 const wordsOnlyRegex = /^\w+$/;
@@ -12,9 +14,9 @@ class RequestTransformerController {
 	/**
 	 * @todo Update these docblocks
 	 */
-	static transform(message, args) {
+	static transform(args, attachments = new Collection) {
 		if (emojiRegex.test(args[0])) {
-			return RequestTransformerController.fromEmoji(args[0]);
+			return this.fromEmoji(args[0]);
 		}
 
 		if (/^:\w+:$/.test(args[0])) {
@@ -25,10 +27,10 @@ class RequestTransformerController {
 			throw new RangeError('Only alphanumeric characters are allowed!');
 		}
 		else if (emojiRegex.test(args[1])) {
-			return RequestTransformerController.fromNameAndEmoji(...args);
+			return this.fromNameAndEmoji(...args);
 		}
-		else if (!args[1] && message.attachments.size) {
-			return RequestTransformerController.fromNameAndAttachment(args[0], message.attachments.first());
+		else if (!args[1] && attachments.size) {
+			return this.fromNameAndAttachment(args[0], attachments.first());
 		}
 		else if (!urlRegex.test(args[1])) {
 			throw new Error('That doesn\'t seem like a valid image URL.');

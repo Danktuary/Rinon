@@ -27,7 +27,7 @@ class RequestValidatorController {
 			].join('\n'));
 		}
 
-		const [emojiName, imageLink] = RequestTransformer.transform(message, args);
+		const [emojiName, imageLink] = RequestTransformer.transform(args, message.attachments);
 		GuildManager.checkEmojiAmount(message.guild, imageLink);
 
 		if (emojiName.length < 2 || emojiName.length > 32) {
