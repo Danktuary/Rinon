@@ -11,7 +11,7 @@ const messageEvent = async (client, message) => {
 	const [, matchedPrefix] = message.content.match(prefixRegex);
 
 	const args = message.content.slice(matchedPrefix.length).trim().split(/\s+/);
-	const commandName = args.shift();
+	const commandName = args.shift().toLowerCase();
 
 	const command = client.commands.get(commandName)
 		|| client.commands.find(cmd => cmd.aliases && cmd.aliases.includes(commandName));
