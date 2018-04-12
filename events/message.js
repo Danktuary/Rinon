@@ -29,7 +29,10 @@ const messageEvent = async (client, message) => {
 
 	command.execute(message, args).catch(error => {
 		console.error(error);
-		message.reply('something went wrong with executing that command.');
+		message.reply([
+			'something went wrong with executing that command.',
+			'```js\n' + error.message + '```',
+		].join('\n'));
 	});
 };
 
