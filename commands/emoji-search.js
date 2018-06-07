@@ -10,7 +10,7 @@ const emojiRegex = /<(a)?:(\w+):(\d+)>/;
 const emojiSearch = {
 	name: 'emoji-search',
 	description: 'Search for an emoji across all servers by name!',
-	aliases: ['emojisearch', 'emoji', 'search'],
+	aliases: ['emojisearch', 'emoji', 'emote', 'search'],
 	usage: '<name>',
 	async execute(message, [name]) {
 		if (!name || name.length < 2) {
