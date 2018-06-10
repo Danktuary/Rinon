@@ -15,8 +15,7 @@ const help = {
 			data.push(`\nYou can send \`${prefix}help [command name]\` to get info on a specific command!`);
 		}
 		else {
-			const command = commands.get(args[0]) ||
-				commands.find(c => c.aliases && c.aliases.includes(args[0]));
+			const command = commands.get(args[0]) || commands.find(c => c.aliases && c.aliases.includes(args[0]));
 
 			if (!command) {
 				return message.reply('that\'s not a valid command!');
