@@ -15,14 +15,16 @@ const help = {
 			data.push(`\nYou can send \`${prefix}help [command name]\` to get info on a specific command!`);
 		}
 		else {
-			if (!commands.has(args[0])) {
+			const command = commands.get(args[0]) ||
+				commands.find(c => c.aliases && c.aliases.includes(args[0]));
+
+			if (!command) {
 				return message.reply('that\'s not a valid command!');
 			}
 
-			const command = commands.get(args[0]);
-
 			data.push(`**Name:** ${command.name}`);
 
+			if (command.aliases.length) data.push(`**Aliases:** ${command.aliases.join(', ')}`);
 			if (command.description) data.push(`**Description:** ${command.description}`);
 			if (command.usage) data.push(`**Usage:** \`${prefix}${command.name} ${command.usage}\``);
 		}
