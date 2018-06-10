@@ -42,7 +42,7 @@ const servers = {
 			return message.reply('I couldn\'t find a server with that name!');
 		}
 
-		const pollChannel = guild.channels.find('name', 'emoji-voting');
+		const pollChannel = guild.channels.find(channel => channel.name === 'emoji-voting');
 
 		if (!pollChannel) {
 			return message.channel.send('Sorry, it looks like that server hasn\'t been set up yet!');

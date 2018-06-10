@@ -45,7 +45,7 @@ class PollController {
 			.addField('Preview', previewEmoji.toString());
 
 		try {
-			const channel = message.guild.channels.find('name', 'emoji-voting');
+			const channel = message.guild.channels.find(c => c.name === 'emoji-voting');
 			const sent = await channel.send(embed);
 
 			await Poll.create({

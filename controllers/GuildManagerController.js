@@ -34,7 +34,7 @@ class GuildManagerController {
 			});
 		}
 
-		if (!guild.channels.exists('name', 'emoji-voting')) {
+		if (!guild.channels.some(c => c.name === 'emoji-voting')) {
 			failures.push({
 				title: 'Missing Voting Channel',
 				body: [
@@ -127,7 +127,7 @@ class GuildManagerController {
 	 * @return {(void|Promise<GuildChannel>)} The newly created GuildChannel
 	 */
 	static createPollChannel(guild) {
-		if (guild.channels.exists('name', 'emoji-voting')) return;
+		if (guild.channels.some(channel => channel.name === 'emoji-voting')) return;
 
 		return guild.channels.create('emoji-voting', {
 			overwrites: [

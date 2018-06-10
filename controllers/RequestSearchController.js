@@ -8,7 +8,7 @@ class RequestSearchController {
 	 * @todo Refactor this to rely on the database instead of message fetching
 	 */
 	static async search(guild, searchTerm) {
-		const pollChannel = guild.channels.find('name', 'emoji-voting');
+		const pollChannel = guild.channels.find(channel => channel.name === 'emoji-voting');
 
 		if (!pollChannel) {
 			throw new Error('I couldn\'t find the `emoji-voting` channel !');
