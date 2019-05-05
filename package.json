@@ -4,5 +4,14 @@
   "main": "index.js",
   "repository": "https://github.com/Danktuary/Rinon.git",
   "author": "Sanctuary <sanc.pw@gmail.com>",
-  "license": "MIT"
+  "license": "MIT",
+  "scripts": {
+    "lint": "eslint ./"
+  },
+  "devDependencies": {
+    "babel-eslint": "^10.0.1",
+    "eslint": "^5.16.0",
+    "eslint-config-sora": "^2.0.0",
+    "eslint-plugin-vue": "^5.2.2"
+  }
 }
