@@ -1,6 +1,8 @@
 const database = require('./index.js');
 const force = process.argv.includes('--force') || process.argv.includes('-f');
 
+database.models = require('./models/index.js');
+
 database.init().then(async () => {
 	try {
 		await database.sync({ force });
