@@ -1,11 +1,7 @@
 const { database } = require('../config.js');
 const Sequelize = require('sequelize');
 
-const connection = new Sequelize(database.name, database.username, database.password, {
-	host: database.host,
-	dialect: database.dialect,
-	logging: false,
-});
+const connection = new Sequelize(database.name, database.username, database.password, database.options);
 
 module.exports = connection;
 
