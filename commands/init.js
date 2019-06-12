@@ -6,6 +6,13 @@ module.exports = class InitCommand extends Command {
 		super('init', {
 			aliases: ['init'],
 			userPermissions: ['MANAGE_GUILD'],
+			args: [
+				{
+					id: 'skipConfirmation',
+					match: 'flag',
+					prefix: ['--yes', '-y'],
+				},
+			],
 		});
 	}
 
@@ -80,7 +87,7 @@ module.exports = class InitCommand extends Command {
 		]);
 	}
 
-	async exec(message) {
+	async exec(message, { skipConfirmation }) {
 		const { guild } = message.channel;
 		const missingPerms = this.missingPermissions(guild.me);
 
@@ -95,10 +102,12 @@ module.exports = class InitCommand extends Command {
 			return message.channel.send('I\'m already good to go!');
 		}
 
-		try {
-			await this.confirmInit(message);
-		} catch (error) {
-			return message.channel.send(error.message);
+		if (!skipConfirmation) {
+			try {
+				await this.confirmInit(message);
+			} catch (error) {
+				return message.channel.send(error.message);
+			}
 		}
 
 		const channels = guild.channels.filter(channel => channel.id !== message.channel.id);
