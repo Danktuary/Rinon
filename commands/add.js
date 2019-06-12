@@ -1,6 +1,6 @@
 const { Command } = require('discord-akairo');
 const snekfetch = require('snekfetch');
-const Poll = require('../core/poll.js');
+const poll = require('../core/poll.js');
 const parseInput = require('../util/parseInput.js');
 const guildUtil = require('../util/guild.js');
 const validators = require('../util/validators.js');
@@ -26,7 +26,7 @@ module.exports = class AddCommand extends Command {
 	async exec(message, args) {
 		try {
 			const { name, url } = await this.validate(message, args);
-			await Poll.create(message, { name, url });
+			await poll.create(message, { name, url });
 		} catch (error) {
 			return message.channel.send(error.message || error);
 		}
