@@ -15,6 +15,7 @@
     "eslint-plugin-vue": "^5.2.2"
   },
   "dependencies": {
+    "canvas": "^2.5.0",
     "discord-akairo": "^7.5.6",
     "discord.js": "^11.4.2",
     "pg": "^7.10.0",
