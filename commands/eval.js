@@ -19,7 +19,6 @@ module.exports = class EvalCommand extends Command {
 		const { client } = message;
 
 		try {
-			console.log(code);
 			let evalResult = eval(code);
 			const tokenRegex = new RegExp(client.token);
 
