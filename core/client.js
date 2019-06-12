@@ -1,4 +1,5 @@
 const path = require('path');
+const { prefix } = require('../config.js');
 const { AkairoClient, CommandHandler } = require('discord-akairo');
 const database = require('../database/index.js');
 
@@ -10,7 +11,7 @@ module.exports = class RinonClient extends AkairoClient {
 
 		this.commandHandler = new CommandHandler(this, {
 			commandDirectory: path.join(__dirname, '..', 'commands'),
-			prefix: '>',
+			prefix,
 		});
 	}
 
