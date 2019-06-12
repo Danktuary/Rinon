@@ -1,7 +1,7 @@
 const { Command } = require('discord-akairo');
 const snekfetch = require('snekfetch');
 const Poll = require('../core/poll.js');
-const transformInput = require('../util/transformInput.js');
+const parseInput = require('../util/parseInput.js');
 const guildUtil = require('../util/guild.js');
 const validators = require('../util/validators.js');
 
@@ -40,7 +40,7 @@ module.exports = class AddCommand extends Command {
 			].join('\n'));
 		}
 
-		const { name: emojiName, url: imageURL } = transformInput({ name, url }, message.attachments);
+		const { name: emojiName, url: imageURL } = parseInput({ name, url }, message.attachments);
 
 		guildUtil.checkEmojiAmounts(message.guild, imageURL);
 

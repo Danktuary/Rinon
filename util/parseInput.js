@@ -27,7 +27,7 @@ function fromNameAndAttachment(name, attachment) {
 	return { name, url: attachment.url };
 }
 
-module.exports = function transform({ name, url }, attachments = new Collection()) {
+module.exports = function parseInput({ name, url }, attachments = new Collection()) {
 	if (emojiRegex.test(name)) return fromEmoji(name);
 
 	if (/^:\w+:$/.test(name)) name = name.replace(/:/g, '');
