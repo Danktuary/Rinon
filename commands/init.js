@@ -1,5 +1,6 @@
 const { Command } = require('discord-akairo');
 const { MessageEmbed } = require('discord.js');
+const permissionsUtil = require('../util/permissions.js');
 
 module.exports = class InitCommand extends Command {
 	constructor() {
@@ -17,20 +18,7 @@ module.exports = class InitCommand extends Command {
 	}
 
 	missingPermissions(clientMember, format = true) {
-		const requiredPerms = [
-			'ADD_REACTIONS',
-			'CREATE_INSTANT_INVITE',
-			'EMBED_LINKS',
-			'MANAGE_CHANNELS',
-			'MANAGE_EMOJIS',
-			'MANAGE_MESSAGES',
-			'READ_MESSAGE_HISTORY',
-			'SEND_MESSAGES',
-			'USE_EXTERNAL_EMOJIS',
-			'VIEW_CHANNEL',
-		];
-
-		const missingPerms = clientMember.permissions.missing(requiredPerms);
+		const missingPerms = clientMember.permissions.missing(permissionsUtil.required);
 
 		if (!format) return missingPerms;
 		return missingPerms.map(perm => `\`${perm}\``).join(', ');
