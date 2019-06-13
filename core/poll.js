@@ -48,4 +48,21 @@ module.exports = {
 
 		return message.guild.deleteEmoji(previewEmoji);
 	},
+	async deny(message, reason) {
+		await message.clearReactions();
+
+		const pollEntry = await Poll.findOne({ where: { messageID: message.id } });
+		const author = await message.client.fetchUser(pollEntry.authorID);
+
+		pollEntry.status = 'denied';
+		await pollEntry.save();
+
+		const embed = new RichEmbed()
+			.setColor(colors.denied)
+			.setAuthor(author.username, author.displayAvatarURL)
+			.setThumbnail(pollEntry.imageURL)
+			.setDescription(reason || `\`${pollEntry.emojiName}\` was denied. :(`);
+
+		return message.edit(embed);
+	},
 };
