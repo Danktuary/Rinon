@@ -1,12 +1,12 @@
 const { prefix } = require('../config.js');
 
-function emojiAmounts(guild) {
-	const [normal, animated] = guild.emojis.partition(emoji => !emoji.animated);
+function getAmounts(emojis) {
+	const [normal, animated] = emojis.partition(emoji => !emoji.animated);
 	return { normal: normal.size, animated: animated.size };
 }
 
-function checkEmojiAmounts(guild, emojiURL) {
-	const { normal, animated } = emojiAmounts(guild);
+function checkAmounts(guild, emojiURL) {
+	const { normal, animated } = getAmounts(guild.emojis);
 
 	const maxEmojisReply = [
 		'It seems like I can\'t add any more emojis to this server.',
@@ -22,5 +22,5 @@ function checkEmojiAmounts(guild, emojiURL) {
 	}
 }
 
-module.exports.emojiAmounts = emojiAmounts;
-module.exports.checkEmojiAmounts = checkEmojiAmounts;
+module.exports.getAmounts = getAmounts;
+module.exports.checkAmounts = checkAmounts;
