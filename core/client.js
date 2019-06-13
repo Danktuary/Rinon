@@ -1,6 +1,7 @@
 const path = require('path');
 const { prefix } = require('../config.js');
 const { AkairoClient, CommandHandler } = require('discord-akairo');
+const HubServer = require('./hubServer.js');
 const database = require('../database/index.js');
 
 module.exports = class RinonClient extends AkairoClient {
@@ -13,6 +14,8 @@ module.exports = class RinonClient extends AkairoClient {
 			commandDirectory: path.join(__dirname, '..', 'commands'),
 			prefix,
 		});
+
+		this.once('ready', () => this.hubServer = new HubServer(this));
 	}
 
 	async login(token) {
