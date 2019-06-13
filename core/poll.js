@@ -1,6 +1,7 @@
 const { RichEmbed } = require('discord.js');
+const emojiUtil = require('../util/emoji.js');
 const { Emoji, Poll } = require('../database/models/index.js');
-const { emojis } = require('../config.js');
+const { colors, emojis, prefix } = require('../config.js');
 
 module.exports = {
 	async create(message, { name, url }) {
@@ -47,6 +48,36 @@ module.exports = {
 		}
 
 		return message.guild.deleteEmoji(previewEmoji);
+	},
+	async approve(message) {
+		const pollData = await Poll.findOne({ where: { messageID: message.id } });
+		const author = await message.client.fetchUser(pollData.authorID);
+
+		try {
+			emojiUtil.checkAmounts(message.guild.emojis, pollData.imageURL);
+		} catch (error) {
+			return this.deny(message, error.message);
+		}
+
+		await message.clearReactions();
+
+		const emoji = await message.guild.createEmoji(pollData.imageURL, pollData.emojiName);
+
+		const pollEntry = await Poll.findOne({ where: { messageID: message.id } });
+		const emojiEntry = await Emoji.create({ emojiID: emoji.id, guildID: message.guild.id });
+
+		pollEntry.status = 'approved';
+
+		await pollEntry.setEmoji(emojiEntry);
+		await pollEntry.save();
+
+		const embed = new RichEmbed()
+			.setColor(colors.approved)
+			.setAuthor(author.username, author.displayAvatarURL)
+			.setThumbnail(pollData.imageURL)
+			.setDescription(`\`${pollData.emojiName}\` has been approved! ${emoji}`);
+
+		return message.edit(embed);
 	},
 	async deny(message, reason) {
 		await message.clearReactions();
