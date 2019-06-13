@@ -5,8 +5,8 @@ function getAmounts(emojis) {
 	return { normal: normal.size, animated: animated.size };
 }
 
-function checkAmounts(guild, emojiURL) {
-	const { normal, animated } = getAmounts(guild.emojis);
+function checkAmounts(emojis, emojiURL) {
+	const { normal, animated } = getAmounts(emojis);
 
 	const maxEmojisReply = [
 		'It seems like I can\'t add any more emojis to this server.',
