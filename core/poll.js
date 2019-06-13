@@ -20,8 +20,8 @@ module.exports = {
 			.addField('Preview', previewEmoji.toString());
 
 		try {
-			const channel = message.guild.channels.find(c => c.name === 'emoji-voting');
-			const sent = await channel.send(embed);
+			const { hubServer } = message.client;
+			const sent = await hubServer.emojiVoting.send(embed);
 
 			await Poll.create({
 				messageID: sent.id,
@@ -33,7 +33,14 @@ module.exports = {
 			await sent.react(emojis.approve);
 			await sent.react(emojis.deny);
 
-			await message.channel.send(`Done! Others can now vote on your request in ${channel}.`);
+			const successMessage = [`Done! Others can now vote on your request in ${hubServer.emojiVoting}.`];
+
+			if (message.guild.id !== hubServer.id) {
+				successMessage[0] = `${successMessage.slice(0, -1)} in ${hubServer.guild.name}.`;
+				successMessage.push(`If you can\'t open the channel link, send \`${prefix}server 1\` for an invite.`);
+			}
+
+			await message.channel.send(successMessage.join('\n'));
 		} catch (error) {
 			console.error(error);
 			await message.channel.send('There was an error trying to create the poll!');
