@@ -43,7 +43,7 @@ module.exports = {
 			await message.channel.send(successMessage.join('\n'));
 		} catch (error) {
 			console.error(error);
-			await message.channel.send('There was an error trying to create the poll!');
+			await message.channel.send(`There was an error trying to create the poll!\n\`\`\`js\n${error.message}\`\`\``);
 		}
 
 		return message.guild.deleteEmoji(previewEmoji);
