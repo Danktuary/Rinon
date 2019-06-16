@@ -1,6 +1,5 @@
 const { Command } = require('discord-akairo');
 const poll = require('../core/poll.js');
-const emojiUtil = require('../util/emoji.js');
 
 module.exports = class DenyCommand extends Command {
 	constructor() {
@@ -17,7 +16,7 @@ module.exports = class DenyCommand extends Command {
 
 	async exec(message, { input }) {
 		try {
-			const pollMessage = await emojiUtil.search(message.client.hubServer.emojiVoting, input);
+			const pollMessage = await poll.search(message.client.hubServer.emojiVoting, input);
 			await poll.deny(pollMessage);
 			return message.channel.send('Done!');
 		} catch (error) {

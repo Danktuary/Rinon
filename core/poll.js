@@ -96,4 +96,22 @@ module.exports = {
 
 		return message.edit(embed);
 	},
+	async search(channel, searchTerm) {
+		const messages = await channel.fetchMessages({ limit: 100 });
+
+		let requestMessage = messages.find(message => {
+			const [embed] = message.embeds;
+			return embed && !embed.color && (new RegExp(`\`${searchTerm}\`\\.$`, 'i')).test(embed.description);
+		});
+
+		if (!requestMessage && /\d+/.test(searchTerm)) {
+			requestMessage = await channel.fetchMessages(searchTerm);
+		}
+
+		if (!requestMessage) {
+			throw new Error('I couldn\'t find any requests that match your search term!');
+		}
+
+		return requestMessage;
+	},
 };
