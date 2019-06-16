@@ -13,10 +13,7 @@ module.exports = class RinonClient extends AkairoClient {
 			prefix,
 		});
 
-		this.once('ready', () => {
-			this.hubServer = new HubServer(this);
-			this.emojiGuilds = this.guilds.filter(guild => /\(ES#\d+\)$/.test(guild.name));
-		});
+		this.once('ready', () => this.hubServer = new HubServer(this));
 	}
 
 	async login(token) {
