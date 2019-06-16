@@ -1,4 +1,5 @@
 const { Command } = require('discord-akairo');
+const Canvas = require('canvas');
 const snekfetch = require('snekfetch');
 const { prefix } = require('../config.js');
 const poll = require('../core/poll.js');
@@ -20,6 +21,11 @@ module.exports = class AddCommand extends Command {
 					id: 'url',
 					type: 'string',
 				},
+				{
+					id: 'reverse',
+					match: 'flag',
+					prefix: ['--reverse', '-r'],
+				},
 			],
 		});
 	}
@@ -27,7 +33,15 @@ module.exports = class AddCommand extends Command {
 	async exec(message, args) {
 		try {
 			const { hubServer } = message.client;
-			const { name, url } = await this.validate(message, args);
+			let { name, url, imageData } = await this.validate(message, args);
+
+			if (args.reverse) {
+				if (!name.toLowerCase().endsWith('reverse')) {
+					name = await this.modifyEmojiName(message, name);
+				}
+
+				url = this.reverseImage(imageData, url);
+			}
 
 			await poll.create(message, { name, url });
 			const response = [`Done! Others can now vote on your request in ${hubServer.emojiVoting}.`];
@@ -37,7 +51,7 @@ module.exports = class AddCommand extends Command {
 				response.push(`If you can\'t open the channel link, send \`${prefix}server 1\` for an invite.`);
 			}
 
-			message.channel.send(response.join('\n'));
+			return message.channel.send(response.join('\n'));
 		} catch (error) {
 			return message.channel.send(error.message || error);
 		}
@@ -73,6 +87,50 @@ module.exports = class AddCommand extends Command {
 
 		await validators.duplicates(message, emojiName);
 
-		return { name: emojiName, url: imageURL };
+		return { name: emojiName, url: imageURL, imageData };
+	}
+
+	reverseImage(imageData, url) {
+		if (!/\.png(\?v=\d*)?$/.test(url)) {
+			throw new RangeError('I can only reverse PNG images!');
+		}
+
+		const canvas = new Canvas.createCanvas(128, 128);
+		const ctx = canvas.getContext('2d');
+
+		const image = new Canvas.Image();
+		image.src = imageData.body;
+
+		canvas.width = image.width;
+		canvas.height = image.height;
+
+		ctx.translate(canvas.width, 0);
+		ctx.scale(-1, 1);
+		ctx.drawImage(image, 0, 0);
+
+		return canvas.toBuffer();
+	}
+
+	async modifyEmojiName(message, name) {
+		await message.channel.send([
+			'Your emoji name doesn\'t end with "reverse". Do you want me to modify it for you?',
+			'1) Yes, with "reverse" - 2) Yes, with "Reverse" - 3) No',
+		].join('\n'));
+
+		const options = { max: 1, time: 20000, errors: ['time'] };
+		const filter = m => ['yes', 'y', 'no', 'n', '1', '2', '3'].includes(m.content.toLowerCase());
+
+		try {
+			const responses = await message.channel.awaitMessages(filter, options);
+			const response = responses.first().content.toLowerCase();
+
+			if (response && ['yes', 'y', '1', '2'].includes(response)) {
+				return response !== '2' ? `${name}reverse` : `${name}Reverse`;
+			}
+		} catch (error) {
+			await message.channel.send('You didn\'t reply in time, leaving emoji name as is.');
+		}
+
+		return name;
 	}
 };
