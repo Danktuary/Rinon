@@ -22,5 +22,18 @@ function checkAmounts(emojis, emojiURL) {
 	}
 }
 
+function search(emojis, searchTerm) {
+	const foundEmojis = emojis.filter(emoji => {
+		return emoji.name.toLowerCase().includes(searchTerm.toLowerCase());
+	});
+
+	if (!foundEmojis.size) {
+		throw new Error('I couldn\'t find any requests that match your search term!');
+	}
+
+	return foundEmojis;
+}
+
+module.exports.search = search;
 module.exports.getAmounts = getAmounts;
 module.exports.checkAmounts = checkAmounts;
