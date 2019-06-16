@@ -1,5 +1,6 @@
 const { Command } = require('discord-akairo');
 const snekfetch = require('snekfetch');
+const { prefix } = require('../config.js');
 const poll = require('../core/poll.js');
 const parseInput = require('../util/parseInput.js');
 const emojiUtil = require('../util/emoji.js');
@@ -25,8 +26,18 @@ module.exports = class AddCommand extends Command {
 
 	async exec(message, args) {
 		try {
+			const { hubServer } = message.client;
 			const { name, url } = await this.validate(message, args);
+
 			await poll.create(message, { name, url });
+			const response = [`Done! Others can now vote on your request in ${hubServer.emojiVoting}.`];
+
+			if (message.guild.id !== hubServer.id) {
+				response[0] = `${response.slice(0, -1)} in ${hubServer.guild.name}.`;
+				response.push(`If you can\'t open the channel link, send \`${prefix}server 1\` for an invite.`);
+			}
+
+			message.channel.send(response.join('\n'));
 		} catch (error) {
 			return message.channel.send(error.message || error);
 		}
