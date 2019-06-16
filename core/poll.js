@@ -84,7 +84,7 @@ module.exports = {
 		});
 
 		if (!requestMessage && /\d+/.test(searchTerm)) {
-			requestMessage = await channel.fetchMessages(searchTerm);
+			requestMessage = await channel.fetchMessage(searchTerm);
 		}
 
 		if (!requestMessage) {
