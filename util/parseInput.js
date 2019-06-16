@@ -40,3 +40,7 @@ module.exports = function parseInput({ name, url }, attachments = new Collection
 
 	return { name, url };
 };
+
+module.exports.fromEmoji = fromEmoji;
+module.exports.fromNameAndEmoji = fromNameAndEmoji;
+module.exports.fromNameAndAttachment = fromNameAndAttachment;
