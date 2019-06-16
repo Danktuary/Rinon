@@ -18,4 +18,12 @@ module.exports = class HubServer {
 	get emojiVoting() {
 		return this._getChannel('emoji-voting');
 	}
+
+	get approvedEmojis() {
+		return this._getChannel('approved-emojis');
+	}
+
+	get deniedEmojis() {
+		return this._getChannel('denied-emojis');
+	}
 };
