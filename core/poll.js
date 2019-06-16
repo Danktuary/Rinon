@@ -56,7 +56,8 @@ module.exports = {
 			.setThumbnail(pollData.imageURL)
 			.setDescription(`\`${pollData.emojiName}\` has been approved! ${emoji}`);
 
-		return message.edit(embed);
+		await message.delete();
+		return message.client.hubServer.approvedEmojis.send(embed);
 	},
 	async deny(message, reason) {
 		await message.clearReactions();
@@ -73,7 +74,8 @@ module.exports = {
 			.setThumbnail(pollEntry.imageURL)
 			.setDescription(reason || `\`${pollEntry.emojiName}\` was denied. :(`);
 
-		return message.edit(embed);
+		await message.delete();
+		return message.client.hubServer.deniedEmojis.send(embed);
 	},
 	async search(channel, searchTerm) {
 		const messages = await channel.fetchMessages({ limit: 100 });
