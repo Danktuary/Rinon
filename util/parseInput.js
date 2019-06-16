@@ -1,19 +1,15 @@
 const { Collection } = require('discord.js');
+const regexes = require('./regexes.js');
 
 const baseEmojiURL = 'https://cdn.discordapp.com/emojis';
-const wordsOnlyRegex = /^\w+$/;
-const emojiRegex = /<(a)?:(\w+):(\d+)>/;
-const urlRegex = /(https?:\/\/)?(www.)?[^\s<>#%{}|\\^~\\[\]]+\.(png|jpe?g|webp|gif)(\?v=\d*)?$/;
 
 function fromEmoji(emoji) {
-	const [, animated, name, emojiID] = emoji.match(emojiRegex);
-
+	const [, animated, name, emojiID] = emoji.match(regexes.emoji);
 	return { name, url: `${baseEmojiURL}/${emojiID}.${animated ? 'gif' : 'png'}` };
 }
 
 function fromNameAndEmoji(name, emoji) {
-	const [, animated, , emojiID] = emoji.match(emojiRegex);
-
+	const [, animated, , emojiID] = emoji.match(regexes.emoji);
 	return { name, url: `${baseEmojiURL}/${emojiID}.${animated ? 'gif' : 'png'}` };
 }
 
@@ -28,17 +24,17 @@ function fromNameAndAttachment(name, attachment) {
 }
 
 module.exports = function parseInput({ name, url }, attachments = new Collection()) {
-	if (emojiRegex.test(name)) return fromEmoji(name);
+	if (regexes.emoji.test(name)) return fromEmoji(name);
 
 	if (/^:\w+:$/.test(name)) name = name.replace(/:/g, '');
 
-	if (!wordsOnlyRegex.test(name)) {
+	if (!regexes.wordsOnly.test(name)) {
 		throw new RangeError('Only alphanumeric characters are allowed!');
-	} else if (emojiRegex.test(url)) {
+	} else if (regexes.emoji.test(url)) {
 		return fromNameAndEmoji(name, url);
 	} else if (!url && attachments.size) {
 		return fromNameAndAttachment(name, attachments.first());
-	} else if (!urlRegex.test(url)) {
+	} else if (!regexes.url.test(url)) {
 		throw new Error('That doesn\'t seem like a valid image URL.');
 	}
 
