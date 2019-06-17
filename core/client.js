@@ -1,5 +1,5 @@
 const path = require('path');
-const { AkairoClient, CommandHandler, ListenerHandler } = require('discord-akairo');
+const { AkairoClient, CommandHandler } = require('discord-akairo');
 const HubServer = require('./hubServer.js');
 const database = require('../database/index.js');
 const { ownerID, prefix } = require('../config.js');

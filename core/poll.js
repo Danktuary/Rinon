@@ -1,7 +1,7 @@
 const { RichEmbed } = require('discord.js');
 const emojiUtil = require('../util/emoji.js');
 const { Emoji, Poll } = require('../database/models/index.js');
-const { colors, emojis, prefix } = require('../config.js');
+const { colors, emojis } = require('../config.js');
 
 module.exports = {
 	async create(message, { name, url }) {
