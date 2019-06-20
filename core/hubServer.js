@@ -16,7 +16,7 @@ module.exports = class HubServer {
 	}
 
 	get emojiVoting() {
-		return this._getChannel('emoji-voting');
+		return this._getChannel('voting');
 	}
 
 	get approvedEmojis() {
