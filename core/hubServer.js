@@ -8,7 +8,7 @@ module.exports = class HubServer {
 	}
 
 	_getChannel(name) {
-		return this.guild.channels.find(channel => channel.name.toLowerCase() === name);
+		return this.guild.channels.find(channel => channel.name.toLowerCase() === name.toLowerCase());
 	}
 
 	get serverList() {
