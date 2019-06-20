@@ -3,10 +3,7 @@ const { Emoji, MessageReaction } = require('discord.js');
 
 module.exports = class RawListener extends Listener {
 	constructor() {
-		super('raw', {
-			emitter: 'client',
-			eventName: 'raw',
-		});
+		super('raw', { eventName: 'raw' });
 	}
 
 	async exec({ t: eventName, d: data }) {
