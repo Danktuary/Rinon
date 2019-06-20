@@ -12,8 +12,8 @@ module.exports = class RinonClient extends AkairoClient {
 		});
 
 		this.commandHandler = new CommandHandler(this, {
-			commandDirectory: path.join(__dirname, '..', 'commands'),
 			prefix,
+			commandDirectory: path.join(__dirname, '..', 'commands'),
 		});
 
 		this.once('ready', () => this.hubServer = new HubServer(this));
