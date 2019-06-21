@@ -5,23 +5,21 @@ module.exports = class DenyCommand extends Command {
 		super('deny', {
 			aliases: ['deny'],
 			args: [
+				{ id: 'input' },
 				{
-					id: 'input',
-					type: 'string',
+					id: 'mode',
+					match: 'prefix',
+					prefix: ['--mode=', '-m='],
+					'default': 'emoji',
 				},
 			],
 		});
 	}
 
-	async exec(message, { input }) {
-		try {
-			// TODO: use flags/"prefixes" to determine if it should be 'emoji' or 'rename'
-			const poll = this.client.hubServer.polls.emoji;
-			await poll.deny(await poll.search(input));
-			return message.channel.send('Done!');
-		} catch (error) {
-			console.error(error);
-			return message.reply(error.message);
-		}
+	async exec(message, { input, mode }) {
+		if (!['emoji', 'rename'].includes(mode)) mode = 'emoji';
+		const poll = this.client.hubServer.polls[mode];
+		await poll.deny(await poll.search(input));
+		return message.channel.send('Done!');
 	}
 };
