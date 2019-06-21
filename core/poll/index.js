@@ -6,21 +6,20 @@ module.exports = class Poll {
 		this.client = client;
 	}
 
-	async sendEmbed({ author, description, emoji = null, channel = this.channel, status = 'pending' }) {
+	async sendEmbed({ author, description, thumbnail, emoji, channel, status = 'pending' }) {
 		const embed = new RichEmbed()
-			.setAuthor(`Request by ${author.tag}`, author.displayAvatarURL)
-			.setDescription(description);
+			.setAuthor(`Request by ${author.tag} (${author.id})`, author.displayAvatarURL)
+			.setDescription(description)
+			.setThumbnail(thumbnail || (emoji && emoji.url));
 
-		if (emoji) {
-			embed.setThumbnail(emoji.url).addField('Preview', emoji.toString());
-		}
+		if (emoji) embed.addField('Preview', emoji.toString());
 
 		if (status !== 'pending') {
 			embed.fields = [];
 			embed.setColor(config.colors[status]);
 		}
 
-		const sent = await channel.send(embed);
+		const sent = await (channel || this.channel).send(embed);
 
 		if (status === 'pending') {
 			await sent.react(config.emojis.approve);
