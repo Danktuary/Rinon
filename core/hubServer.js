@@ -27,7 +27,15 @@ module.exports = class HubServer {
 		return this._getChannel('approved-emojis');
 	}
 
+	get approvedRenames() {
+		return this._getChannel('approved-renames');
+	}
+
 	get deniedEmojis() {
 		return this._getChannel('denied-emojis');
+	}
+
+	get deniedRenames() {
+		return this._getChannel('denied-renames');
 	}
 };
