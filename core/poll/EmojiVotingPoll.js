@@ -13,6 +13,7 @@ module.exports = class EmojiVotingPoll extends Poll {
 
 		const sent = await this.sendEmbed({
 			emoji,
+			thumbnail: emoji.url,
 			author: message.author,
 			description: `\`${message.author.tag}\` wants to add an emoji with the name as \`${name}\`.`,
 		});
@@ -38,7 +39,7 @@ module.exports = class EmojiVotingPoll extends Poll {
 			return this.deny(message, error.message);
 		}
 
-		await message.clearReactions();
+		await message.delete();
 
 		const emoji = await guild.createEmoji(pollData.imageURL, pollData.emojiName);
 		const emojiData = await models.Emoji.create({ emojiID: emoji.id, guildID: guild.id });
@@ -46,8 +47,6 @@ module.exports = class EmojiVotingPoll extends Poll {
 		pollData.status = 'approved';
 		await pollData.setEmoji(emojiData);
 		await pollData.save();
-
-		await message.delete();
 
 		return this.sendEmbed({
 			author,
@@ -72,7 +71,7 @@ module.exports = class EmojiVotingPoll extends Poll {
 			emoji: { url: pollEntry.imageURL },
 			status: 'denied',
 			channel: this.client.hubServer.deniedEmojis,
-			description: reason || `\`${pollEntry.emojiName}\` was denied. :(`,
+			description: reason || `\`${pollEntry.emojiName}\` has been denied. :(`,
 		});
 
 		return message.delete();
