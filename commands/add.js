@@ -2,7 +2,6 @@ const { Command } = require('discord-akairo');
 const Canvas = require('canvas');
 const snekfetch = require('snekfetch');
 const { prefix } = require('../config.js');
-const poll = require('../core/poll.js');
 const parseInput = require('../util/parseInput.js');
 const emojiUtil = require('../util/emoji.js');
 const validators = require('../util/validators.js');
@@ -32,7 +31,7 @@ module.exports = class AddCommand extends Command {
 
 	async exec(message, args) {
 		try {
-			const { hubServer } = message.client;
+			const { hubServer } = this.client;
 			let { name, url, imageData } = await this.validate(message, args);
 
 			if (args.reverse) {
@@ -43,7 +42,8 @@ module.exports = class AddCommand extends Command {
 				url = this.reverseImage(imageData, url);
 			}
 
-			await poll.create(message, { name, url });
+			await hubServer.polls.emoji.create({ message, name, url });
+
 			const response = [`Done! Others can now vote on your request in ${hubServer.emojiVoting}.`];
 
 			if (message.guild.id !== hubServer.id) {
