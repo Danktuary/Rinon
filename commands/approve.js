@@ -4,6 +4,7 @@ module.exports = class ApproveCommand extends Command {
 	constructor() {
 		super('approve', {
 			aliases: ['approve'],
+			ownerOnly: true,
 			args: [
 				{ id: 'input' },
 				{

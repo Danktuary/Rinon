@@ -4,6 +4,7 @@ module.exports = class DenyCommand extends Command {
 	constructor() {
 		super('deny', {
 			aliases: ['deny'],
+			ownerOnly: true,
 			args: [
 				{ id: 'input' },
 				{
