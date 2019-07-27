@@ -1,5 +1,8 @@
+const { RichEmbed } = require('discord.js');
 const { Command } = require('discord-akairo');
+const chunk = require('lodash.chunk');
 const redis = require('../core/redis.js');
+const { colors } = require('../config.js');
 
 module.exports = class SyncCommand extends Command {
 	constructor() {
@@ -11,7 +14,41 @@ module.exports = class SyncCommand extends Command {
 
 	async exec(message) {
 		await this.syncInvites();
+		await this.syncGalleries();
 		return message.channel.send('Syncing complete!');
+	}
+
+	async syncGalleries() {
+		const { guilds, hubServer } = this.client;
+
+		for (const channel of hubServer.galleryChannels.values()) {
+			const number = channel.name.slice(-1);
+			const guild = guilds.find(g => g.name.endsWith(`(ES#${number})`));
+			const [normal, animated] = guild.emojis.partition(emoji => !emoji.animated);
+
+			const messages = await channel.fetchMessages();
+			const emojiChunks = chunk(Array.from(guild.emojis), 5);
+			const invite = await redis.hget('guild-invites', guild.id);
+			const embed = new RichEmbed()
+				.setColor(colors.approved)
+				.setDescription(`Emojis for **${guild.name}** (${guild.channels.first()}). ${normal.size} normal, ${animated.size} animated.`);
+
+			const formatEmojis = emojis => emojis.map(([, emoji]) => emoji.toString()).join(' ');
+
+			if (!messages.size) {
+				await channel.send(invite, { embed });
+				for (const emojis of emojiChunks) await channel.send(formatEmojis(emojis));
+				continue;
+			}
+
+			const emojiMessages = messages.filter(message => !message.embeds.length && message.content !== invite);
+
+			for (const [index, emojis] of emojiChunks.entries()) {
+				await emojiMessages.last(index + 1)[0].edit(formatEmojis(emojis));
+			}
+
+			await messages.last().edit(invite, { embed });
+		}
 	}
 
 	async syncInvites() {
