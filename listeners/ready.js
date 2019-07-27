@@ -2,7 +2,10 @@ const { Listener } = require('discord-akairo');
 
 module.exports = class ReadyListener extends Listener {
 	constructor() {
-		super('ready', { eventName: 'ready' });
+		super('ready', {
+			eventName: 'ready',
+			type: 'once',
+		});
 	}
 
 	exec() {
