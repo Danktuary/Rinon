@@ -1,10 +1,12 @@
 const Poll = require('./index.js');
+const Sync = require('../sync.js');
 const emojiUtil = require('../../util/emoji.js');
 const models = require('../../database/models/index.js');
 
 module.exports = class EmojiVotingPoll extends Poll {
 	constructor(client) {
 		super(client);
+		this.sync = new Sync(client);
 		this.channel = client.hubServer.emojiVoting;
 	}
 
@@ -47,6 +49,9 @@ module.exports = class EmojiVotingPoll extends Poll {
 		pollData.status = 'approved';
 		await pollData.setEmoji(emojiData);
 		await pollData.save();
+
+		const [, number] = guild.name.match(/\(ES#(\d+)\)$/);
+		await this.sync.gallery(client.hubServer.galleryChannel(number));
 
 		return this.sendEmbed({
 			author,
