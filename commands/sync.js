@@ -9,10 +9,24 @@ module.exports = class SyncCommand extends Command {
 		super('sync', {
 			aliases: ['sync'],
 			ownerOnly: true,
+			args: [
+				{
+					id: 'force',
+					match: 'flag',
+					prefix: ['--force', '-f'],
+				},
+			],
 		});
 	}
 
-	async exec(message) {
+	async exec(message, { force }) {
+		if (force) {
+			const { hubServer } = this.client;
+			await redis.del('guild-invites');
+			await hubServer.serverList.bulkDelete(10);
+			await Promise.all(hubServer.galleryChannels.map(channel => channel.bulkDelete(10)));
+		}
+
 		await this.syncInvites();
 		await this.syncGalleries();
 		return message.channel.send('Syncing complete!');
