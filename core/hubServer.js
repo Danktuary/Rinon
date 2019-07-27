@@ -11,6 +11,10 @@ module.exports = class HubServer {
 		return this.guild.channels.find(channel => channel.name.toLowerCase() === name.toLowerCase());
 	}
 
+	get galleryChannels() {
+		return this._getChannel('galleries').children;
+	}
+
 	get serverList() {
 		return this._getChannel('server-list');
 	}
