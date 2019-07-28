@@ -15,6 +15,9 @@ module.exports = class RinonClient extends AkairoClient {
 
 		this.commandHandler = new CommandHandler(this, {
 			prefix,
+			handleEdits: true,
+			commandUtil: true,
+			commandUtilLifetime: 600000,
 			commandDirectory: path.join(__dirname, '..', 'commands'),
 		});
 
