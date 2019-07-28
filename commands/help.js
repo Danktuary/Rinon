@@ -23,13 +23,13 @@ module.exports = class HelpCommand extends Command {
 			data.push(commands.map(command => command.aliases[0]).join(', '));
 			data.push(`\nYou can send \`${prefix}help [command name]\` to get info on a specific command!`);
 		} else {
-			if (!commands.has(helpCommand)) {
+			const command = commands.find(c => c.aliases.includes(helpCommand.toLowerCase()));
+
+			if (!command) {
 				return message.reply(`that's not a valid command! Send \`${prefix}help\` to get a list of all commands.`);
 			}
 
-			const { aliases, description, options: { usage } } = commands.find(command => {
-				return command.aliases.includes(helpCommand);
-			});
+			const { aliases, description, options: { usage } } = command;
 
 			data.push(`**Name:** ${aliases[0]}`);
 			if (aliases.length > 1) data.push(`**Aliases:** ${aliases.slice(1).join(', ')}`);
