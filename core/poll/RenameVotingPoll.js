@@ -12,7 +12,7 @@ module.exports = class RenameVotingPoll extends Poll {
 	}
 
 	async create({ message, oldName, newName }) {
-		// TODO: Account for multiple results
+		// TODO: Account for multiple results and store these polls in a DB somehow
 		const emoji = emojiUtil.search(this.client.emojis, oldName).first();
 		return this.sendEmbed({
 			thumbnail: emoji.url,
@@ -50,7 +50,7 @@ module.exports = class RenameVotingPoll extends Poll {
 			status: 'denied',
 			thumbnail: emoji.url,
 			channel: this.client.hubServer.deniedRenames,
-			description: reason || `Renaming \`${oldName}\` to \`${newName}\` has been denied. :(`,
+			description: `Renaming \`${oldName}\` to \`${newName}\` has been denied. :(${(reason ? `\nReason: ${reason}` : '')}`,
 		});
 	}
 

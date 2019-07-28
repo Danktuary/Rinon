@@ -76,7 +76,7 @@ module.exports = class EmojiVotingPoll extends Poll {
 			emoji: { url: pollEntry.imageURL },
 			status: 'denied',
 			channel: this.client.hubServer.deniedEmojis,
-			description: reason || `\`${pollEntry.emojiName}\` has been denied. :(`,
+			description: `\`${pollEntry.emojiName}\` has been denied. :(${(reason ? `\nReason: ${reason}` : '')}`,
 		});
 
 		return message.delete();
