@@ -65,7 +65,7 @@ module.exports = class EmojiVotingPoll extends Poll {
 	async deny(message, reason) {
 		await message.clearReactions();
 
-		const pollEntry = await Poll.findOne({ where: { messageID: message.id } });
+		const pollEntry = await models.Poll.findOne({ where: { messageID: message.id } });
 		const author = await this.client.fetchUser(pollEntry.authorID);
 
 		pollEntry.status = 'denied';
