@@ -22,7 +22,7 @@ module.exports = class Sync {
 		}
 
 		const uncachedGuilds = guilds.filter(guild => !invites.has(guild.id));
-		const fetchedInvites = await this.generateInvites(uncachedGuilds);
+		const fetchedInvites = await this._generateInvites(uncachedGuilds);
 
 		for (const [id, url] of fetchedInvites.entries()) {
 			await redis.hset('guild-invites', id, url);
@@ -84,7 +84,7 @@ module.exports = class Sync {
 		}
 	}
 
-	async generateInvites(guilds) {
+	async _generateInvites(guilds) {
 		const urls = new Map();
 
 		for (const guild of guilds.values()) {
