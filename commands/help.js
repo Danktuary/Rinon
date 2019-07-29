@@ -26,7 +26,7 @@ module.exports = class HelpCommand extends Command {
 			const command = commands.find(c => c.aliases.includes(helpCommand.toLowerCase()));
 
 			if (!command) {
-				return message.reply(`that's not a valid command! Send \`${prefix}help\` to get a list of all commands.`);
+				return message.util.reply(`that's not a valid command! Send \`${prefix}help\` to get a list of all commands.`);
 			}
 
 			const { aliases, description, id, options: { usage } } = command;
@@ -37,6 +37,6 @@ module.exports = class HelpCommand extends Command {
 			if (usage) data.push(`**Usage:** \`${prefix}${id} ${usage}\``);
 		}
 
-		return message.channel.send(data, { split: true });
+		return message.util.send(data, { split: true });
 	}
 };

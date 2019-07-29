@@ -29,6 +29,6 @@ module.exports = class SyncCommand extends Command {
 
 		await sync.invites();
 		await sync.galleries();
-		return message.channel.send('Syncing complete!');
+		return message.util.send('Syncing complete!');
 	}
 };

@@ -46,13 +46,13 @@ module.exports = class RenameCommand extends Command {
 		await pollData.save();
 		await pollMessage.edit(embed);
 		await message.guild.deleteEmoji(previewEmoji);
-		return message.channel.send('*Done renaming your request!');
+		return message.util.send('*Done renaming your request!');
 	}
 
 	async renameEmoji({ message, oldName, newName }) {
 		const poll = this.client.hubServer.polls.rename;
 		await poll.create({ message, oldName, newName });
-		return message.channel.send('*Done renaming your request!');
+		return message.util.send('*Done renaming your request!');
 		// await poll.create({
 		// 	message,
 		// 	name: newName,

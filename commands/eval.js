@@ -30,10 +30,10 @@ module.exports = class EvalCommand extends Command {
 				evalResult = evalResult.replace(client.token, '[TOKEN]');
 			}
 
-			return message.channel.send(evalResult, { code: 'js' });
+			return message.util.send(evalResult, { code: 'js' });
 		} catch (error) {
 			console.error(inspect(error));
-			return message.channel.send(error, { code: 'js' });
+			return message.util.send(error, { code: 'js' });
 		}
 	}
 }

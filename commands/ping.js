@@ -8,7 +8,7 @@ module.exports = class PingCommand extends Command {
 	}
 
 	async exec(message) {
-		const sent = await message.channel.send('Pinging...');
+		const sent = await message.util.send('Pinging...');
 		return sent.edit(`Pong! Took ${sent.createdTimestamp - message.createdTimestamp}ms`);
 	}
 };

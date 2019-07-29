@@ -24,17 +24,17 @@ module.exports = class DenyCommand extends Command {
 
 		if (message.util.alias === 'deny' && message.author.id !== ownerID) {
 			const owner = await this.client.fetchUser(ownerID);
-			return message.reply(`only ${owner.tag} may use that command. If you're trying to cancel your own poll, use \`${this.handler.prefix()}cancel <input>\``);
+			return message.util.reply(`only ${owner.tag} may use that command. If you're trying to cancel your own poll, use \`${this.handler.prefix()}cancel <input>\``);
 		}
 
 		const pollMessage = await poll.search(input);
 		const [, pollAuthorID] = pollMessage.embeds[0].author.name.match(/\((\d+)\)/);
 
 		if (![pollAuthorID, ownerID].includes(message.author.id)) {
-			return message.reply('you can\'t cancel polls you didn\'t create.');
+			return message.util.reply('you can\'t cancel polls you didn\'t create.');
 		}
 
 		await poll.deny(pollMessage, `Cancelled by ${message.author.id === pollAuthorID ? 'poll author' : 'bot owner'}.`);
-		return message.channel.send('Done!');
+		return message.util.send('Done!');
 	}
 };

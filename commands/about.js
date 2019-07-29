@@ -28,6 +28,6 @@ module.exports = class AboutCommand extends Command {
 			.addField('Servers', `${client.guilds.size} (${client.hubServer.serverList})`, true)
 			.addField('Emojis', `${emojis.total} (${emojis.animated} animated, ${emojis.normal} normal)`, true)
 
-		return message.channel.send(embed);
+		return message.util.send(embed);
 	}
 };

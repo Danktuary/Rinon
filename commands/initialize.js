@@ -22,21 +22,21 @@ module.exports = class InitializeCommand extends Command {
 		const missingPerms = this.missingPermissions(guild.me);
 
 		if (missingPerms.length) {
-			return message.channel.send(this.formatErrors([{
+			return message.util.send(this.formatErrors([{
 				title: 'Missing Permissions',
 				body: `I'm missing the following permissions: ${missingPerms}`,
 			}]));
 		}
 
 		if (guild.channels.some(channel => channel.name === 'emoji-voting')) {
-			return message.channel.send('I\'m already good to go!');
+			return message.util.send('I\'m already good to go!');
 		}
 
 		if (!skipConfirmation) {
 			try {
 				await this.confirmInit(message);
 			} catch (error) {
-				return message.channel.send(error.message);
+				return message.util.send(error.message);
 			}
 		}
 
@@ -47,7 +47,7 @@ module.exports = class InitializeCommand extends Command {
 			await this.setupChannels(guild);
 		} catch (error) {
 			console.error('Failed to initialize channels.\n', error);
-			return message.channel.send('There was an error setting up the channels.');
+			return message.util.send('There was an error setting up the channels.');
 		}
 
 		if (guild.me.hasPermission('MANAGE_GUILD')) {
@@ -55,19 +55,19 @@ module.exports = class InitializeCommand extends Command {
 				await guild.setSystemChannel(null);
 				await guild.setDefaultMessageNotifications('MENTIONS');
 			} catch (error) {
-				await message.channel.send([
+				await message.util.send([
 					'Error trying to adjust the server\'s current settings.',
 					'Server default message notifications and system channel settings left unconfigured.',
 				]);
 			}
 		} else {
-			await message.channel.send([
+			await message.util.send([
 				'There are some extra settings I can adjust for you if I\'m given the "Manage Server" permission.',
 				'Server default message notifications and system channel left unconfigured.',
 			]);
 		}
 
-		return message.channel.send(`Done! You can now use the \`${this.handler.prefix()}add\` command to create polls.`);
+		return message.util.send(`Done! You can now use the \`${this.handler.prefix()}add\` command to create polls.`);
 	}
 
 
@@ -94,7 +94,7 @@ module.exports = class InitializeCommand extends Command {
 	}
 
 	async confirmInit(message) {
-		await message.channel.send([
+		await message.util.send([
 			'This will delete all other channels in this server and setup the necessary ones.',
 			'I\'ll also try to configure the guild settings appropriately, if possible. Continue?',
 		]);

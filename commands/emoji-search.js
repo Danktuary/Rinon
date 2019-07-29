@@ -15,14 +15,14 @@ module.exports = class EmojiSearchCommand extends Command {
 
 	async exec(message, { name }) {
 		if (!name || name.length < 2) {
-			return message.channel.send('A search term must be at least 2 characters long!');
+			return message.util.send('A search term must be at least 2 characters long!');
 		}
 
 		try {
 			const emojis = emojiUtil.search(message.client.emojis, this.parseQuery(name));
-			return message.channel.send(...this.formatResponse(emojis));
+			return message.util.send(...this.formatResponse(emojis));
 		} catch (error) {
-			return message.channel.send(error.message);
+			return message.util.send(error.message);
 		}
 	}
 
