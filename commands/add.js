@@ -9,7 +9,7 @@ const validators = require('../util/validators.js');
 module.exports = class AddCommand extends Command {
 	constructor() {
 		super('add', {
-			aliases: ['add', 'request', 'vote', 'poll'],
+			aliases: ['add', 'request', 'vote', 'poll', 'reverse'],
 			channel: 'guild',
 			args: [
 				{
@@ -34,7 +34,7 @@ module.exports = class AddCommand extends Command {
 			const { hubServer } = this.client;
 			let { name, url, imageData } = await this.validate(message, args);
 
-			if (args.reverse) {
+		if (message.util.alias === 'reverse' || args.reverse) {
 				if (!name.toLowerCase().endsWith('reverse')) {
 					name = await this.modifyEmojiName(message, name);
 				}
