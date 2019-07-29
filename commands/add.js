@@ -40,7 +40,7 @@ module.exports = class AddCommand extends Command {
 		const response = [`Done! Others can now vote on your request in ${hubServer.emojiVoting}.`];
 
 		if (message.guild.id !== hubServer.id) {
-			response[0] = `${response.slice(0, -1)} in **${hubServer.guild.name}**.`;
+			response[0] = `${response[0].slice(0, -1)} in **${hubServer.guild.name}**.`;
 			response.push(`If you can\'t open the channel link, send \`${prefix}server 1\` for an invite.`);
 		}
 
