@@ -12,14 +12,8 @@ module.exports = class AddCommand extends Command {
 			aliases: ['add', 'request', 'vote', 'poll', 'reverse'],
 			channel: 'guild',
 			args: [
-				{
-					id: 'name',
-					type: 'string',
-				},
-				{
-					id: 'url',
-					type: 'string',
-				},
+				{ id: 'name' },
+				{ id: 'url' },
 				{
 					id: 'reverse',
 					match: 'flag',
@@ -30,31 +24,27 @@ module.exports = class AddCommand extends Command {
 	}
 
 	async exec(message, args) {
-		try {
-			const { hubServer } = this.client;
-			let { name, url, imageData } = await this.validate(message, args);
+		const { hubServer } = this.client;
+		let { name, url, imageData } = await this.validate(message, args);
 
 		if (message.util.alias === 'reverse' || args.reverse) {
-				if (!name.toLowerCase().endsWith('reverse')) {
-					name = await this.modifyEmojiName(message, name);
-				}
-
-				url = this.reverseImage(imageData, url);
+			if (!name.toLowerCase().endsWith('reverse')) {
+				name = await this.modifyEmojiName(message, name);
 			}
 
-			await hubServer.polls.emoji.create({ message, name, url });
-
-			const response = [`Done! Others can now vote on your request in ${hubServer.emojiVoting}.`];
-
-			if (message.guild.id !== hubServer.id) {
-				response[0] = `${response.slice(0, -1)} in ${hubServer.guild.name}.`;
-				response.push(`If you can\'t open the channel link, send \`${prefix}server 1\` for an invite.`);
-			}
-
-			return message.channel.send(response.join('\n'));
-		} catch (error) {
-			return message.channel.send(error.message || error);
+			url = this.reverseImage(imageData, url);
 		}
+
+		await hubServer.polls.emoji.create({ message, name, url });
+
+		const response = [`Done! Others can now vote on your request in ${hubServer.emojiVoting}.`];
+
+		if (message.guild.id !== hubServer.id) {
+			response[0] = `${response.slice(0, -1)} in **${hubServer.guild.name}**.`;
+			response.push(`If you can\'t open the channel link, send \`${prefix}server 1\` for an invite.`);
+		}
+
+		return message.channel.send(response.join('\n'));
 	}
 
 	async validate(message, { name, url }) {
