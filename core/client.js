@@ -19,6 +19,13 @@ module.exports = class RinonClient extends AkairoClient {
 			commandUtil: true,
 			commandUtilLifetime: 600000,
 			commandDirectory: path.join(__dirname, '..', 'commands'),
+			defaultPrompt: {
+				timeout: 'time ran out, command has been cancelled.',
+				ended: 'too many retries, command has been cancelled.',
+				cancel: 'command has been cancelled.',
+				retries: 4,
+				time: 30000,
+			},
 		});
 
 		this.once('ready', () => {
