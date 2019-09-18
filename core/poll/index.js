@@ -1,5 +1,7 @@
 const { RichEmbed } = require('discord.js');
+const { Op } = require('sequelize');
 const config = require('../../config.js');
+const models = require('../../database/models/index.js');
 
 module.exports = class Poll {
 	constructor(client) {
@@ -29,22 +31,19 @@ module.exports = class Poll {
 		return sent;
 	}
 
-	async search(searchTerm) {
-		const messages = await this.channel.fetchMessages({ limit: 100 });
-
-		let requestMessage = messages.find(message => {
-			const [embed] = message.embeds;
-			return embed && !embed.color && (new RegExp(`\`${searchTerm}\`\\.$`, 'i')).test(embed.description);
+	async search(searchTerm, data = {}) {
+		const column = data.column || (/\d+/.test(searchTerm) ? 'message_id' : 'emoji_name');
+		const pollData = await models.Poll.findOne({
+			where: {
+				status: 'pending',
+				[column]: { [Op.iLike]: searchTerm },
+			},
 		});
 
-		if (!requestMessage && /\d+/.test(searchTerm)) {
-			requestMessage = await this.channel.fetchMessage(searchTerm);
-		}
-
-		if (!requestMessage) {
+		if (!pollData) {
 			throw new Error('I couldn\'t find any requests that match your search term!');
 		}
-
-		return requestMessage;
+		
+		return this.channel.fetchMessage(pollData.messageID);
 	}
 };
