@@ -23,8 +23,22 @@ module.exports = class SyncCommand extends Command {
 		if (force) {
 			const { hubServer } = this.client;
 			await redis.del('guild-invites');
-			await hubServer.serverList.bulkDelete(10);
-			await Promise.all(hubServer.galleryChannels.map(channel => channel.bulkDelete(10)));
+
+			const altDelete = items => Promise.all(items.map(item => item.delete()));
+
+			try {
+				await hubServer.serverList.bulkDelete(100);
+			} catch (error) {
+				await altDelete(await hubServer.serverList.fetchMessages(100));
+			}
+
+			try {
+				await Promise.all(hubServer.galleryChannels.map(channel => channel.bulkDelete(100)));
+			} catch (error) {
+				for (const channel of hubServer.galleryChannels.values()) {
+					await altDelete(await channel.fetchMessages(100));
+				}
+			}
 		}
 
 		await sync.invites();
