@@ -8,6 +8,11 @@ function fromEmoji(emoji) {
 	return { name, url: `${baseEmojiURL}/${emojiID}.${animated ? 'gif' : 'png'}` };
 }
 
+function fromEmojiAndName(emoji, name) {
+	const [, animated, , emojiID] = emoji.match(regexes.emoji);
+	return { name, url: `${baseEmojiURL}/${emojiID}.${animated ? 'gif' : 'png'}` };
+}
+
 function fromUrlAndName(url, name) {
 	if (!regexes.wordsOnly.test(name)) {
 		throw new RangeError('Only alphanumeric characters are allowed!');
@@ -32,11 +37,11 @@ function fromNameAndAttachment(name, attachment) {
 }
 
 module.exports = function parseInput({ name, url }, attachments = new Collection()) {
-	if (regexes.emoji.test(name)) return fromEmoji(name);
-
-	if (/^:\w+:$/.test(name)) name = name.replace(/:/g, '');
-
-	if (regexes.url.test(name) && regexes.wordsOnly.test(url)) {
+	if (regexes.emoji.test(name) && !url) {
+		return fromEmoji(name);
+	} else if (regexes.emoji.test(name) && regexes.wordsOnly.test(url)) {
+		return fromEmojiAndName(name, url);
+	} else if (regexes.url.test(name) && regexes.wordsOnly.test(url)) {
 		return fromUrlAndName(name, url);
 	} else if (!regexes.wordsOnly.test(name)) {
 		throw new RangeError('Only alphanumeric characters are allowed!');
@@ -52,6 +57,7 @@ module.exports = function parseInput({ name, url }, attachments = new Collection
 };
 
 module.exports.fromEmoji = fromEmoji;
+module.exports.fromEmojiAndName = fromEmoji;
 module.exports.fromNameAndEmoji = fromNameAndEmoji;
 module.exports.fromNameAndAttachment = fromNameAndAttachment;
 module.exports.fromUrlAndName = fromUrlAndName;
