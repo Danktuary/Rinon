@@ -1,6 +1,6 @@
 const { Listener } = require('discord-akairo');
-const models = require('../database/models/');
-const { emojis, voteEndAmount } = require('../config');
+const models = require('../database/models/index.js');
+const { emojis, voteEndAmount } = require('../config.js');
 
 module.exports = class MessageReactionAddListener extends Listener {
 	constructor() {
