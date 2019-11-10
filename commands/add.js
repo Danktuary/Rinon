@@ -1,7 +1,6 @@
 const { Command } = require('discord-akairo');
 const Canvas = require('canvas');
 const snekfetch = require('snekfetch');
-const { prefix } = require('../config.js');
 const parseInput = require('../util/parseInput.js');
 const emojiUtil = require('../util/emoji.js');
 const validators = require('../util/validators.js');
@@ -41,7 +40,7 @@ module.exports = class AddCommand extends Command {
 
 		if (message.guild.id !== hubServer.id) {
 			response[0] = `${response[0].slice(0, -1)} in **${hubServer.guild.name}**.`;
-			response.push(`If you can\'t open the channel link, send \`${prefix}server 1\` for an invite.`);
+			response.push(`If you can\'t open the channel link, send \`${this.handler.prefix()}server 1\` for an invite.`);
 		}
 
 		return message.util.send(response.join('\n'));
