@@ -43,7 +43,7 @@ module.exports = class Poll {
 		if (!pollData) {
 			throw new Error('I couldn\'t find any requests that match your search term!');
 		}
-		
+
 		return this.channel.fetchMessage(pollData.messageID);
 	}
 };
