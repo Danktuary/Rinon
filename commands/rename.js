@@ -35,6 +35,10 @@ module.exports = class RenameCommand extends Command {
 			oldName = emojiName;
 		}
 
+		if (oldName.length < 2 || newName.length < 2 || oldName.length > 32 || newName.length > 32) {
+			return message.util.send('An emoji name needs to be between 2 and 32 characters long.');
+		}
+
 		return this[`rename${textUtil.capitalize(mode)}`]({ message, oldName, newName });
 	}
 
