@@ -33,7 +33,7 @@ module.exports = class Poll {
 
 	async search(searchTerm, data = {}) {
 		const column = data.column || (/\d+/.test(searchTerm) ? 'message_id' : 'emoji_name');
-		const pollData = await models.Poll.findOne({
+		const pollData = await models[data.model || 'Poll'].findOne({
 			where: {
 				status: 'pending',
 				[column]: { [Op.iLike]: searchTerm },
