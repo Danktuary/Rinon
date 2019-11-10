@@ -1,7 +1,9 @@
 const { RichEmbed } = require('discord.js');
 const { Command } = require('discord-akairo');
 const models = require('../database/models/index.js');
+const parseInput = require('../util/parseInput.js');
 const textUtil = require('../util/text.js');
+const regexes = require('../util/regexes.js');
 
 module.exports = class RenameCommand extends Command {
 	constructor() {
@@ -24,6 +26,15 @@ module.exports = class RenameCommand extends Command {
 		if (message.util.alias === 'rename-poll') mode = 'poll';
 		else if (message.util.alias === 'rename-emoji') mode = 'emoji';
 		else if (!['emoji', 'poll'].includes(mode)) mode = 'poll';
+
+		if (mode === 'emoji' && regexes.emoji.test(oldName)) {
+			oldName = parseInput.fromEmoji(oldName).name;
+		} else if (mode === 'emoji' && regexes.emoji.test(newName)) {
+			const emojiName = parseInput.fromEmoji(newName).name;
+			newName = oldName;
+			oldName = emojiName;
+		}
+
 		return this[`rename${textUtil.capitalize(mode)}`]({ message, oldName, newName });
 	}
 
