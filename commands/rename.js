@@ -44,7 +44,17 @@ module.exports = class RenameCommand extends Command {
 	}
 
 	async renamePoll({ message, oldName, newName }) {
-		const pollMessage = await this.client.hubServer.polls.emoji.search(oldName);
+		let pollMessage = null;
+
+		try {
+			pollMessage = await this.client.hubServer.polls.emoji.search(oldName);
+		} catch (error) {
+			return message.util.send([
+				'I couldn\'t find any requests that match your search term!',
+				`If you want to rename an existing emoji, use the \`${this.handler.prefix()}rename-emoji <emoji name> <new name>\` command.`,
+			].join('\n'));
+		}
+
 		const pollData = await models.Poll.findOne({ where: { messageID: pollMessage.id } });
 
 		if (message.author.id !== pollData.authorID) {
@@ -68,13 +78,20 @@ module.exports = class RenameCommand extends Command {
 	}
 
 	async renameEmoji({ message, oldName, newName }) {
+		let emojis = null;
 		let selectedEmoji = null;
 		const { hubServer } = this.client;
-		const emojis = emojiUtil.search(message.client.emojis, emojiUtil.parseSearchQuery(oldName));
 
-		if (!emojis.size) {
-			return message.util.send('I couldn\'t find any requests that match your search term!');
-		} else if (emojis.size === 1) {
+		try {
+			emojis = emojiUtil.search(message.client.emojis, emojiUtil.parseSearchQuery(oldName));
+		} catch (error) {
+			return message.util.send([
+				'I couldn\'t find any requests that match your search term!',
+				`If you want to rename a current poll, use the \`${this.handler.prefix()}rename-poll <old name> <new name>\` command.`,
+			].join('\n'));
+		}
+
+		if (emojis.size === 1) {
 			selectedEmoji = emojis.first();
 		} else {
 			const sent = await message.channel.send([
