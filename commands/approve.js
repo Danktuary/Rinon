@@ -3,7 +3,7 @@ const { Command } = require('discord-akairo');
 module.exports = class ApproveCommand extends Command {
 	constructor() {
 		super('approve', {
-			aliases: ['approve'],
+			aliases: ['approve', 'approve-emoji', 'approve-rename'],
 			ownerOnly: true,
 			args: [
 				{ id: 'input' },
@@ -18,7 +18,10 @@ module.exports = class ApproveCommand extends Command {
 	}
 
 	async exec(message, { input, mode }) {
-		if (!['emoji', 'rename'].includes(mode)) mode = 'emoji';
+		if (message.util.alias === 'approve-emoji') mode = 'emoji';
+		else if (message.util.alias === 'approve-rename') mode = 'rename';
+		else if (!['emoji', 'rename'].includes(mode)) mode = 'emoji';
+
 		const poll = this.client.hubServer.polls[mode];
 		await poll.approve(await poll.search(input));
 		return message.util.send('Done!');
