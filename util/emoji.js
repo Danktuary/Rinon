@@ -1,4 +1,6 @@
 const { prefix } = require('../config.js');
+const parseInput = require('../util/parseInput.js');
+const regexes = require('../util/regexes.js');
 
 function getAmounts(emojis) {
 	const [normal, animated] = emojis.partition(emoji => !emoji.animated);
@@ -34,6 +36,21 @@ function search(emojis, searchTerm) {
 	return foundEmojis;
 }
 
+function parseSearchQuery(name) {
+	if (regexes.emoji.test(name)) {
+		return parseInput.fromEmoji(name).name.toLowerCase();
+	}
+
+	if (/^:\w+:$/.test(name)) name = name.replace(/:/g, '');
+
+	if (!regexes.wordsOnly.test(name)) {
+		throw new Error('only alphanumeric characters are allowed!');
+	}
+
+	return name.toLowerCase();
+}
+
 module.exports.search = search;
+module.exports.parseSearchQuery = parseSearchQuery;
 module.exports.getAmounts = getAmounts;
 module.exports.checkAmounts = checkAmounts;

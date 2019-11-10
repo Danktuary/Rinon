@@ -2,8 +2,6 @@ const { RichEmbed } = require('discord.js');
 const { Command } = require('discord-akairo');
 const { colors, prefix } = require('../config.js');
 const emojiUtil = require('../util/emoji.js');
-const parseInput = require('../util/parseInput.js');
-const regexes = require('../util/regexes.js');
 
 module.exports = class EmojiSearchCommand extends Command {
 	constructor() {
@@ -19,7 +17,7 @@ module.exports = class EmojiSearchCommand extends Command {
 		}
 
 		try {
-			const emojis = emojiUtil.search(message.client.emojis, this.parseQuery(name));
+			const emojis = emojiUtil.search(message.client.emojis, emojiUtil.parseSearchQuery(name));
 			return message.util.send(...this.formatResponse(emojis));
 		} catch (error) {
 			return message.util.send(error.message);
@@ -49,19 +47,5 @@ module.exports = class EmojiSearchCommand extends Command {
 		}
 
 		return [content.join('\n'), { split: '\n' }];
-	}
-
-	parseQuery(name) {
-		if (regexes.emoji.test(name)) {
-			return parseInput.fromEmoji(name).name.toLowerCase();
-		}
-
-		if (/^:\w+:$/.test(name)) name = name.replace(/:/g, '');
-
-		if (!regexes.wordsOnly.test(name)) {
-			throw new Error('only alphanumeric characters are allowed!');
-		}
-
-		return name.toLowerCase();
 	}
 };
