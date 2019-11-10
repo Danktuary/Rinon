@@ -33,7 +33,7 @@ module.exports = class RenameCommand extends Command {
 			throw new Error('You can\'t edit a poll that\'s not yours!');
 		}
 
-		pollData.name = newName;
+		pollData.emojiName = newName;
 
 		const embed = new RichEmbed(pollMessage.embeds[0]);
 		const previewEmoji = await message.guild.createEmoji(pollData.imageURL, newName);
