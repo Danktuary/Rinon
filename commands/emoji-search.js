@@ -12,8 +12,8 @@ module.exports = class EmojiSearchCommand extends Command {
 	}
 
 	async exec(message, { name }) {
-		if (!name || name.length < 2) {
-			return message.util.send('A search term must be at least 2 characters long!');
+		if (!name || name.length < 2 || name.length > 32) {
+			return message.util.send('A search term needs to be between 2 and 32 characters long.');
 		}
 
 		try {
