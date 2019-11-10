@@ -3,6 +3,7 @@ const { Command } = require('discord-akairo');
 const models = require('../database/models/index.js');
 const parseInput = require('../util/parseInput.js');
 const textUtil = require('../util/text.js');
+const emojiUtil = require('../util/emoji.js');
 const regexes = require('../util/regexes.js');
 
 module.exports = class RenameCommand extends Command {
@@ -67,15 +68,45 @@ module.exports = class RenameCommand extends Command {
 	}
 
 	async renameEmoji({ message, oldName, newName }) {
-		const poll = this.client.hubServer.polls.rename;
-		await poll.create({ message, oldName, newName });
-		return message.util.send('*Done renaming your request!');
-		// await poll.create({
-		// 	message,
-		// 	name: newName,
-		// 	url: emoji.url,
-		// 	description: `\`${message.author.tag}\` wants to rename an emoji with the name as \`${name}\`.`,
-		// 	channel: this.client.hubServer.renameVoting,
-		// });
+		let selectedEmoji = null;
+		const { hubServer } = this.client;
+		const emojis = emojiUtil.search(message.client.emojis, emojiUtil.parseSearchQuery(oldName));
+
+		if (!emojis.size) {
+			return message.util.send('I couldn\'t find any requests that match your search term!');
+		} else if (emojis.size === 1) {
+			selectedEmoji = emojis.first();
+		} else {
+			const sent = await message.channel.send([
+				`I found these emojis with that same name: ${emojis.map(emoji => emoji.toString()).join(' ')}`,
+				'React with the corresponding emoji you want to rename.',
+			].join('\n'));
+
+			await Promise.all(emojis.map(emoji => sent.react(emoji)));
+
+			const filter = (reaction, user) => {
+				return emojis.map(emoji => emoji.id).includes(reaction.emoji.id) && user.id === message.author.id;
+			};
+
+			try {
+				const reactions = await sent.awaitReactions(filter, { max: 1, time: 20000, errors: ['time'] });
+				await sent.clearReactions();
+				selectedEmoji = reactions.first().emoji;
+			} catch (error) {
+				await sent.clearReactions();
+				return message.channel.send('You didn\'t react in time; cancelling the request.');
+			}
+		}
+
+		await hubServer.polls.rename.create({ message, emoji: selectedEmoji, newName });
+
+		const response = [`Done! Others can now vote on your request in ${hubServer.renameVoting}.`];
+
+		if (message.guild.id !== hubServer.id) {
+			response[0] = `${response[0].slice(0, -1)} in **${hubServer.guild.name}**.`;
+			response.push(`If you can\'t open the channel link, send \`${this.handler.prefix()}server 1\` for an invite.`);
+		}
+
+		return message.util.send(response.join('\n'));
 	}
 };
