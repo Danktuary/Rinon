@@ -3,7 +3,7 @@ const { Command } = require('discord-akairo');
 module.exports = class DenyCommand extends Command {
 	constructor() {
 		super('deny', {
-			aliases: ['deny', 'cancel'],
+			aliases: ['deny', 'deny-emoji', 'deny-rename', 'cancel', 'cancel-emoji', 'cancel-rename'],
 			args: [
 				{ id: 'input' },
 				{
@@ -17,14 +17,18 @@ module.exports = class DenyCommand extends Command {
 	}
 
 	async exec(message, { input, mode }) {
-		if (!['emoji', 'rename'].includes(mode)) mode = 'emoji';
+		const { alias } = message.util;
+
+		if (['deny-emoji', 'cancel-emoji'].includes(alias)) mode = 'emoji';
+		else if (['deny-rename', 'cancel-rename'].includes(alias)) mode = 'rename';
+		else if (!['emoji', 'rename'].includes(mode)) mode = 'emoji';
 
 		const { hubServer, ownerID } = this.client;
 		const poll = hubServer.polls[mode];
 
-		if (message.util.alias === 'deny' && message.author.id !== ownerID) {
+		if (alias.startsWith('deny') && message.author.id !== ownerID) {
 			const owner = await this.client.fetchUser(ownerID);
-			return message.util.reply(`only ${owner.tag} may use that command. If you're trying to cancel your own poll, use \`${this.handler.prefix()}cancel <input>\``);
+			return message.util.reply(`only ${owner.tag} may use that command. If you're trying to cancel your own poll, use \`${this.handler.prefix()}${alias.replace('deny', 'cancel')} <input>\``);
 		}
 
 		const pollMessage = await poll.search(input);
