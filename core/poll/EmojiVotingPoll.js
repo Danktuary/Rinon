@@ -44,10 +44,8 @@ module.exports = class EmojiVotingPoll extends Poll {
 		await message.delete();
 
 		const emoji = await guild.createEmoji(pollData.imageURL, pollData.emojiName);
-		const emojiData = await models.Emoji.create({ emojiID: emoji.id, guildID: guild.id });
 
 		pollData.status = 'approved';
-		await pollData.setEmoji(emojiData);
 		await pollData.save();
 
 		const [, number] = guild.name.match(/\(ES#(\d+)\)$/);
