@@ -1,7 +1,5 @@
 const Poll = require('./index.js');
 const Sync = require('../sync.js');
-const emojiUtil = require('../../util/emoji.js');
-const regexes = require('../../util/regexes.js');
 const models = require('../../database/models/index.js');
 
 module.exports = class RenameVotingPoll extends Poll {
@@ -11,24 +9,32 @@ module.exports = class RenameVotingPoll extends Poll {
 		this.channel = client.hubServer.renameVoting;
 	}
 
-	async create({ message, oldName, newName }) {
-		// TODO: Account for multiple results and store these polls in a DB somehow
-		const emoji = emojiUtil.search(this.client.emojis, oldName).first();
-		return this.sendEmbed({
+	async create({ message, emoji, newName }) {
+		const sent = await this.sendEmbed({
 			thumbnail: emoji.url,
 			author: message.author,
 			description: `\`${message.author.tag}\` wants to rename ${emoji} from \`${emoji.name}\` to \`${newName}\`.`,
 		});
+
+		return models.RenamePoll.create({
+			messageID: sent.id,
+			authorID: message.author.id,
+			emojiID: emoji.id,
+			oldName: emoji.name,
+			newName,
+		});
 	}
 
 	async approve(message) {
-		const { oldName, newName, author, emoji } = await this._parseData(message);
-		const emojiData = await models.Emoji.findOne({ where: { emojiID: emoji.id }, include: ['poll'] });
+		const pollData = await models.RenamePoll.findOne({ where: { messageID: message.id } });
+		const author = await message.client.fetchUser(pollData.authorID);
+		const emoji = message.client.emojis.get(pollData.emojiID);
 
-		emojiData.poll.emojiName = newName;
 		await message.delete();
-		await emoji.edit({ name: newName });
-		await emojiData.save();
+		await emoji.edit({ name: pollData.newName });
+
+		pollData.status = 'approved';
+		await pollData.save();
 
 		const [, number] = emoji.guild.name.match(/\(ES#(\d+)\)$/);
 		await this.sync.gallery(this.client.hubServer.galleryChannel(number));
@@ -38,33 +44,33 @@ module.exports = class RenameVotingPoll extends Poll {
 			status: 'approved',
 			thumbnail: emoji.url,
 			channel: this.client.hubServer.approvedRenames,
-			description: `\`${oldName}\` has been renamed to \`${newName}\`! ${emoji}`,
+			description: `\`${pollData.oldName}\` has been renamed to \`${pollData.newName}\`! ${emoji}`,
 		});
 	}
 
 	async deny(message, reason) {
-		const { oldName, newName, author, emoji } = await this._parseData(message);
+		const pollData = await models.RenamePoll.findOne({ where: { messageID: message.id } });
+		const author = await message.client.fetchUser(pollData.authorID);
+		const emoji = message.client.emojis.get(pollData.emojiID);
+
 		await message.delete();
+
+		pollData.status = 'denied';
+		await pollData.save();
+
 		return this.sendEmbed({
 			author,
 			status: 'denied',
 			thumbnail: emoji.url,
 			channel: this.client.hubServer.deniedRenames,
-			description: `Renaming \`${oldName}\` to \`${newName}\` has been denied. :(${(reason ? `\nReason: ${reason}` : '')}`,
+			description: `Renaming \`${pollData.oldName}\` to \`${pollData.newName}\` has been denied. :(${(reason ? `\nReason: ${reason}` : '')}`,
 		});
 	}
 
-	async _parseData(message) {
-		const { client, embeds: [embed] } = message;
-		const [, authorID] = embed.author.name.match(/\((\d+)\)/);
-		const [, oldName, newName] = embed.description.match(/from `(\w+)` to `(\w+)`\./);
-		const emojiID = embed.description.match(regexes.emoji)[3];
-
-		return {
-			oldName,
-			newName,
-			author: await client.fetchUser(authorID),
-			emoji: client.emojis.get(emojiID),
-		};
+	search(searchTerm) {
+		return super.search(searchTerm, {
+			model: 'RenamePoll',
+			column: (/\d+/.test(searchTerm) ? 'message_id' : 'new_name'),
+		});
 	}
 };
