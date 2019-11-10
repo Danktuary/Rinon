@@ -6,7 +6,7 @@ const textUtil = require('../util/text.js');
 module.exports = class RenameCommand extends Command {
 	constructor() {
 		super('rename', {
-			aliases: ['rename'],
+			aliases: ['rename', 'rename-poll', 'rename-emoji'],
 			args: [
 				{ id: 'oldName' },
 				{ id: 'newName' },
@@ -21,7 +21,9 @@ module.exports = class RenameCommand extends Command {
 	}
 
 	async exec(message, { oldName, newName, mode }) {
-		if (!['emoji', 'poll'].includes(mode)) mode = 'poll';
+		if (message.util.alias === 'rename-poll') mode = 'poll';
+		else if (message.util.alias === 'rename-emoji') mode = 'emoji';
+		else if (!['emoji', 'poll'].includes(mode)) mode = 'poll';
 		return this[`rename${textUtil.capitalize(mode)}`]({ message, oldName, newName });
 	}
 
