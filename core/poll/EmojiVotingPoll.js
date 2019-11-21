@@ -57,7 +57,7 @@ module.exports = class EmojiVotingPoll extends Poll {
 	}
 
 	async deny(message, reason) {
-		await message.clearReactions();
+		await message.delete();
 
 		const pollEntry = await models.Poll.findOne({ where: { messageID: message.id } });
 		const author = await this.client.fetchUser(pollEntry.authorID);
@@ -65,13 +65,14 @@ module.exports = class EmojiVotingPoll extends Poll {
 		pollEntry.status = 'denied';
 		await pollEntry.save();
 
-		await this.sendEmbed({
+		return this.sendEmbed({
 			author,
 			emoji: { url: pollEntry.imageURL },
 			status: 'denied',
 			channel: this.client.hubServer.deniedEmojis,
 			description: `\`${pollEntry.emojiName}\` has been denied. :(${(reason ? `\nReason: ${reason}` : '')}`,
 		});
+	}
 
 	_nextAvailableGuild({ imageURL }) {
 		return this.client.guilds.find(guild => {
