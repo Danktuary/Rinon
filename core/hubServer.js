@@ -16,7 +16,7 @@ module.exports = class HubServer {
 	}
 
 	galleryChannel(number) {
-		return this._getChannel('galleries').children.find(channel => channel.name.slice(-1) === number);
+		return this._getChannel('galleries').children.find(channel => parseInt(channel.name.slice(-1)) === parseInt(number));
 	}
 
 	get serverList() {
