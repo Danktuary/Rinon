@@ -54,3 +54,4 @@ module.exports.search = search;
 module.exports.parseSearchQuery = parseSearchQuery;
 module.exports.getAmounts = getAmounts;
 module.exports.checkAmounts = checkAmounts;
+module.exports.boostedEmojisLimits = { 0: 50, 1: 100, 2: 150, 3: 250 };
