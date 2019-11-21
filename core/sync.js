@@ -68,7 +68,7 @@ module.exports = class Sync {
 
 		for (const [index, emojis] of emojiChunks.entries()) {
 			if (index + 1 > emojiMessages.size) {
-				await emojiMessages.first().channel.send(formatEmojis(emojis));
+				await channel.send(formatEmojis(emojis));
 				continue;
 			}
 
