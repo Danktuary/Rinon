@@ -2,6 +2,8 @@ const { prefix } = require('../config.js');
 const parseInput = require('../util/parseInput.js');
 const regexes = require('../util/regexes.js');
 
+const boostedEmojisLimits = { 0: 50, 1: 100, 2: 150, 3: 250 };
+
 function getAmounts(emojis) {
 	const [normal, animated] = emojis.partition(emoji => !emoji.animated);
 	return { normal: normal.size, animated: animated.size };
@@ -53,5 +55,4 @@ function parseSearchQuery(name) {
 module.exports.search = search;
 module.exports.parseSearchQuery = parseSearchQuery;
 module.exports.getAmounts = getAmounts;
-module.exports.checkAmounts = checkAmounts;
-module.exports.boostedEmojisLimits = { 0: 50, 1: 100, 2: 150, 3: 250 };
+module.exports.boostedEmojisLimits = boostedEmojisLimits;
