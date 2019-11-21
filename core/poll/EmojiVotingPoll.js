@@ -28,7 +28,7 @@ module.exports = class EmojiVotingPoll extends Poll {
 			imageURL: url instanceof Buffer ? emoji.url : url,
 		});
 
-		return message.guild.deleteEmoji(emoji);
+		return emoji.delete();
 	}
 
 	async approve(message) {
