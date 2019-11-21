@@ -74,7 +74,7 @@ module.exports = class RenameCommand extends Command {
 
 		await pollData.save();
 		await pollMessage.edit(embed);
-		await message.guild.deleteEmoji(previewEmoji);
+		await previewEmoji.delete();
 		return message.util.send('Done renaming your poll!');
 	}
 
