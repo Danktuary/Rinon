@@ -45,14 +45,15 @@ module.exports = class EmojiVotingPoll extends Poll {
 		await pollData.save();
 
 		const [, number] = guild.name.match(/\(ES#(\d+)\)$/);
-		await this.sync.gallery(client.hubServer.galleryChannel(number));
+		const galleryChannel = client.hubServer.galleryChannel(number);
+		await this.sync.gallery(galleryChannel);
 
 		return this.sendEmbed({
 			author,
 			emoji,
 			status: 'approved',
 			channel: this.client.hubServer.approvedEmojis,
-			description: `\`${pollData.emojiName}\` has been approved! ${emoji}`,
+			description: `\`${pollData.emojiName}\` has been approved! ${emoji}\nAdded to **${guild.name}**. (${galleryChannel})`,
 		});
 	}
 
