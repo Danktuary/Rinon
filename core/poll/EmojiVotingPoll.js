@@ -35,12 +35,6 @@ module.exports = class EmojiVotingPoll extends Poll {
 		const pollData = await models.Poll.findOne({ where: { messageID: message.id } });
 		const author = await client.fetchUser(pollData.authorID);
 
-		try {
-			emojiUtil.checkAmounts(guild.emojis, pollData.imageURL);
-		} catch (error) {
-			return this.deny(message, error.message);
-		}
-
 		await message.delete();
 
 		const emoji = await guild.createEmoji(pollData.imageURL, pollData.emojiName);

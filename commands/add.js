@@ -2,7 +2,6 @@ const { Command } = require('discord-akairo');
 const Canvas = require('canvas');
 const snekfetch = require('snekfetch');
 const parseInput = require('../util/parseInput.js');
-const emojiUtil = require('../util/emoji.js');
 const validators = require('../util/validators.js');
 
 module.exports = class AddCommand extends Command {
@@ -55,8 +54,6 @@ module.exports = class AddCommand extends Command {
 		}
 
 		const { name: emojiName, url: imageURL } = parseInput({ name, url }, message.attachments);
-
-		emojiUtil.checkAmounts(message.guild.emojis, imageURL);
 
 		if (emojiName.length < 2 || emojiName.length > 32) {
 			throw new RangeError('An emoji name needs to be between 2 and 32 characters long.');
