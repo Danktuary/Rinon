@@ -1,5 +1,6 @@
 const Poll = require('./index.js');
 const emojiUtil = require('../../util/emoji.js');
+const regexes = require('../../util/regexes.js');
 const models = require('../../database/models/index.js');
 
 module.exports = class EmojiVotingPoll extends Poll {
@@ -42,7 +43,7 @@ module.exports = class EmojiVotingPoll extends Poll {
 		pollData.status = 'approved';
 		await pollData.save();
 
-		const [, number] = guild.name.match(/\(ES#(\d+)\)$/);
+		const [, number] = guild.name.match(regexes.guildNameEnding);
 		const galleryChannel = client.hubServer.galleryChannel(number);
 		await this.sync.gallery(galleryChannel);
 

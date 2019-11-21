@@ -2,6 +2,7 @@ const { RichEmbed } = require('discord.js');
 const chunk = require('lodash.chunk');
 const redis = require('../core/redis.js');
 const { colors } = require('../config.js');
+const regexes = require('../util/regexes.js');
 
 module.exports = class Sync {
 	constructor(client) {
@@ -33,7 +34,7 @@ module.exports = class Sync {
 
 		for (const [id, url] of invites.entries()) {
 			const guild = guilds.get(id);
-			const [, number] = guild.name.match(/\(ES#(\d+)\)$/);
+			const [, number] = guild.name.match(regexes.guildNameEnding);
 			const gallery = hubServer.galleryChannels.find(channel => channel.name.slice(-1) === number);
 
 			content += `Invite link for **${guild.name}**:\n${url} (View gallery: ${gallery})\n\n`;

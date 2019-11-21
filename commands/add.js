@@ -3,6 +3,7 @@ const Canvas = require('canvas');
 const snekfetch = require('snekfetch');
 const parseInput = require('../util/parseInput.js');
 const validators = require('../util/validators.js');
+const regexes = require('../util/regexes.js');
 
 module.exports = class AddCommand extends Command {
 	constructor() {
@@ -67,7 +68,7 @@ module.exports = class AddCommand extends Command {
 			throw new RangeError('That file surpasses the 256kb file size limit! Please resize it and try again.');
 		}
 
-		if (validators.regexes.blobInit.test(emojiName) && !validators.regexes.blob.test(emojiName)) {
+		if (regexes.blobInit.test(emojiName) && !regexes.blob.test(emojiName)) {
 			validators.blobs(emojiName, imageURL, imageData);
 		}
 
@@ -77,7 +78,7 @@ module.exports = class AddCommand extends Command {
 	}
 
 	reverseImage(imageData, url) {
-		if (!/\.png(\?v=\d*)?$/.test(url)) {
+		if (!regexes.png.test(url)) {
 			throw new RangeError('I can only reverse PNG images!');
 		}
 

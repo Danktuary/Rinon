@@ -1,11 +1,6 @@
 const path = require('path');
 const Canvas = require('canvas');
-
-const regexes = {
-	gif: /\.gif(\?v=\d+)?$/,
-	blobInit: /^a?b(lo|ol)b/i,
-	blob: /^a?b(lo|ol)b[a-z]+$/,
-};
+const regexes = require('../util/regexes.js');
 
 module.exports = {
 	blobs(emojiName, imageURL, imageData) {
@@ -90,5 +85,3 @@ module.exports = {
 		}
 	},
 };
-
-module.exports.regexes = regexes;

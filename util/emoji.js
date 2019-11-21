@@ -12,7 +12,7 @@ function nextAvailableGuild({ guilds, imageURL }) {
 	return guilds.find(guild => {
 		const { normal, animated } = getAmounts(guild.emojis);
 		const boostAmount = boostedEmojisLimits[guild.premiumTier];
-		return /\.gif(\?v=\d+)?$/.test(imageURL) ? animated < boostAmount : normal < boostAmount;
+		return regexes.gif.test(imageURL) ? animated < boostAmount : normal < boostAmount;
 	});
 }
 
