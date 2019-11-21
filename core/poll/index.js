@@ -1,11 +1,13 @@
 const { RichEmbed } = require('discord.js');
 const { Op } = require('sequelize');
+const Sync = require('../sync.js');
 const config = require('../../config.js');
 const models = require('../../database/models/index.js');
 
 module.exports = class Poll {
 	constructor(client) {
 		this.client = client;
+		this.sync = new Sync(client);
 	}
 
 	async sendEmbed({ author, description, thumbnail, emoji, channel, status = 'pending' }) {

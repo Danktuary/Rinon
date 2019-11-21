@@ -1,11 +1,9 @@
 const Poll = require('./index.js');
-const Sync = require('../sync.js');
 const models = require('../../database/models/index.js');
 
 module.exports = class RenameVotingPoll extends Poll {
 	constructor(client) {
 		super(client);
-		this.sync = new Sync(client);
 		this.channel = client.hubServer.renameVoting;
 	}
 
