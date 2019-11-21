@@ -11,7 +11,7 @@ module.exports = class ServerCommand extends Command {
 			args: [
 				{
 					id: 'number',
-					type: 'serverNumber',
+					type: 'integer',
 					prompt: {
 						start: message => `Which server would you like info about? Pick a number 1-${message.client.guilds.size}.`,
 						retry: message => `That's not a valid answer! Pick a number 1-${message.client.guilds.size}.`,
@@ -25,7 +25,7 @@ module.exports = class ServerCommand extends Command {
 		const { guilds, hubServer } = this.client;
 		const guild = guilds.find(g => g.name.endsWith(`(ES#${number})`));
 		const { normal, animated } = emojiUtil.getAmounts(guild.emojis);
-		const gallery = hubServer.galleryChannels.find(channel => parseInt(channel.name.slice(-1)) === number);
+		const gallery = hubServer.galleryChannel(number);
 
 		const embed = new RichEmbed()
 			.setColor(colors.misc)
