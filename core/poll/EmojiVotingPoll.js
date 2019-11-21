@@ -60,18 +60,18 @@ module.exports = class EmojiVotingPoll extends Poll {
 	async deny(message, reason) {
 		await message.delete();
 
-		const pollEntry = await models.Poll.findOne({ where: { messageID: message.id } });
-		const author = await this.client.fetchUser(pollEntry.authorID);
+		const pollData = await models.Poll.findOne({ where: { messageID: message.id } });
+		const author = await this.client.fetchUser(pollData.authorID);
 
-		pollEntry.status = 'denied';
-		await pollEntry.save();
+		pollData.status = 'denied';
+		await pollData.save();
 
 		return this.sendEmbed({
 			author,
-			emoji: { url: pollEntry.imageURL },
+			emoji: { url: pollData.imageURL },
 			status: 'denied',
 			channel: this.client.hubServer.deniedEmojis,
-			description: `\`${pollEntry.emojiName}\` has been denied. :(${(reason ? `\nReason: ${reason}` : '')}`,
+			description: `\`${pollData.emojiName}\` has been denied. :(${(reason ? `\nReason: ${reason}` : '')}`,
 		});
 	}
 
