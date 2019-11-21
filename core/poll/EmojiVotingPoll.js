@@ -11,7 +11,8 @@ module.exports = class EmojiVotingPoll extends Poll {
 	}
 
 	async create({ message, name, url }) {
-		const emoji = await message.guild.createEmoji(url, name);
+		const guild = this._nextAvailableGuild({ imageURL: url });
+		const emoji = await guild.createEmoji(url, name);
 
 		const sent = await this.sendEmbed({
 			emoji,
@@ -31,9 +32,10 @@ module.exports = class EmojiVotingPoll extends Poll {
 	}
 
 	async approve(message) {
-		const { client, guild } = message;
+		const { client } = message;
 		const pollData = await models.Poll.findOne({ where: { messageID: message.id } });
 		const author = await client.fetchUser(pollData.authorID);
+		const guild = this._nextAvailableGuild({ imageURL: pollData.imageURL });
 
 		await message.delete();
 
@@ -71,6 +73,11 @@ module.exports = class EmojiVotingPoll extends Poll {
 			description: `\`${pollEntry.emojiName}\` has been denied. :(${(reason ? `\nReason: ${reason}` : '')}`,
 		});
 
-		return message.delete();
+	_nextAvailableGuild({ imageURL }) {
+		return this.client.guilds.find(guild => {
+			const { normal, animated } = emojiUtil.getAmounts(guild.emojis);
+			const boostAmount = emojiUtil.boostedEmojisLimits[guild.premiumTier];
+			return /\.gif(\?v=\d+)?$/.test(imageURL) ? animated < boostAmount : normal < boostAmount;
+		});
 	}
 };
