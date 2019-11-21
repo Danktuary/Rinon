@@ -8,6 +8,14 @@ function getAmounts(emojis) {
 	return { normal: normal.size, animated: animated.size };
 }
 
+function nextAvailableGuild({ guilds, imageURL }) {
+	return guilds.find(guild => {
+		const { normal, animated } = getAmounts(guild.emojis);
+		const boostAmount = boostedEmojisLimits[guild.premiumTier];
+		return /\.gif(\?v=\d+)?$/.test(imageURL) ? animated < boostAmount : normal < boostAmount;
+	});
+}
+
 function search(emojis, searchTerm) {
 	const foundEmojis = emojis.filter(emoji => {
 		return emoji.name.toLowerCase().includes(searchTerm.toLowerCase());
@@ -38,3 +46,4 @@ module.exports.search = search;
 module.exports.parseSearchQuery = parseSearchQuery;
 module.exports.getAmounts = getAmounts;
 module.exports.boostedEmojisLimits = boostedEmojisLimits;
+module.exports.nextAvailableGuild = nextAvailableGuild;
