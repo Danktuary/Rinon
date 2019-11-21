@@ -64,7 +64,8 @@ module.exports = class RenameCommand extends Command {
 		pollData.emojiName = newName;
 
 		const embed = new RichEmbed(pollMessage.embeds[0]);
-		const previewEmoji = await message.guild.createEmoji(pollData.imageURL, newName);
+		const guild = emojiUtil.nextAvailableGuild({ guilds: this.client.guilds, imageURL: pollData.imageURL });
+		const previewEmoji = await guild.createEmoji(pollData.imageURL, newName);
 
 		embed.fields = [];
 		embed
