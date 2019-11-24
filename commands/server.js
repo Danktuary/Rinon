@@ -11,7 +11,7 @@ module.exports = class ServerCommand extends Command {
 			args: [
 				{
 					id: 'number',
-					type: 'integer',
+					type: 'serverNumber',
 					prompt: {
 						start: message => `Which server would you like info about? Pick a number 1-${message.client.guilds.size}.`,
 						retry: message => `That's not a valid answer! Pick a number 1-${message.client.guilds.size}.`,
