@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const database = require('../connection.js');
+const database = require('../index.js');
 
 const models = {};
 
