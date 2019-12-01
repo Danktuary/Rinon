@@ -3,7 +3,6 @@ const { hubServerID } = require('../config.js');
 module.exports = class HubServer {
 	constructor(client) {
 		this.client = client;
-		this.id = hubServerID;
 		this.guild = client.guilds.get(hubServerID);
 	}
 

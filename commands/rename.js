@@ -120,7 +120,7 @@ module.exports = class RenameCommand extends Command {
 
 		const response = [`Done! Others can now vote on your request in ${hubServer.renameVoting}.`];
 
-		if (message.guild.id !== hubServer.id) {
+		if (message.guild.id !== hubServer.guild.id) {
 			response[0] = `${response[0].slice(0, -1)} in **${hubServer.guild.name}**.`;
 			response.push(`If you can\'t open the channel link, send \`${this.handler.prefix()}server 1\` for an invite.`);
 		}
