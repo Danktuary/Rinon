@@ -45,7 +45,7 @@ module.exports = class RenameVotingPoll extends Poll {
 			thumbnail: emoji.url,
 			description: `\`${pollData.oldName}\` has been renamed to \`${emoji.name}\`! ${emoji}`,
 			fields: [{ title: 'Belongs to', value: `${emoji.guild.name} (${galleryChannel})` }],
-			status: 'approved',
+			color: 'green',
 		});
 	}
 
@@ -65,7 +65,7 @@ module.exports = class RenameVotingPoll extends Poll {
 			thumbnail: emoji.url,
 			description: `Renaming ${emoji} from \`${emoji.name}\` to \`${pollData.newName}\` has been denied. :(`,
 			fields: reason ? [{ title: 'Reason', value: reason }] : [],
-			status: 'denied',
+			color: 'red',
 		});
 	}
 

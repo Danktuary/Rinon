@@ -54,7 +54,7 @@ module.exports = class Sync {
 		const emojiChunks = chunk(Array.from(guild.emojis), 5);
 		const invite = await redis.hget('guild-invites', guild.id);
 		const embed = new RichEmbed()
-			.setColor(colors.approved)
+			.setColor(colors.green)
 			.setDescription(`Emojis for **${guild.name}** (${guild.channels.first()}). ${normal.size} normal, ${animated.size} animated.`);
 
 		const formatEmojis = emojis => emojis.map(([, emoji]) => emoji.toString()).join(' ');

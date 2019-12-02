@@ -28,7 +28,7 @@ module.exports = class EmojiSearchCommand extends Command {
 		const inviteText = `If you want an invite to any of these servers, use the \`${prefix}server\` command!`;
 
 		if (emojis.size <= (25 / 3)) {
-			const embed = new RichEmbed().setColor(colors.misc).setDescription(inviteText);
+			const embed = new RichEmbed().setColor(colors.pink).setDescription(inviteText);
 
 			for (const emoji of emojis.values()) {
 				embed

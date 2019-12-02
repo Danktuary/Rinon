@@ -28,7 +28,7 @@ module.exports = class ServerCommand extends Command {
 		const gallery = hubServer.galleryChannel(number);
 
 		const embed = new RichEmbed()
-			.setColor(colors.misc)
+			.setColor(colors.pink)
 			.setDescription(`${normal} normal emojis, ${animated} animated emojis. (View gallery: ${gallery})`);
 
 		return message.util.send(await redis.hget('guild-invites', guild.id), embed);

@@ -51,7 +51,7 @@ module.exports = class EmojiVotingPoll extends Poll {
 			thumbnail: emoji.url,
 			description: `\`${emoji.name}\` has been approved! ${emoji}`,
 			fields: [{ title: 'Added to', value: `${guild.name} (${galleryChannel})` }],
-			status: 'approved',
+			color: 'green',
 		});
 	}
 
@@ -70,7 +70,7 @@ module.exports = class EmojiVotingPoll extends Poll {
 			thumbnail: pollData.imageURL,
 			description: `\`${pollData.emojiName}\` has been denied. :(`,
 			fields: reason ? [{ title: 'Reason', value: reason }] : [],
-			status: 'denied',
+			color: 'red',
 		});
 	}
 

@@ -18,7 +18,7 @@ module.exports = class AboutCommand extends Command {
 		const emojis = { total: client.emojis.size, ...emojiUtil.getAmounts(client.emojis) };
 
 		const embed = new RichEmbed()
-			.setColor(colors.misc)
+			.setColor(colors.pink)
 			.setThumbnail(client.user.displayAvatarURL)
 			.setFooter(`Author: ${owner.tag}`, owner.displayAvatarURL)
 			.setDescription([

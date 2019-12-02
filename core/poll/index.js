@@ -10,12 +10,12 @@ module.exports = class Poll {
 		this.sync = new Sync(client);
 	}
 
-	async sendEmbed({ channel, author, thumbnail, description, fields = [], status = 'pending' }) {
+	async sendEmbed({ channel, author, thumbnail, description, fields = [], color = 'pink' }) {
 		const embed = new RichEmbed()
 			.setAuthor(`Request by ${author.tag} (${author.id})`, author.displayAvatarURL)
 			.setDescription(description)
 			.setThumbnail(thumbnail)
-			.setColor(config.colors[status] || null);
+			.setColor(config.colors[color]);
 
 		if (fields.length) {
 			for (const field of fields) {
