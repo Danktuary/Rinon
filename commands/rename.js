@@ -59,6 +59,8 @@ module.exports = class RenameCommand extends Command {
 
 		if (message.author.id !== pollData.authorID) {
 			throw new Error('You can\'t edit a poll that\'s not yours!');
+		} else if (pollData.emojiName === newName) {
+			throw new Error('The new emoji name can\'t be the same as the old one!');
 		}
 
 		pollData.emojiName = newName;
@@ -114,6 +116,10 @@ module.exports = class RenameCommand extends Command {
 				await sent.clearReactions();
 				return message.channel.send('You didn\'t react in time; cancelling the request.');
 			}
+		}
+
+		if (selectedEmoji.name === newName) {
+			throw new Error('The new emoji name can\'t be the same as the old one!');
 		}
 
 		await hubServer.polls.rename.create({ message, emoji: selectedEmoji, newName });
