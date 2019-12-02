@@ -21,6 +21,6 @@ module.exports = class MessageReactionAddListener extends Listener {
 
 		if (reaction.count < endAmount) return;
 		if (reaction.emoji.id === emojis.deny) return poll.deny(message);
-		return poll.approve(message);
+		return poll.approve({ message });
 	}
 };
