@@ -22,27 +22,11 @@ module.exports = class HubServer {
 		return this._getChannel('server-list');
 	}
 
-	get emojiVoting() {
+	get votingChannel() {
 		return this._getChannel('voting');
 	}
 
-	get renameVoting() {
-		return this._getChannel('rename-voting');
-	}
-
-	get approvedEmojis() {
-		return this._getChannel('approved-emojis');
-	}
-
-	get approvedRenames() {
-		return this._getChannel('approved-renames');
-	}
-
-	get deniedEmojis() {
-		return this._getChannel('denied-emojis');
-	}
-
-	get deniedRenames() {
-		return this._getChannel('denied-renames');
+	get logsChannel() {
+		return this._getChannel('logs');
 	}
 };

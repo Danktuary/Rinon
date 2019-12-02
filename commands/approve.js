@@ -23,7 +23,7 @@ module.exports = class ApproveCommand extends Command {
 		else if (!['emoji', 'rename'].includes(mode)) mode = 'emoji';
 
 		const poll = this.client.hubServer.polls[mode];
-		await poll.approve(await poll.search(input));
+		await poll.approve({ message: await poll.search(input) });
 		return message.util.send('Done!');
 	}
 };

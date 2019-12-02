@@ -38,7 +38,11 @@ module.exports = class DenyCommand extends Command {
 			return message.util.reply('you can\'t cancel polls you didn\'t create.');
 		}
 
-		await poll.deny(pollMessage, `Cancelled by ${message.author.id === pollAuthorID ? 'poll author' : 'bot owner'}.`);
+		await poll.deny({
+			message: pollMessage,
+			reason: `Cancelled by ${message.author.id === pollAuthorID ? 'poll author' : 'bot owner'}.`,
+		});
+
 		return message.util.send('Done!');
 	}
 };

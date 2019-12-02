@@ -10,32 +10,24 @@ module.exports = class Poll {
 		this.sync = new Sync(client);
 	}
 
-	async sendEmbed({ author, description, thumbnail, emoji, channel, status = 'pending' }) {
+	async sendEmbed({ channel, author, thumbnail, description, fields = [], status = 'pending' }) {
 		const embed = new RichEmbed()
 			.setAuthor(`Request by ${author.tag} (${author.id})`, author.displayAvatarURL)
 			.setDescription(description)
-			.setThumbnail(thumbnail || (emoji && emoji.url));
+			.setThumbnail(thumbnail)
+			.setColor(config.colors[status] || null);
 
-		if (emoji) embed.addField('Preview', emoji.toString());
-
-		if (status !== 'pending') {
-			embed.fields = [];
-			embed.setColor(config.colors[status]);
+		if (fields.length) {
+			for (const field of fields) {
+				embed.addField(field.title, field.value);
+			}
 		}
 
-		const sent = await (channel || this.channel).send(embed);
-
-		if (status === 'pending') {
-			await sent.react(config.emojis.approve);
-			await sent.react(config.emojis.deny);
-		}
-
-		return sent;
+		return channel.send(embed);
 	}
 
-	async search(searchTerm, data = {}) {
-		const column = data.column || (/\d+/.test(searchTerm) ? 'message_id' : 'emoji_name');
-		const pollData = await models[data.model || 'Poll'].findOne({
+	async search(searchTerm, { column, model }) {
+		const pollData = await models[model].findOne({
 			where: {
 				status: 'pending',
 				[column]: { [Op.iLike]: searchTerm },
@@ -46,6 +38,6 @@ module.exports = class Poll {
 			throw new Error('I couldn\'t find any requests that match your search term!');
 		}
 
-		return this.channel.fetchMessage(pollData.messageID);
+		return this.client.hubServer.votingChannel.fetchMessage(pollData.messageID);
 	}
 };
