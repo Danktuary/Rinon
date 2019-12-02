@@ -7,37 +7,51 @@ const regexes = require('../util/regexes.js');
 module.exports = class Sync {
 	constructor(client) {
 		this.client = client;
+		if (redis.hlen('guild-invites')) {
+			redis.hgetall('guild-invites').then(cachedInvites => {
+				this.cachedInvites = new Map(Object.entries(cachedInvites));
+			});
+		}
 	}
 
 	async invites() {
-		const invites = new Map();
-		const { guilds, hubServer } = this.client;
+		const uncachedGuilds = this.client.guilds.filter(guild => !this.cachedInvites.has(guild.id));
+		if (!uncachedGuilds.size) return;
 
-		if (redis.hlen('guild-invites')) {
-			const cachedInvites = await redis.hgetall('guild-invites');
-			const cachedGuilds = guilds.filter(guild => Object.keys(cachedInvites).includes(guild.id));
-
-			for (const id of cachedGuilds.keys()) {
-				invites.set(id, cachedInvites[id]);
-			}
-		}
-
-		const uncachedGuilds = guilds.filter(guild => !invites.has(guild.id));
 		const fetchedInvites = await this._generateInvites(uncachedGuilds);
 
 		for (const [id, url] of fetchedInvites.entries()) {
 			await redis.hset('guild-invites', id, url);
-			invites.set(id, url);
+			this.cachedInvites.set(id, url);
+		}
+	}
+
+	async _generateInvites(guilds) {
+		const urls = new Map();
+
+		for (const guild of guilds.values()) {
+			const invites = await guild.fetchInvites();
+
+			if (invites.size) {
+				urls.set(guild.id, invites.first().url);
+				continue;
+			}
+
+			const invite = await guild.channels.first().createInvite({ maxAge: 0 });
+			urls.set(guild.id, invite.url);
 		}
 
-		let content = '';
+		return urls;
+	}
 
-		for (const [id, url] of invites.entries()) {
+	async serverList() {
+		let content = '';
+		const { guilds, hubServer } = this.client;
+
+		for (const [id, url] of this.cachedInvites.entries()) {
 			const guild = guilds.get(id);
 			const [, number] = guild.name.match(regexes.guildNameEnding);
-			const gallery = hubServer.galleryChannels.find(channel => channel.name.slice(-1) === number);
-
-			content += `Invite link for **${guild.name}**:\n${url} (View gallery: ${gallery})\n\n`;
+			content += `Invite link for **${guild.name}**:\n${url} (View gallery: ${hubServer.galleryChannel(number)})\n\n`;
 		}
 
 		const messages = await hubServer.serverList.fetchMessages();
@@ -52,7 +66,11 @@ module.exports = class Sync {
 
 		const messages = await channel.fetchMessages();
 		const emojiChunks = chunk(Array.from(guild.emojis), 5);
+
+		// make this fetch the invite if not already cached
+		// should be getting from this.cachedInvites
 		const invite = await redis.hget('guild-invites', guild.id);
+
 		const embed = new RichEmbed()
 			.setColor(colors.green)
 			.setDescription(`Emojis for **${guild.name}** (${guild.channels.first()}). ${normal.size} normal, ${animated.size} animated.`);
@@ -83,23 +101,5 @@ module.exports = class Sync {
 		for (const channel of this.client.hubServer.galleryChannels.values()) {
 			await this.gallery(channel);
 		}
-	}
-
-	async _generateInvites(guilds) {
-		const urls = new Map();
-
-		for (const guild of guilds.values()) {
-			const invites = await guild.fetchInvites();
-
-			if (invites.size) {
-				urls.set(guild.id, invites.first().url);
-				continue;
-			}
-
-			const invite = await guild.channels.first().createInvite({ maxAge: 0 });
-			urls.set(guild.id, invite.url);
-		}
-
-		return urls;
 	}
 };
