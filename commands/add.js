@@ -36,7 +36,7 @@ module.exports = class AddCommand extends Command {
 
 		await hubServer.polls.emoji.create({ message, name, url });
 
-		const response = [`Done! Others can now vote on your request in ${hubServer.emojiVoting}.`];
+		const response = [`Done! Others can now vote on your request in ${hubServer.votingChannel}.`];
 
 		if (message.guild.id !== hubServer.guild.id) {
 			response[0] = `${response[0].slice(0, -1)} in **${hubServer.guild.name}**.`;
