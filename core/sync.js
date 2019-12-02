@@ -67,9 +67,8 @@ module.exports = class Sync {
 		const messages = await channel.fetchMessages();
 		const emojiChunks = chunk(Array.from(guild.emojis), 5);
 
-		// make this fetch the invite if not already cached
-		// should be getting from this.cachedInvites
-		const invite = await redis.hget('guild-invites', guild.id);
+		if (!this.cachedInvites.has(guild.id)) await this.invites();
+		const invite = this.cachedInvites.get(guild.id);
 
 		const embed = new RichEmbed()
 			.setColor(colors.green)
