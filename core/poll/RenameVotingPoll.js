@@ -64,12 +64,18 @@ module.exports = class RenameVotingPoll extends Poll {
 		pollData.status = 'denied';
 		await pollData.save();
 
+		const [, number] = emoji.guild.name.match(regexes.guildNameEnding);
+		const galleryChannel = this.client.hubServer.galleryChannel(number);
+
+		const fields = [{ title: 'Belongs to', value: `${emoji.guild.name} (${galleryChannel})` }];
+		if (reason) fields.push({ title: 'Reason', value: reason });
+
 		return this.sendEmbed({
 			channel: this.client.hubServer.logsChannel,
 			author,
 			thumbnail: emoji.url,
 			description: `Renaming ${emoji} from \`${emoji.name}\` to \`${pollData.newName}\` has been denied. :(`,
-			fields: reason ? [{ title: 'Reason', value: reason }] : [],
+			fields,
 			color: 'red',
 		});
 	}
