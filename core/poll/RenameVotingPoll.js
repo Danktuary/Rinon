@@ -42,7 +42,7 @@ module.exports = class RenameVotingPoll extends Poll {
 
 		const [, number] = emoji.guild.name.match(regexes.guildNameEnding);
 		const galleryChannel = this.client.hubServer.galleryChannel(number);
-		await this.sync.gallery(galleryChannel);
+		await this.client.sync.gallery(galleryChannel);
 
 		return this.sendEmbed({
 			channel: this.client.hubServer.logsChannel,

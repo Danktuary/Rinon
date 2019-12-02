@@ -1,5 +1,6 @@
 const path = require('path');
 const { AkairoClient, CommandHandler } = require('discord-akairo');
+const Sync = require('./sync.js');
 const HubServer = require('./hubServer.js');
 const database = require('../database/index.js');
 const { ownerID, prefix } = require('../config.js');
@@ -29,6 +30,7 @@ module.exports = class RinonClient extends AkairoClient {
 		});
 
 		this.once('ready', () => {
+			this.sync = new Sync(this);
 			this.hubServer = new HubServer(this);
 			// NOTE: This stays here because the 2 classes depend on the `hubServer[votingChannel]` props
 			this.hubServer.polls = { emoji: new EmojiVotingPoll(this), rename: new RenameVotingPoll(this) };
