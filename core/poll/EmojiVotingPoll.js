@@ -5,6 +5,11 @@ const regexes = require('../../util/regexes.js');
 const models = require('../../database/models/index.js');
 
 module.exports = class EmojiVotingPoll extends Poll {
+	constructor(client) {
+		super(client);
+		this.model = models.Poll;
+	}
+
 	async create({ message, name, url }) {
 		const guild = emojiUtil.nextAvailableGuild({ guilds: this.client.guilds, imageURL: url });
 		const emoji = await guild.createEmoji(url, name);
@@ -21,7 +26,7 @@ module.exports = class EmojiVotingPoll extends Poll {
 		await sent.react(config.emojis.approve);
 		await sent.react(config.emojis.deny);
 
-		return models.Poll.create({
+		return this.model.create({
 			messageID: sent.id,
 			authorID: message.author.id,
 			emojiName: name,
@@ -30,7 +35,7 @@ module.exports = class EmojiVotingPoll extends Poll {
 	}
 
 	async approve({ message }) {
-		const pollData = await models.Poll.findOne({ where: { messageID: message.id } });
+		const pollData = await this.model.findOne({ where: { messageID: message.id } });
 		const author = await this.client.fetchUser(pollData.authorID);
 		const guild = emojiUtil.nextAvailableGuild({ guilds: this.client.guilds, imageURL: pollData.imageURL });
 
@@ -58,7 +63,7 @@ module.exports = class EmojiVotingPoll extends Poll {
 	async deny({ message, reason }) {
 		await message.delete();
 
-		const pollData = await models.Poll.findOne({ where: { messageID: message.id } });
+		const pollData = await this.model.findOne({ where: { messageID: message.id } });
 		const author = await this.client.fetchUser(pollData.authorID);
 
 		pollData.status = 'denied';
@@ -75,9 +80,6 @@ module.exports = class EmojiVotingPoll extends Poll {
 	}
 
 	async search(searchTerm) {
-		return super.search(searchTerm, {
-			model: 'Poll',
-			column: /\d+/.test(searchTerm) ? 'message_id' : 'emoji_name',
-		});
+		return super.search(searchTerm, { column: /\d+/.test(searchTerm) ? 'message_id' : 'emoji_name' });
 	}
 };

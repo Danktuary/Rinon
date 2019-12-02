@@ -1,5 +1,4 @@
 const { Listener } = require('discord-akairo');
-const models = require('../database/models/index.js');
 const { emojis, voteEndAmount } = require('../config.js');
 
 module.exports = class MessageReactionAddListener extends Listener {
@@ -16,7 +15,7 @@ module.exports = class MessageReactionAddListener extends Listener {
 		if (![emojis.approve, emojis.deny].includes(reaction.emoji.id)) return;
 		if (!embed || embed.color) return;
 
-		const pollData = await models.Poll.findOne({ where: { messageID: message.id } });
+		const pollData = await poll.model.findOne({ where: { messageID: message.id } });
 		const endAmount = reaction.users.has(pollData.authorID) ? voteEndAmount + 2 : voteEndAmount + 1;
 
 		if (reaction.count < endAmount) return;

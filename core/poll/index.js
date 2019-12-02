@@ -2,7 +2,6 @@ const { RichEmbed } = require('discord.js');
 const { Op } = require('sequelize');
 const Sync = require('../sync.js');
 const config = require('../../config.js');
-const models = require('../../database/models/index.js');
 
 module.exports = class Poll {
 	constructor(client) {
@@ -26,8 +25,8 @@ module.exports = class Poll {
 		return channel.send(embed);
 	}
 
-	async search(searchTerm, { column, model }) {
-		const pollData = await models[model].findOne({
+	async search(searchTerm, { column }) {
+		const pollData = await this.model.findOne({
 			where: {
 				status: 'pending',
 				[column]: { [Op.iLike]: searchTerm },

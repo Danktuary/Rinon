@@ -4,6 +4,11 @@ const regexes = require('../../util/regexes.js');
 const models = require('../../database/models/index.js');
 
 module.exports = class RenameVotingPoll extends Poll {
+	constructor(client) {
+		super(client);
+		this.model = models.RenamePoll;
+	}
+
 	async create({ message, emoji, newName }) {
 		const sent = await this.sendEmbed({
 			channel: this.client.hubServer.votingChannel,
@@ -15,7 +20,7 @@ module.exports = class RenameVotingPoll extends Poll {
 		await sent.react(config.emojis.approve);
 		await sent.react(config.emojis.deny);
 
-		return models.RenamePoll.create({
+		return this.model.create({
 			messageID: sent.id,
 			authorID: message.author.id,
 			emojiID: emoji.id,
@@ -25,7 +30,7 @@ module.exports = class RenameVotingPoll extends Poll {
 	}
 
 	async approve({ message }) {
-		const pollData = await models.RenamePoll.findOne({ where: { messageID: message.id } });
+		const pollData = await this.model.findOne({ where: { messageID: message.id } });
 		const author = await message.client.fetchUser(pollData.authorID);
 		const emoji = message.client.emojis.get(pollData.emojiID);
 
@@ -52,7 +57,7 @@ module.exports = class RenameVotingPoll extends Poll {
 	async deny({ message, reason }) {
 		await message.delete();
 
-		const pollData = await models.RenamePoll.findOne({ where: { messageID: message.id } });
+		const pollData = await this.model.findOne({ where: { messageID: message.id } });
 		const author = await message.client.fetchUser(pollData.authorID);
 		const emoji = message.client.emojis.get(pollData.emojiID);
 
@@ -70,9 +75,6 @@ module.exports = class RenameVotingPoll extends Poll {
 	}
 
 	async search(searchTerm) {
-		return super.search(searchTerm, {
-			model: 'RenamePoll',
-			column: /\d+/.test(searchTerm) ? 'message_id' : 'new_name',
-		});
+		return super.search(searchTerm, { column: /\d+/.test(searchTerm) ? 'message_id' : 'new_name' });
 	}
 };

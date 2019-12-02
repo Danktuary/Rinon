@@ -1,6 +1,5 @@
 const { RichEmbed } = require('discord.js');
 const { Command } = require('discord-akairo');
-const models = require('../database/models/index.js');
 const parseInput = require('../util/parseInput.js');
 const textUtil = require('../util/text.js');
 const emojiUtil = require('../util/emoji.js');
@@ -45,9 +44,10 @@ module.exports = class RenameCommand extends Command {
 
 	async renamePoll({ message, oldName, newName }) {
 		let pollMessage = null;
+		const poll = this.client.hubServer.polls.emoji;
 
 		try {
-			pollMessage = await this.client.hubServer.polls.emoji.search(oldName);
+			pollMessage = await poll.search(oldName);
 		} catch (error) {
 			return message.util.send([
 				'I couldn\'t find any requests that match your search term!',
@@ -55,7 +55,7 @@ module.exports = class RenameCommand extends Command {
 			].join('\n'));
 		}
 
-		const pollData = await models.Poll.findOne({ where: { messageID: pollMessage.id } });
+		const pollData = await poll.model.findOne({ where: { messageID: pollMessage.id } });
 
 		if (message.author.id !== pollData.authorID) {
 			throw new Error('You can\'t edit a poll that\'s not yours!');
