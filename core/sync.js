@@ -7,6 +7,8 @@ const regexes = require('../util/regexes.js');
 module.exports = class Sync {
 	constructor(client) {
 		this.client = client;
+		this.cachedInvites = new Map();
+
 		if (redis.hlen('guild-invites')) {
 			redis.hgetall('guild-invites').then(cachedInvites => {
 				this.cachedInvites = new Map(Object.entries(cachedInvites));
