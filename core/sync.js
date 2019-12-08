@@ -71,7 +71,7 @@ module.exports = class Sync {
 		const invite = this.cachedInvites.get(guild.id);
 
 		const embed = new RichEmbed()
-			.setColor(colors.green)
+			.setColor(colors.pink)
 			.setDescription(`Emojis for **${guild.name}** (${guild.channels.first()}). ${normal.size} normal, ${animated.size} animated.`);
 
 		const formatEmojis = emojis => emojis.map(([, emoji]) => emoji.toString()).join(' ');
