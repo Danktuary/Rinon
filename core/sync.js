@@ -103,4 +103,28 @@ module.exports = class Sync {
 			await this.gallery(channel);
 		}
 	}
+
+	clearInvites() {
+		this.cachedInvites.clear();
+		return redis.del('guild-invites');
+	}
+
+	async clearChannel(channel) {
+		try {
+			await channel.bulkDelete(100);
+		} catch (error) {
+			await this._altDelete(await channel.fetchMessages(100));
+		}
+	}
+
+	async clearGalleries() {
+		for (const channel of this.client.hubServer.galleryChannels.values()) {
+			await this.clearChannel(channel);
+		}
+	}
+
+
+	_altDelete(items) {
+		return Promise.all(items.map(item => item.delete()));
+	}
 };
