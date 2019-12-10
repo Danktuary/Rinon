@@ -1,7 +1,6 @@
 const { RichEmbed } = require('discord.js');
 const { Command } = require('discord-akairo');
 const { colors } = require('../config.js');
-const redis = require('../core/redis.js');
 const emojiUtil = require('../util/emoji.js');
 
 module.exports = class ServerCommand extends Command {
@@ -31,6 +30,6 @@ module.exports = class ServerCommand extends Command {
 			.setColor(colors.pink)
 			.setDescription(`${normal} normal emojis, ${animated} animated emojis. (View gallery: ${gallery})`);
 
-		return message.util.send(await redis.hget('guild-invites', guild.id), embed);
+		return message.util.send(this.client.sync.cachedInvites.get(guild.id), embed);
 	}
 };
