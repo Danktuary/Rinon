@@ -7,6 +7,7 @@ module.exports = class EmojiSearchCommand extends Command {
 	constructor() {
 		super('emoji-search', {
 			aliases: ['emoji-search', 'emoji', 'emote', 'search'],
+			description: 'Find a list of emojis based on your search query.',
 			args: [{ id: 'name' }],
 		});
 	}

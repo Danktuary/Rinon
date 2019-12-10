@@ -4,6 +4,7 @@ module.exports = class ApproveCommand extends Command {
 	constructor() {
 		super('approve', {
 			aliases: ['approve', 'approve-emoji', 'approve-rename'],
+			description: 'Approve a pending emoji or rename poll.',
 			ownerOnly: true,
 			args: [
 				{ id: 'input' },

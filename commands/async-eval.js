@@ -4,6 +4,7 @@ module.exports = class AsyncEvalCommand extends Command {
 	constructor() {
 		super('async-eval', {
 			aliases: ['async-eval', 'async'],
+			description: 'The same as the eval command, but wrapped in an async immediately invoked function expression.',
 			ownerOnly: true,
 			args: [
 				{

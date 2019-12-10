@@ -8,6 +8,7 @@ module.exports = class AboutCommand extends Command {
 	constructor() {
 		super('about', {
 			aliases: ['about'],
+			description: 'Displays some basic info about Rinon!',
 		});
 	}
 

@@ -4,6 +4,7 @@ module.exports = class DenyCommand extends Command {
 	constructor() {
 		super('deny', {
 			aliases: ['deny', 'deny-emoji', 'deny-rename', 'cancel', 'cancel-emoji', 'cancel-rename'],
+			description: 'Deny/cancel a pending emoji or rename poll.',
 			args: [
 				{ id: 'input' },
 				{
