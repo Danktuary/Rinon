@@ -16,7 +16,7 @@ module.exports = class AboutCommand extends Command {
 		const { client } = message;
 		const owner = await client.fetchUser(client.ownerID);
 		const invite = await client.generateInvite(permissionsUtil.required);
-		const emojis = { total: client.emojis.size, ...emojiUtil.getAmounts(client.emojis) };
+		const [normal, animated] = client.emojis.partition(emoji => !emoji.animated);
 
 		const embed = new RichEmbed()
 			.setColor(colors.pink)
@@ -27,7 +27,7 @@ module.exports = class AboutCommand extends Command {
 				`[Invite](${invite}) | [GitHub](https://github.com/Danktuary/Rinon)`,
 			].join('\n'))
 			.addField('Servers', `${client.guilds.size} (${client.hubServer.serverList})`, true)
-			.addField('Emojis', `${emojis.total} (${emojis.animated} animated, ${emojis.normal} normal)`, true);
+			.addField('Emojis', `${client.emojis.size} (${animated.size} animated, ${normal.size} normal)`, true);
 
 		return message.util.send(embed);
 	}

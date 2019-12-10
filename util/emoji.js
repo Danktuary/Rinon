@@ -3,16 +3,11 @@ const regexes = require('../util/regexes.js');
 
 const boostedEmojisLimits = { 0: 50, 1: 100, 2: 150, 3: 250 };
 
-function getAmounts(emojis) {
-	const [normal, animated] = emojis.partition(emoji => !emoji.animated);
-	return { normal: normal.size, animated: animated.size };
-}
-
 function nextAvailableGuild({ guilds, imageURL }) {
 	return guilds.find(guild => {
-		const { normal, animated } = getAmounts(guild.emojis);
+		const [normal, animated] = guild.emojis.partition(emoji => !emoji.animated);
 		const boostAmount = boostedEmojisLimits[guild.premiumTier];
-		return regexes.gif.test(imageURL) ? animated < boostAmount : normal < boostAmount;
+		return regexes.gif.test(imageURL) ? animated.size < boostAmount : normal.size < boostAmount;
 	});
 }
 
@@ -29,6 +24,5 @@ function parseSearchQuery(name) {
 
 module.exports.search = search;
 module.exports.parseSearchQuery = parseSearchQuery;
-module.exports.getAmounts = getAmounts;
 module.exports.boostedEmojisLimits = boostedEmojisLimits;
 module.exports.nextAvailableGuild = nextAvailableGuild;
