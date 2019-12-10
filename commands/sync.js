@@ -1,6 +1,6 @@
+const { RichEmbed } = require('discord.js');
 const { Command } = require('discord-akairo');
-const redis = require('../core/redis.js');
-const Sync = require('../core/sync.js');
+const config = require('../config.js');
 
 module.exports = class SyncCommand extends Command {
 	constructor() {
@@ -8,6 +8,23 @@ module.exports = class SyncCommand extends Command {
 			aliases: ['sync'],
 			ownerOnly: true,
 			args: [
+				{
+					id: 'mode',
+					type: ['all', 'invites', 'galleries', 'gallery'],
+					prompt: {
+						start: () => 'Choose what you\'d like to sync: invites, galleries, gallery, or all.',
+						retry: () => `That's not a valid answer! Please choose from: invites, galleries, gallery, or all.`,
+					},
+				},
+				{
+					id: 'serverNumber',
+					type: 'serverNumber',
+					prompt: {
+						start: message => `Which server would you like to sync? Pick a number 1-${message.client.guilds.size}.`,
+						retry: message => `That's not a valid answer! Pick a number 1-${message.client.guilds.size}.`,
+						optional: true,
+					},
+				},
 				{
 					id: 'force',
 					match: 'flag',
@@ -17,32 +34,54 @@ module.exports = class SyncCommand extends Command {
 		});
 	}
 
-	async exec(message, { force }) {
-		const sync = new Sync(this.client);
+	async exec(message, { mode, force, serverNumber }) {
+		const { hubServer, sync } = this.client;
+		const syncMethod = force ? 'force-synced' : 'synced';
+		const embed = new RichEmbed()
+			.setColor(config.colors.pink)
+			.setAuthor('Server Sync Action: ', this.client.user.displayAvatarURL)
 
-		if (force) {
-			const { hubServer } = this.client;
-			await redis.del('guild-invites');
 
-			const altDelete = items => Promise.all(items.map(item => item.delete()));
-
-			try {
-				await hubServer.serverList.bulkDelete(100);
-			} catch (error) {
-				await altDelete(await hubServer.serverList.fetchMessages(100));
+		if (mode === 'all') {
+			if (force) {
+				await sync.clearInvites();
+				await sync.clearChannel(hubServer.serverList);
+				await sync.clearGalleries();
 			}
 
-			try {
-				await Promise.all(hubServer.galleryChannels.map(channel => channel.bulkDelete(100)));
-			} catch (error) {
-				for (const channel of hubServer.galleryChannels.values()) {
-					await altDelete(await channel.fetchMessages(100));
-				}
+			await sync.invites();
+			await sync.serverList();
+			await sync.galleries();
+
+			embed.author.name += 'Full sync (invites, server list, and galleries)';
+			embed.setDescription(`The invites, ${hubServer.serverList} channel, and emoji galleries have been ${syncMethod}.`);
+		} else if (mode === 'invites') {
+			if (force) {
+				await sync.clearInvites();
+				await sync.clearChannel(hubServer.serverList);
 			}
+
+			await sync.invites();
+			await sync.serverList();
+
+			embed.author.name += 'Invites and server list';
+			embed.setDescription(`The invites and ${hubServer.serverList} channel have been ${syncMethod}.`);
+		} else if (mode === 'galleries') {
+			if (force) await sync.clearGalleries();
+			await sync.galleries();
+			embed.author.name += 'Galleries';
+			embed.setDescription(`The emoji galleries have been ${syncMethod}.`);
+		} else if (mode === 'gallery') {
+			if (!serverNumber) return message.channel.send('You need to provide a server number with your input.');
+			const channel = hubServer.galleryChannel(serverNumber);
+
+			if (force) await sync.clearChannel(channel);
+			await sync.gallery(channel);
+			embed.author.name += `Gallery (#${serverNumber})`;
+			embed.setDescription(`The emoji gallery for ${channel} has been ${syncMethod}.`);
 		}
 
-		await sync.invites();
-		await sync.galleries();
+		await hubServer.logsChannel.send(embed);
 		return message.util.send('Syncing complete!');
 	}
 };
