@@ -1,7 +1,6 @@
 const { RichEmbed } = require('discord.js');
 const { Command } = require('discord-akairo');
 const { colors } = require('../config.js');
-const emojiUtil = require('../util/emoji.js');
 
 module.exports = class ServerCommand extends Command {
 	constructor() {
