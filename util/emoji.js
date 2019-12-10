@@ -29,17 +29,10 @@ function search(emojis, searchTerm) {
 }
 
 function parseSearchQuery(name) {
-	if (regexes.emoji.test(name)) {
-		return parseInput.fromEmoji(name).name.toLowerCase();
-	}
-
+	if (regexes.emoji.test(name)) return parseInput.fromEmoji(name).name;
 	if (/^:\w+:$/.test(name)) name = name.replace(/:/g, '');
-
-	if (!regexes.wordsOnly.test(name)) {
-		throw new Error('only alphanumeric characters are allowed!');
-	}
-
-	return name.toLowerCase();
+	if (!regexes.wordsOnly.test(name)) throw new Error('only alphanumeric characters are allowed!');
+	return name;
 }
 
 module.exports.search = search;
