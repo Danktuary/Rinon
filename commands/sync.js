@@ -6,6 +6,7 @@ module.exports = class SyncCommand extends Command {
 	constructor() {
 		super('sync', {
 			aliases: ['sync'],
+			description: '',
 			ownerOnly: true,
 			args: [
 				{
@@ -40,7 +41,6 @@ module.exports = class SyncCommand extends Command {
 		const embed = new RichEmbed()
 			.setColor(config.colors.pink)
 			.setAuthor('Server Sync Action: ', this.client.user.displayAvatarURL);
-
 
 		if (mode === 'all') {
 			if (force) {

@@ -37,4 +37,4 @@ module.exports = class EvalCommand extends Command {
 			return message.util.send(error, { code: 'js' });
 		}
 	}
-}
+};

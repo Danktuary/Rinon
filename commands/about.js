@@ -27,7 +27,7 @@ module.exports = class AboutCommand extends Command {
 				`[Invite](${invite}) | [GitHub](https://github.com/Danktuary/Rinon)`,
 			].join('\n'))
 			.addField('Servers', `${client.guilds.size} (${client.hubServer.serverList})`, true)
-			.addField('Emojis', `${emojis.total} (${emojis.animated} animated, ${emojis.normal} normal)`, true)
+			.addField('Emojis', `${emojis.total} (${emojis.animated} animated, ${emojis.normal} normal)`, true);
 
 		return message.util.send(embed);
 	}
