@@ -1,6 +1,7 @@
 const { Command } = require('discord-akairo');
 const { MessageEmbed } = require('discord.js');
 const permissionsUtil = require('../util/permissions.js');
+const regexes = require('../util/regexes.js');
 
 module.exports = class InitializeCommand extends Command {
 	constructor() {
@@ -28,7 +29,7 @@ module.exports = class InitializeCommand extends Command {
 			}]));
 		}
 
-		if (guild.channels.some(channel => channel.name === 'emoji-voting')) {
+		if (guild.channels.some(channel => channel.name === 'info')) {
 			return message.util.send('I\'m already good to go!');
 		}
 
@@ -116,16 +117,21 @@ module.exports = class InitializeCommand extends Command {
 	}
 
 	async setupChannels(guild) {
-		if (guild.channels.some(channel => ['emoji-voting', 'rinon-testing'].includes(channel.name))) return;
+		const { hubServer, sync } = this.client;
 
-		await guild.createChannel('emoji-voting', 'text', [
-			{ id: guild.defaultRole.id, denied: ['SEND_MESSAGES'] },
-			{ id: guild.me.id, allowed: ['SEND_MESSAGES', 'CREATE_INSTANT_INVITE', 'MANAGE_MESSAGES'] },
-		]);
+		const infoChannel = guild.channels.find(channel => channel.name === 'info')
+			|| await guild.createChannel('info', 'text', [
+				{ id: guild.defaultRole.id, denied: ['SEND_MESSAGES'] },
+				{ id: guild.me.id, allowed: ['SEND_MESSAGES', 'CREATE_INSTANT_INVITE', 'MANAGE_MESSAGES'] },
+			]);
 
-		return guild.createChannel('rinon-testing', 'text', [
-			{ id: guild.defaultRole.id, denied: ['VIEW_CHANNEL'] },
-			{ id: guild.me.id, allowed: ['VIEW_CHANNEL'] },
+		const [, number] = guild.name.match(regexes.guildNameEnding);
+
+		return infoChannel.send([
+			`Welcome! This is **${guild.name}**, one of our many emoji servers.`,
+			'If you haven\'t already, please join the main server! That\'s where you\'ll get to vote on polls for new emojis and view all the existing emojis our servers have to offer.\n',
+			`**Emoji gallery for server #${number}:** ${hubServer.galleryChannel(number)}`,
+			`**Invite link for ${hubServer.guild.name}:** ${sync.cachedInvites.get(hubServer.guild.id)}`,
 		]);
 	}
 };
