@@ -1,16 +1,17 @@
 const { Collection } = require('discord.js');
 const regexes = require('./regexes.js');
 
-const baseEmojiURL = 'https://cdn.discordapp.com/emojis';
-
 function fromEmoji(emoji) {
 	const [, animated, name, emojiID] = emoji.match(regexes.emoji);
-	return { name, url: `${baseEmojiURL}/${emojiID}.${animated ? 'gif' : 'png'}` };
+	return { name, url: `https://cdn.discordapp.com/emojis'/${emojiID}.${animated ? 'gif' : 'png'}` };
 }
 
 function fromEmojiAndName(emoji, name) {
-	const [, animated, , emojiID] = emoji.match(regexes.emoji);
-	return { name, url: `${baseEmojiURL}/${emojiID}.${animated ? 'gif' : 'png'}` };
+	return Object.assign(fromEmoji(emoji), { name });
+}
+
+function fromNameAndEmoji(name, emoji) {
+	return Object.assign(fromEmoji(emoji), { name });
 }
 
 function fromUrlAndName(url, name) {
@@ -19,11 +20,6 @@ function fromUrlAndName(url, name) {
 	}
 
 	return { name, url };
-}
-
-function fromNameAndEmoji(name, emoji) {
-	const [, animated, , emojiID] = emoji.match(regexes.emoji);
-	return { name, url: `${baseEmojiURL}/${emojiID}.${animated ? 'gif' : 'png'}` };
 }
 
 function fromNameAndAttachment(name, attachment) {
