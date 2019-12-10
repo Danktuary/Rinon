@@ -27,11 +27,6 @@ module.exports = class DenyCommand extends Command {
 		const { hubServer, ownerID } = this.client;
 		const poll = hubServer.polls[mode];
 
-		if (alias.startsWith('deny') && message.author.id !== ownerID) {
-			const owner = await this.client.fetchUser(ownerID);
-			return message.util.reply(`only ${owner.tag} may use that command. If you're trying to cancel your own poll, use \`${this.handler.prefix()}${alias.replace('deny', 'cancel')} <input>\``);
-		}
-
 		const pollMessage = await poll.search(input);
 		const [, pollAuthorID] = pollMessage.embeds[0].author.name.match(/\((\d+)\)/);
 
