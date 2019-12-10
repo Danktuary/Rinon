@@ -17,15 +17,7 @@ function nextAvailableGuild({ guilds, imageURL }) {
 }
 
 function search(emojis, searchTerm) {
-	const foundEmojis = emojis.filter(emoji => {
-		return emoji.name.toLowerCase().includes(searchTerm.toLowerCase());
-	});
-
-	if (!foundEmojis.size) {
-		throw new Error('I couldn\'t find any requests that match your search term!');
-	}
-
-	return foundEmojis;
+	return emojis.filter(emoji => emoji.name.toLowerCase().includes(searchTerm.toLowerCase()));
 }
 
 function parseSearchQuery(name) {
