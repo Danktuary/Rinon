@@ -1,5 +1,5 @@
 const Poll = require('./index.js');
-const config = require('../../config.js');
+const { emojis } = require('../../config.js');
 const regexes = require('../../util/regexes.js');
 const models = require('../../database/models/index.js');
 
@@ -17,8 +17,8 @@ module.exports = class RenameVotingPoll extends Poll {
 			description: `\`${message.author.tag}\` wants to rename ${emoji} from \`${emoji.name}\` to \`${newName}\`.`,
 		});
 
-		await sent.react(config.emojis.approve);
-		await sent.react(config.emojis.deny);
+		await sent.react(emojis.approve);
+		await sent.react(emojis.deny);
 
 		return this.model.create({
 			messageID: sent.id,

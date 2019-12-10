@@ -1,5 +1,5 @@
 const Poll = require('./index.js');
-const config = require('../../config.js');
+const { emojis } = require('../../config.js');
 const emojiUtil = require('../../util/emoji.js');
 const regexes = require('../../util/regexes.js');
 const models = require('../../database/models/index.js');
@@ -23,8 +23,8 @@ module.exports = class EmojiVotingPoll extends Poll {
 		});
 
 		await emoji.delete();
-		await sent.react(config.emojis.approve);
-		await sent.react(config.emojis.deny);
+		await sent.react(emojis.approve);
+		await sent.react(emojis.deny);
 
 		return this.model.create({
 			messageID: sent.id,

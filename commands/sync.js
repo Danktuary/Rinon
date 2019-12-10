@@ -1,6 +1,6 @@
 const { RichEmbed } = require('discord.js');
 const { Command } = require('discord-akairo');
-const config = require('../config.js');
+const { colors } = require('../config.js');
 
 module.exports = class SyncCommand extends Command {
 	constructor() {
@@ -39,7 +39,7 @@ module.exports = class SyncCommand extends Command {
 		const { hubServer, sync } = this.client;
 		const syncMethod = force ? 'force-synced' : 'synced';
 		const embed = new RichEmbed()
-			.setColor(config.colors.pink)
+			.setColor(colors.pink)
 			.setAuthor('Server Sync Action: ', this.client.user.displayAvatarURL);
 
 		if (mode === 'all') {

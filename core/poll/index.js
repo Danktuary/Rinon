@@ -1,6 +1,6 @@
 const { RichEmbed } = require('discord.js');
 const { Op } = require('sequelize');
-const config = require('../../config.js');
+const { colors } = require('../../config.js');
 
 module.exports = class Poll {
 	constructor(client) {
@@ -12,7 +12,7 @@ module.exports = class Poll {
 			.setAuthor(`Request by ${author.tag} (${author.id})`, author.displayAvatarURL)
 			.setDescription(description)
 			.setThumbnail(thumbnail)
-			.setColor(config.colors[color]);
+			.setColor(colors[color]);
 
 		if (fields.length) {
 			for (const field of fields) {
