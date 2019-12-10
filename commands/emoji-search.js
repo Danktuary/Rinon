@@ -8,21 +8,27 @@ module.exports = class EmojiSearchCommand extends Command {
 		super('emoji-search', {
 			aliases: ['emoji-search', 'emoji', 'emote', 'search'],
 			description: 'Find a list of emojis based on your search query.',
-			args: [{ id: 'name' }],
+			args: [
+				{
+					id: 'query',
+					prompt: {
+						start: () => 'What emoji would you like to search for?',
+						retry: () => 'That\'s not a valid search term! Please send the emoji or an emoji name you\'d like to search for.',
+					},
+				},
+			],
 		});
 	}
 
-	async exec(message, { name }) {
-		if (!name || name.length < 2 || name.length > 32) {
+	async exec(message, { query }) {
+		const searchTerm = emojiUtil.parseSearchQuery(query);
+		if (searchTerm.length < 2 || searchTerm.length > 32) {
 			return message.util.send('A search term needs to be between 2 and 32 characters long.');
 		}
 
-		try {
-			const emojis = emojiUtil.search(message.client.emojis, emojiUtil.parseSearchQuery(name));
-			return message.util.send(...this.formatResponse(emojis));
-		} catch (error) {
-			return message.util.send(error.message);
-		}
+		const emojis = emojiUtil.search(message.client.emojis, searchTerm);
+		if (!emojis.size) return message.util.send('I couldn\'t find any requests that match your search term!');
+		return message.util.send(...this.formatResponse(emojis));
 	}
 
 	formatResponse(emojis) {

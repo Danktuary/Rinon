@@ -81,20 +81,16 @@ module.exports = class RenameCommand extends Command {
 	}
 
 	async renameEmoji({ message, oldName, newName }) {
-		let emojis = null;
 		let selectedEmoji = null;
 		const { hubServer } = this.client;
+		const emojis = emojiUtil.search(message.client.emojis, emojiUtil.parseSearchQuery(oldName));
 
-		try {
-			emojis = emojiUtil.search(message.client.emojis, emojiUtil.parseSearchQuery(oldName));
-		} catch (error) {
+		if (!emojis.size) {
 			return message.util.send([
-				'I couldn\'t find any requests that match your search term!',
+				'I couldn\'t find any emojis that match your search term!',
 				`If you want to rename a current poll, use the \`${this.handler.prefix()}rename-poll <old name> <new name>\` command.`,
 			].join('\n'));
-		}
-
-		if (emojis.size === 1) {
+		} else if (emojis.size === 1) {
 			selectedEmoji = emojis.first();
 		} else {
 			const sent = await message.channel.send([
