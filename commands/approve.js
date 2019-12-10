@@ -24,6 +24,6 @@ module.exports = class ApproveCommand extends Command {
 
 		const poll = this.client.hubServer.polls[mode];
 		await poll.approve({ message: await poll.search(input) });
-		return message.util.send('Done!');
+		return message.channel.send('Done!');
 	}
 };

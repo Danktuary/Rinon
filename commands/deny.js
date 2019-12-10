@@ -43,6 +43,6 @@ module.exports = class DenyCommand extends Command {
 			reason: `Cancelled by ${message.author.id === pollAuthorID ? 'poll author' : 'bot owner'}.`,
 		});
 
-		return message.util.send('Done!');
+		return message.channel.send('Done!');
 	}
 };

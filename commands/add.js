@@ -43,7 +43,7 @@ module.exports = class AddCommand extends Command {
 			response.push(`If you can\'t open the channel link, send \`${this.handler.prefix()}server 1\` for an invite.`);
 		}
 
-		return message.util.send(response.join('\n'));
+		return message.channel.send(response.join('\n'));
 	}
 
 	async validate(message, { name, url }) {

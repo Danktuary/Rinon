@@ -82,6 +82,6 @@ module.exports = class SyncCommand extends Command {
 		}
 
 		await hubServer.logsChannel.send(embed);
-		return message.util.send('Syncing complete!');
+		return message.channel.send('Syncing complete!');
 	}
 };

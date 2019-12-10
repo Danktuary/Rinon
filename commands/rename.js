@@ -77,7 +77,7 @@ module.exports = class RenameCommand extends Command {
 		await pollData.save();
 		await pollMessage.edit(embed);
 		await previewEmoji.delete();
-		return message.util.send('Done renaming your poll!');
+		return message.channel.send('Done renaming your poll!');
 	}
 
 	async renameEmoji({ message, oldName, newName }) {
@@ -131,6 +131,6 @@ module.exports = class RenameCommand extends Command {
 			response.push(`If you can\'t open the channel link, send \`${this.handler.prefix()}server 1\` for an invite.`);
 		}
 
-		return message.util.send(response.join('\n'));
+		return message.channel.send(response.join('\n'));
 	}
 };
