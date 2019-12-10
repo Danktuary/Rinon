@@ -49,7 +49,7 @@ module.exports = class AddCommand extends Command {
 	async validate(message, { name, url }) {
 		if (!name && !url) {
 			throw new Error([
-				'You need to provide: an emoji, a name and an emoji, a name and an image URL, an image URL and a name, or a name and an image file!',
+				'You need to provide: an emoji, a name and an emoji, a name and an image URL, or a name and an image file!',
 				`For example: \`${this.handler.prefix()}add AiSmug https://i.imgur.com/8jGJzmd.png\`.`,
 			].join('\n'));
 		}
