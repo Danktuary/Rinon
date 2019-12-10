@@ -39,7 +39,7 @@ module.exports = class SyncCommand extends Command {
 		const syncMethod = force ? 'force-synced' : 'synced';
 		const embed = new RichEmbed()
 			.setColor(config.colors.pink)
-			.setAuthor('Server Sync Action: ', this.client.user.displayAvatarURL)
+			.setAuthor('Server Sync Action: ', this.client.user.displayAvatarURL);
 
 
 		if (mode === 'all') {
