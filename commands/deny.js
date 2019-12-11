@@ -25,17 +25,15 @@ module.exports = class DenyCommand extends Command {
 
 		const { hubServer, ownerID } = this.client;
 		const poll = hubServer.polls[mode];
+		const { pollData, message: pollMessage } = await poll.search(input);
 
-		const pollMessage = await poll.search(input);
-		const [, pollAuthorID] = pollMessage.embeds[0].author.name.match(/\((\d+)\)/);
-
-		if (![pollAuthorID, ownerID].includes(message.author.id)) {
+		if (![pollData.authorID, ownerID].includes(message.author.id)) {
 			return message.util.reply('you can\'t cancel polls you didn\'t create.');
 		}
 
 		await poll.deny({
 			message: pollMessage,
-			reason: `Cancelled by ${message.author.id === pollAuthorID ? 'poll author' : 'bot owner'}.`,
+			reason: `Cancelled by ${message.author.id === pollData.authorID ? 'poll author' : 'bot owner'}.`,
 		});
 
 		return message.channel.send('Done!');

@@ -35,6 +35,9 @@ module.exports = class Poll {
 			throw new Error('I couldn\'t find any requests that match your search term!');
 		}
 
-		return this.client.hubServer.votingChannel.fetchMessage(pollData.messageID);
+		return {
+			pollData,
+			message: await this.client.hubServer.votingChannel.fetchMessage(pollData.messageID),
+		};
 	}
 };

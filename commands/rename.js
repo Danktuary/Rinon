@@ -44,11 +44,11 @@ module.exports = class RenameCommand extends Command {
 	}
 
 	async renamePoll({ message, oldName, newName }) {
-		let pollMessage = null;
+		let searchResult;
 		const poll = this.client.hubServer.polls.emoji;
 
 		try {
-			pollMessage = await poll.search(oldName);
+			searchResult = await poll.search(oldName);
 		} catch (error) {
 			return message.util.send([
 				'I couldn\'t find any requests that match your search term!',
@@ -56,7 +56,7 @@ module.exports = class RenameCommand extends Command {
 			].join('\n'));
 		}
 
-		const pollData = await poll.model.findOne({ where: { messageID: pollMessage.id } });
+		const { pollData, message: pollMessage } = searchResult;
 
 		if (message.author.id !== pollData.authorID) {
 			throw new Error('You can\'t edit a poll that\'s not yours!');
