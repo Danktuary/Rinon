@@ -1,4 +1,4 @@
-const Poll = (database, DataTypes) => {
+module.exports = (database, DataTypes) => {
 	return database.define('poll', {
 		messageID: {
 			field: 'message_id',
@@ -30,5 +30,3 @@ const Poll = (database, DataTypes) => {
 		underscored: true,
 	});
 };
-
-module.exports = Poll;

@@ -1,4 +1,4 @@
-const RenamePoll = (database, DataTypes) => {
+module.exports = (database, DataTypes) => {
 	return database.define('rename_poll', {
 		messageID: {
 			field: 'message_id',
@@ -35,5 +35,3 @@ const RenamePoll = (database, DataTypes) => {
 		underscored: true,
 	});
 };
-
-module.exports = RenamePoll;
