@@ -4,16 +4,15 @@ const regexes = require('../util/regexes.js');
 
 module.exports = {
 	blobs(emojiName, imageURL, imageData) {
+		const assetsPath = [__dirname, '..', 'assets'];
+
 		if (regexes.gif.test(imageURL)) {
-			const imgsPath = [__dirname, '..', 'assets', 'imgs'];
 			// TODO: Figure out a different way to approach this
 			// eslint-disable-next-line no-throw-literal
 			throw {
-				files: [{ attachment: path.join(...imgsPath, 'allmightblobblock-default.png') }],
+				files: [{ attachment: path.join(...assetsPath, 'imgs', 'allmightblobblock-default.png') }],
 			};
 		}
-
-		const assetsPath = [__dirname, '..', 'assets'];
 
 		Canvas.registerFont(path.join(...assetsPath, 'fonts', 'Roboto-Regular.ttf'), { family: 'Roboto' });
 
