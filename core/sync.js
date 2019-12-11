@@ -123,7 +123,6 @@ module.exports = class Sync {
 		}
 	}
 
-
 	_altDelete(items) {
 		return Promise.all(items.map(item => item.delete()));
 	}
