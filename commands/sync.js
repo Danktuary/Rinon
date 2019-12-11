@@ -68,6 +68,7 @@ module.exports = class SyncCommand extends Command {
 		} else if (mode === 'galleries') {
 			if (force) await sync.clearGalleries();
 			await sync.galleries();
+
 			embed.author.name += 'Galleries';
 			embed.setDescription(`The emoji galleries have been ${syncMethod}.`);
 		} else if (mode === 'gallery') {
@@ -76,6 +77,7 @@ module.exports = class SyncCommand extends Command {
 
 			if (force) await sync.clearChannel(channel);
 			await sync.gallery(channel);
+
 			embed.author.name += `Gallery (#${serverNumber})`;
 			embed.setDescription(`The emoji gallery for ${channel} has been ${syncMethod}.`);
 		}
