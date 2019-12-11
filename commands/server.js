@@ -21,7 +21,7 @@ module.exports = class ServerCommand extends Command {
 	}
 
 	async exec(message, { number }) {
-		const { guilds, hubServer } = this.client;
+		const { guilds, hubServer, sync } = this.client;
 		const guild = guilds.find(g => g.name.endsWith(`(ES#${number})`));
 		const [normal, animated] = guild.emojis.partition(emoji => !emoji.animated);
 		const gallery = hubServer.galleryChannel(number);
@@ -30,6 +30,6 @@ module.exports = class ServerCommand extends Command {
 			.setColor(colors.pink)
 			.setDescription(`${normal.size} normal emojis, ${animated.size} animated emojis. (View gallery: ${gallery})`);
 
-		return message.util.send(this.client.sync.cachedInvites.get(guild.id), embed);
+		return message.util.send(sync.cachedInvites.get(guild.id), embed);
 	}
 };
