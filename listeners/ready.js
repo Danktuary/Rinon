@@ -9,8 +9,6 @@ module.exports = class ReadyListener extends Listener {
 	}
 
 	exec() {
-		const { client } = this;
-		console.log(`${client.user.tag} ready!`);
-		client.user.setPresence({ game: { name: `${client.emojis.size} emojis in ${client.guilds.size} servers` } });
+		console.log(`${this.client.user.tag} ready!`);
 	}
 };

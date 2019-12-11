@@ -16,6 +16,17 @@ module.exports = class Sync {
 		}
 	}
 
+	status() {
+		const { client } = this;
+		const [normal, animated] = client.emojis.partition(emoji => !emoji.animated);
+
+		return client.user.setPresence({
+			game: {
+				name: `${client.emojis.size} emojis (${normal.size} normal, ${animated.size} animated) in ${client.guilds.size} servers`,
+			},
+		});
+	}
+
 	async invites() {
 		const uncachedGuilds = this.client.guilds.filter(guild => !this.cachedInvites.has(guild.id));
 		if (!uncachedGuilds.size) return;

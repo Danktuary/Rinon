@@ -107,6 +107,7 @@ module.exports = class InitializeCommand extends Command {
 			parent: galleriesCategory,
 		});
 
+		await sync.status();
 		await sync.infoChannel(guild);
 		return sync.gallery(galleryChannel);
 	}

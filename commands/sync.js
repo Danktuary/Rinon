@@ -11,10 +11,10 @@ module.exports = class SyncCommand extends Command {
 			args: [
 				{
 					id: 'mode',
-					type: ['all', 'invites', 'info', 'galleries', 'gallery'],
+					type: ['all', 'invites', 'info', 'galleries', 'gallery', 'status'],
 					prompt: {
-						start: () => 'Choose what you\'d like to sync: invites, info, galleries, gallery, or all.',
-						retry: () => `That's not a valid answer! Please choose from: invites, info, galleries, gallery, or all.`,
+						start: () => 'Choose what you\'d like to sync: invites, info, galleries, gallery, status, or all.',
+						retry: () => `That's not a valid answer! Please choose from: invites, info, galleries, gallery, status, or all.`,
 					},
 				},
 				{
@@ -50,6 +50,7 @@ module.exports = class SyncCommand extends Command {
 				await sync.clearGalleries();
 			}
 
+			await sync.status();
 			await sync.invites();
 			await sync.serverList();
 			await sync.infoChannels();
@@ -100,6 +101,11 @@ module.exports = class SyncCommand extends Command {
 
 			embed.author.name += `Gallery (Server #${serverNumber})`;
 			embed.setDescription(`The emoji gallery for ${channel} has been ${syncMethod}.`);
+		} else if (mode === 'status') {
+			await sync.status();
+
+			embed.author.name += 'Status';
+			embed.setDescription('The bot status has been synced.');
 		}
 
 		await hubServer.logsChannel.send(embed);

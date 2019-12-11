@@ -34,6 +34,7 @@ module.exports = class RinonClient extends AkairoClient {
 			this.hubServer = new HubServer(this);
 			// NOTE: This stays here because the 2 classes depend on the `hubServer[votingChannel]` props
 			this.hubServer.polls = { emoji: new EmojiVotingPoll(this), rename: new RenameVotingPoll(this) };
+			this.sync.status();
 		});
 	}
 
