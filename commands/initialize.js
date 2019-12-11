@@ -102,7 +102,7 @@ module.exports = class InitializeCommand extends Command {
 
 		let response;
 		const options = { max: 1, time: 20000, errors: ['time'] };
-		const filter = m => ['yes', 'y', 'no', 'n'].includes(m.content.toLowerCase());
+		const filter = m => ['yes', 'y', 'no', 'n'].includes(m.content.toLowerCase()) && m.author.id === message.author.id;
 
 		try {
 			const responses = await message.channel.awaitMessages(filter, options);

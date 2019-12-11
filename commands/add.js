@@ -105,7 +105,9 @@ module.exports = class AddCommand extends Command {
 		].join('\n'));
 
 		const options = { max: 1, time: 20000, errors: ['time'] };
-		const filter = m => ['yes', 'y', 'no', 'n', '1', '2', '3'].includes(m.content.toLowerCase());
+		const filter = m => {
+			return ['yes', 'y', 'no', 'n', '1', '2', '3'].includes(m.content.toLowerCase()) && m.author.id === message.author.id;
+		};
 
 		try {
 			const responses = await message.channel.awaitMessages(filter, options);
