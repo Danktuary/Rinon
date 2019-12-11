@@ -6,6 +6,7 @@ module.exports = class InitializeCommand extends Command {
 	constructor() {
 		super('initialize', {
 			aliases: ['initialize', 'init'],
+			description: 'Initializes a new guild with the proper settings to make it function as needed.',
 			channelRestriction: 'guild',
 			userPermissions: ['MANAGE_GUILD'],
 			args: [
