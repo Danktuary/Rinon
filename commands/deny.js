@@ -19,10 +19,8 @@ module.exports = class DenyCommand extends Command {
 	}
 
 	async exec(message, { input, mode }) {
-		const { alias } = message.util;
-
-		if (['deny-emoji', 'cancel-emoji'].includes(alias)) mode = 'emoji';
-		else if (['deny-rename', 'cancel-rename'].includes(alias)) mode = 'rename';
+		if (['deny-emoji', 'cancel-emoji'].includes(message.util.alias)) mode = 'emoji';
+		else if (['deny-rename', 'cancel-rename'].includes(message.util.alias)) mode = 'rename';
 		else if (!['emoji', 'rename'].includes(mode)) mode = 'emoji';
 
 		const { hubServer, ownerID } = this.client;
