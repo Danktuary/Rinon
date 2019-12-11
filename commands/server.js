@@ -6,7 +6,7 @@ module.exports = class ServerCommand extends Command {
 	constructor() {
 		super('server', {
 			aliases: ['server', 'servers', 'invite', 'inv'],
-			description: 'Displays info about a specific server, along with an invite link.',
+			description: 'Display emoji info and the invite link for a specific server.',
 			args: [
 				{
 					id: 'number',

@@ -6,7 +6,6 @@ module.exports = class SyncCommand extends Command {
 	constructor() {
 		super('sync', {
 			aliases: ['sync'],
-			description: '',
 			ownerOnly: true,
 			args: [
 				{
