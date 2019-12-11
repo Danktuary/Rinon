@@ -9,6 +9,7 @@ module.exports = class RenameCommand extends Command {
 	constructor() {
 		super('rename', {
 			aliases: ['rename', 'rename-poll', 'rename-emoji'],
+			description: 'Rename an existing emoji or poll.',
 			channelRestriction: 'guild',
 			args: [
 				{ id: 'oldName' },
