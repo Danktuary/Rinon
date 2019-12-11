@@ -17,7 +17,7 @@ module.exports = class RenameCommand extends Command {
 					id: 'mode',
 					match: 'prefix',
 					prefix: ['--mode=', '-m='],
-					'default': 'poll',
+					'default': 'emoji',
 				},
 			],
 		});
@@ -26,7 +26,7 @@ module.exports = class RenameCommand extends Command {
 	async exec(message, { oldName, newName, mode }) {
 		if (message.util.alias === 'rename-poll') mode = 'poll';
 		else if (message.util.alias === 'rename-emoji') mode = 'emoji';
-		else if (!['emoji', 'poll'].includes(mode)) mode = 'poll';
+		else if (!['emoji', 'poll'].includes(mode)) mode = 'emoji';
 
 		if (mode === 'emoji' && regexes.emoji.test(oldName)) {
 			oldName = parseInput.fromEmoji(oldName).name;
