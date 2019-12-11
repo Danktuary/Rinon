@@ -63,10 +63,9 @@ async function duplicates(message, emojiName) {
 	if (!duplicatedEmojis.size) return;
 
 	await message.reply([
-		'I found these emojis with that same name: ',
-		duplicatedEmojis.map(emoji => emoji.toString()).join(' '),
-		'\nWould you like to continue with your request anyway?',
-	].join(''));
+		`I found these emojis with that same name: ${duplicatedEmojis.map(emoji => emoji.toString()).join(' ')}`,
+		'Would you like to continue with your request anyway?',
+	].join('\n'));
 
 	let response;
 	const options = { max: 1, time: 20000, errors: ['time'] };
