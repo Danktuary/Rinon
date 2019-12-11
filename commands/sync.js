@@ -39,7 +39,7 @@ module.exports = class SyncCommand extends Command {
 		const syncMethod = force ? 'force-synced' : 'synced';
 		const embed = new RichEmbed()
 			.setColor(colors.pink)
-			.setAuthor('Server Sync Action: ', this.client.user.displayAvatarURL);
+			.setAuthor('Sync Action: ', this.client.user.displayAvatarURL);
 
 		if (mode === 'all') {
 			if (force) {
@@ -97,7 +97,7 @@ module.exports = class SyncCommand extends Command {
 			if (force) await sync.clearChannel(channel);
 			await sync.gallery(channel);
 
-			embed.author.name += `Gallery (#${serverNumber})`;
+			embed.author.name += `Gallery (Server #${serverNumber})`;
 			embed.setDescription(`The emoji gallery for ${channel} has been ${syncMethod}.`);
 		}
 
