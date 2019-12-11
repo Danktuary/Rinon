@@ -5,7 +5,7 @@ module.exports = class DenyCommand extends Command {
 		super('deny', {
 			aliases: ['deny', 'deny-emoji', 'deny-rename', 'cancel', 'cancel-emoji', 'cancel-rename'],
 			description: 'Deny/cancel a pending emoji or rename poll.',
-			channel: 'guild',
+			channelRestriction: 'guild',
 			args: [
 				{ id: 'input' },
 				{

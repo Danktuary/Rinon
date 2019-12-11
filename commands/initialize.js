@@ -7,7 +7,7 @@ module.exports = class InitializeCommand extends Command {
 	constructor() {
 		super('initialize', {
 			aliases: ['initialize', 'init'],
-			channel: 'guild',
+			channelRestriction: 'guild',
 			userPermissions: ['MANAGE_GUILD'],
 			args: [
 				{

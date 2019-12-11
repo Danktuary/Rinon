@@ -5,7 +5,7 @@ module.exports = class ApproveCommand extends Command {
 		super('approve', {
 			aliases: ['approve', 'approve-emoji', 'approve-rename'],
 			description: 'Approve a pending emoji or rename poll.',
-			channel: 'guild',
+			channelRestriction: 'guild',
 			ownerOnly: true,
 			args: [
 				{ id: 'input' },

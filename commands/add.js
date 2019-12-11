@@ -10,7 +10,7 @@ module.exports = class AddCommand extends Command {
 		super('add', {
 			aliases: ['add', 'request', 'vote', 'poll', 'reverse'],
 			description: 'Create a poll to add a new emoji to one of the emoji servers.',
-			channel: 'guild',
+			channelRestriction: 'guild',
 			args: [
 				{ id: 'name' },
 				{ id: 'url' },
