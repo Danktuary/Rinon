@@ -20,13 +20,14 @@ module.exports = class InitializeCommand extends Command {
 
 	async exec(message, { skipConfirmation }) {
 		const { guild } = message.channel;
+		const [, guildNumber] = guild.name.match(regexes.guildNameEnding);
 		const missingPermissions = guild.me.permissions.missing(permissionsUtil.required);
 
 		if (missingPermissions.length) {
 			return message.channel.send(`I'm missing the following permissions: ${permissionsUtil.formatNames(missingPermissions)}`);
 		}
 
-		if (guild.channels.some(channel => channel.name === 'info')) {
+		if (guild.channels.some(channel => channel.name === 'info') || this.client.hubServer.galleryChannel(guildNumber)) {
 			return message.util.send('I\'m already good to go!');
 		}
 
@@ -38,15 +39,7 @@ module.exports = class InitializeCommand extends Command {
 			}
 		}
 
-		const channels = guild.channels.filter(channel => channel.id !== message.channel.id);
-
-		try {
-			await Promise.all(channels.map(channel => channel.delete()));
-			await this.setupChannels(guild);
-		} catch (error) {
-			console.error('Failed to initialize channels.\n', error);
-			return message.channel.send('There was an error setting up the channels.');
-		}
+		await this.setupChannels(guild);
 
 		if (guild.me.hasPermission('MANAGE_GUILD')) {
 			try {
@@ -70,7 +63,7 @@ module.exports = class InitializeCommand extends Command {
 
 	async confirmInit(message) {
 		await message.channel.send([
-			'This will delete all other channels in this server and setup the necessary ones.',
+			'This will setup the necessary additional channels for this server.',
 			'I\'ll also try to configure the guild settings appropriately, if possible. Continue?',
 		]);
 
@@ -92,20 +85,28 @@ module.exports = class InitializeCommand extends Command {
 
 	async setupChannels(guild) {
 		const { hubServer, sync } = this.client;
+		const [, guildNumber] = guild.name.match(regexes.guildNameEnding);
+		const permissionOverwrites = [
+			{ id: guild.me.id, allow: ['SEND_MESSAGES'] },
+			{ id: guild.defaultRole.id, deny: ['SEND_MESSAGES'] },
+		];
 
-		const infoChannel = guild.channels.find(channel => channel.name === 'info')
-			|| await guild.createChannel('info', 'text', [
-				{ id: guild.defaultRole.id, denied: ['SEND_MESSAGES'] },
-				{ id: guild.me.id, allowed: ['SEND_MESSAGES', 'CREATE_INSTANT_INVITE', 'MANAGE_MESSAGES'] },
-			]);
+		const galleriesCategory = hubServer.guild.channels.find(channel => {
+			return channel.type === 'category' && channel.name.toLowerCase() === 'galleries';
+		});
 
-		const [, number] = guild.name.match(regexes.guildNameEnding);
+		await guild.channels
+			.find(channel => channel.name.toLowerCase() === 'general')
+			.overwritePermissions(guild.defaultRole.id, { MENTION_EVERYONE: false });
 
-		return infoChannel.send([
-			`Welcome! This is **${guild.name}**, one of our many emoji servers.`,
-			'If you haven\'t already, please join the main server! That\'s where you\'ll get to vote on polls for new emojis and view all the existing emojis our servers have to offer.\n',
-			`**Emoji gallery for server #${number}:** ${hubServer.galleryChannel(number)}`,
-			`**Invite link for ${hubServer.guild.name}:** ${sync.cachedInvites.get(hubServer.guild.id)}`,
-		]);
+		await guild.createChannel('info', { type: 'text', permissionOverwrites });
+		const galleryChannel = await hubServer.guild.createChannel(`emoji-gallery-${guildNumber}`, {
+			type: 'text',
+			permissionOverwrites,
+			parent: galleriesCategory,
+		});
+
+		await sync.infoChannel(guild);
+		return sync.gallery(galleryChannel);
 	}
 };
