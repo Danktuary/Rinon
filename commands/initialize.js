@@ -1,5 +1,4 @@
 const { Command } = require('discord-akairo');
-const { MessageEmbed } = require('discord.js');
 const permissionsUtil = require('../util/permissions.js');
 const regexes = require('../util/regexes.js');
 
@@ -21,13 +20,10 @@ module.exports = class InitializeCommand extends Command {
 
 	async exec(message, { skipConfirmation }) {
 		const { guild } = message.channel;
-		const missingPerms = this.missingPermissions(guild.me);
+		const missingPermissions = guild.me.permissions.missing(permissionsUtil.required);
 
-		if (missingPerms.length) {
-			return message.channel.send(this.formatErrors([{
-				title: 'Missing Permissions',
-				body: `I'm missing the following permissions: ${missingPerms}`,
-			}]));
+		if (missingPermissions.length) {
+			return message.channel.send(`I'm missing the following permissions: ${permissionsUtil.formatNames(missingPermissions)}`);
 		}
 
 		if (guild.channels.some(channel => channel.name === 'info')) {
@@ -70,29 +66,6 @@ module.exports = class InitializeCommand extends Command {
 		}
 
 		return message.channel.send(`Done! You can now use the \`${this.handler.prefix()}add\` command to create polls.`);
-	}
-
-
-	missingPermissions(clientMember, format = true) {
-		const missingPerms = clientMember.permissions.missing(permissionsUtil.required);
-
-		if (!format) return missingPerms;
-		return missingPerms.map(perm => `\`${perm}\``).join(', ');
-	}
-
-	formatErrors(errors) {
-		errors.unshift({
-			title: 'Execution Error',
-			body: 'I can\'t execute that command because I haven\'t been properly configured yet!',
-		});
-
-		const message = new MessageEmbed().setColor('#e84a4a');
-
-		for (const error of errors) {
-			message.addField(error.title, error.body);
-		}
-
-		return message;
 	}
 
 	async confirmInit(message) {
