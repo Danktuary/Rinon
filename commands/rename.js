@@ -101,12 +101,11 @@ module.exports = class RenameCommand extends Command {
 
 			await Promise.all(emojis.map(emoji => sent.react(emoji)));
 
-			const filter = (reaction, user) => {
-				return emojis.map(emoji => emoji.id).includes(reaction.emoji.id) && user.id === message.author.id;
-			};
+			const options = { max: 1, time: 20000, errors: ['time'] };
+			const filter = (reaction, user) => emojis.has(reaction.emoji.id) && user.id === message.author.id;
 
 			try {
-				const reactions = await sent.awaitReactions(filter, { max: 1, time: 20000, errors: ['time'] });
+				const reactions = await sent.awaitReactions(filter, options);
 				await sent.clearReactions();
 				selectedEmoji = reactions.first().emoji;
 			} catch (error) {
