@@ -10,10 +10,10 @@ module.exports = class SyncCommand extends Command {
 			args: [
 				{
 					id: 'mode',
-					type: ['all', 'invites', 'galleries', 'gallery'],
+					type: ['all', 'invites', 'info', 'galleries', 'gallery'],
 					prompt: {
-						start: () => 'Choose what you\'d like to sync: invites, galleries, gallery, or all.',
-						retry: () => `That's not a valid answer! Please choose from: invites, galleries, gallery, or all.`,
+						start: () => 'Choose what you\'d like to sync: invites, info, galleries, gallery, or all.',
+						retry: () => `That's not a valid answer! Please choose from: invites, info, galleries, gallery, or all.`,
 					},
 				},
 				{
@@ -45,26 +45,45 @@ module.exports = class SyncCommand extends Command {
 			if (force) {
 				await sync.clearInvites();
 				await sync.clearChannel(hubServer.serverList);
+				await sync.clearInfoChannels();
 				await sync.clearGalleries();
 			}
 
 			await sync.invites();
 			await sync.serverList();
+			await sync.infoChannels();
 			await sync.galleries();
 
-			embed.author.name += 'Full sync (invites, server list, and galleries)';
-			embed.setDescription(`The invites, ${hubServer.serverList} channel, and emoji galleries have been ${syncMethod}.`);
+			embed.author.name += 'Full sync (invites, server list, info channels, and galleries)';
+			embed.setDescription(`The invites, ${hubServer.serverList} channel, info channels, and emoji galleries have been ${syncMethod}.`);
 		} else if (mode === 'invites') {
 			if (force) {
 				await sync.clearInvites();
 				await sync.clearChannel(hubServer.serverList);
+				await sync.clearInfoChannels();
 			}
 
 			await sync.invites();
 			await sync.serverList();
+			await sync.infoChannels();
 
 			embed.author.name += 'Invites and server list';
-			embed.setDescription(`The invites and ${hubServer.serverList} channel have been ${syncMethod}.`);
+			embed.setDescription(`The invites, ${hubServer.serverList} channel, and info channels have been ${syncMethod}.`);
+		} else if (mode === 'info') {
+			if (!serverNumber) {
+				return message.channel.send('You need to provide a server number with your input.');
+			} else if (serverNumber === 1) {
+				return message.channel.send('Server #1 doesn\'t have an info channel.');
+			}
+
+			const guild = this.client.guilds.find(g => g.name.endsWith(`(ES#${serverNumber})`));
+			const channel = guild.channels.find(c => c.name === 'info');
+
+			if (force) await sync.clearChannel(channel);
+			await sync.infoChannel(guild);
+
+			embed.author.name += `Info channel (Server #${serverNumber})`;
+			embed.setDescription(`The ${channel} channel for server #${serverNumber} has been ${syncMethod}.`);
 		} else if (mode === 'galleries') {
 			if (force) await sync.clearGalleries();
 			await sync.galleries();

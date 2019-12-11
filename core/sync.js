@@ -61,6 +61,31 @@ module.exports = class Sync {
 		return hubServer.serverList.send(content);
 	}
 
+	async infoChannel(guild) {
+		const { hubServer } = this.client;
+		const channel = guild.channels.find(c => c.name === 'info');
+		const [, number] = guild.name.match(regexes.guildNameEnding);
+
+		const content = [
+			`Welcome! This is **${guild.name}**, one of our ${this.client.guilds.size} emoji servers.`,
+			'If you haven\'t already, please join the main server! That\'s where you\'ll get to vote on polls for new emojis and view all the existing emojis our servers have to offer.\n',
+			`**Emoji gallery for server #${number}:** ${hubServer.galleryChannel(number)}`,
+			`**Invite link for ${hubServer.guild.name}:** ${this.cachedInvites.get(hubServer.guild.id)}`,
+		].join('\n');
+
+		const messages = await channel.fetchMessages();
+		if (messages.size) return messages.first().edit(content);
+		return channel.send(content);
+	}
+
+	async infoChannels() {
+		const guilds = this.client.guilds.filter(guild => guild.id !== this.client.hubServer.guild.id);
+
+		for (const guild of guilds.values()) {
+			await this.infoChannel(guild);
+		}
+	}
+
 	async gallery(channel) {
 		const number = channel.name.slice(-1);
 		const guild = this.client.guilds.find(g => g.name.endsWith(`(ES#${number})`));
@@ -119,6 +144,15 @@ module.exports = class Sync {
 
 	async clearGalleries() {
 		for (const channel of this.client.hubServer.galleryChannels.values()) {
+			await this.clearChannel(channel);
+		}
+	}
+
+	async clearInfoChannels() {
+		const guilds = this.client.guilds.filter(guild => guild.id !== this.client.hubServer.guild.id);
+
+		for (const guild of guilds.values()) {
+			const channel = guild.channels.find(c => c.name === 'info');
 			await this.clearChannel(channel);
 		}
 	}
