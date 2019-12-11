@@ -41,7 +41,7 @@ module.exports = class InitializeCommand extends Command {
 
 		await this.setupChannels(guild);
 
-		if (guild.me.hasPermission('MANAGE_GUILD')) {
+		if (guild.me.permissions.has('MANAGE_GUILD')) {
 			try {
 				await guild.setSystemChannel(null);
 				await guild.setDefaultMessageNotifications('MENTIONS');
