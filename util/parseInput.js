@@ -3,7 +3,7 @@ const regexes = require('./regexes.js');
 
 function fromEmoji(emoji) {
 	const [, animated, name, emojiID] = emoji.match(regexes.emoji);
-	return { name, url: `https://cdn.discordapp.com/emojis'/${emojiID}.${animated ? 'gif' : 'png'}` };
+	return { name, url: `https://cdn.discordapp.com/emojis/${emojiID}.${animated ? 'gif' : 'png'}` };
 }
 
 function fromEmojiAndName(emoji, name) {
