@@ -23,8 +23,16 @@ module.exports = class AddCommand extends Command {
 	}
 
 	async exec(message, args) {
+		let validatedArgs;
 		const { hubServer } = this.client;
-		let { name, url, imageData } = await this.validate(message, args);
+
+		try {
+			validatedArgs = await this.validate(message, args);
+		} catch (error) {
+			return message.channel.send(error.message || error);
+		}
+
+		let { name, url, imageData } = validatedArgs;
 
 		if (message.util.alias === 'reverse' || args.reverse) {
 			if (!name.toLowerCase().endsWith('reverse')) {
