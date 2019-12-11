@@ -28,7 +28,7 @@ module.exports = class EmojiSearchCommand extends Command {
 
 		const emojis = emojiUtil.search(message.client.emojis, searchTerm);
 		if (!emojis.size) return message.util.send('I couldn\'t find any requests that match your search term!');
-		return message.util.send(...this.formatResponse(emojis));
+		return message.util.send(this.formatResponse(emojis));
 	}
 
 	formatResponse(emojis) {
@@ -44,7 +44,7 @@ module.exports = class EmojiSearchCommand extends Command {
 					.addField('Found in', emoji.guild.name, true);
 			}
 
-			return [{ embed }];
+			return { embed };
 		}
 
 		const content = [`${inviteText}\n`];
@@ -53,6 +53,6 @@ module.exports = class EmojiSearchCommand extends Command {
 			content.push(`${emoji.name}: ${emoji} (Found in **${emoji.guild.name}**)`);
 		}
 
-		return [content.join('\n'), { split: '\n' }];
+		return { content: content.join('\n'), split: '\n' };
 	}
 };
