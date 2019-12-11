@@ -54,7 +54,7 @@ module.exports = class AddCommand extends Command {
 			].join('\n'));
 		}
 
-		const { name: emojiName, url: imageURL } = parseInput({ name, url }, message.attachments);
+		const { name: emojiName, url: imageURL } = parseInput.fromAny({ first: name, last: url, attachments: message.attachments });
 
 		if (emojiName.length < 2 || emojiName.length > 32) {
 			throw new RangeError('An emoji name needs to be between 2 and 32 characters long.');

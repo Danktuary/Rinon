@@ -32,26 +32,27 @@ function fromNameAndAttachment(name, attachment) {
 	return { name, url: attachment.url };
 }
 
-module.exports = function parseInput({ name, url }, attachments = new Collection()) {
-	if (regexes.emoji.test(name) && !url) {
-		return fromEmoji(name);
-	} else if (regexes.emoji.test(name) && regexes.wordsOnly.test(url)) {
-		return fromEmojiAndName(name, url);
-	} else if (regexes.url.test(name) && regexes.wordsOnly.test(url)) {
-		return fromUrlAndName(name, url);
-	} else if (!regexes.wordsOnly.test(name)) {
+function fromAny({ first, last, attachments = new Collection() }) {
+	if (regexes.emoji.test(first) && !last) {
+		return fromEmoji(first);
+	} else if (regexes.emoji.test(first) && regexes.wordsOnly.test(last)) {
+		return fromEmojiAndName(first, last);
+	} else if (regexes.url.test(first) && regexes.wordsOnly.test(last)) {
+		return fromUrlAndName(first, last);
+	} else if (!regexes.wordsOnly.test(first)) {
 		throw new RangeError('Only alphanumeric characters are allowed!');
-	} else if (regexes.emoji.test(url)) {
-		return fromNameAndEmoji(name, url);
-	} else if (!url && attachments.size) {
-		return fromNameAndAttachment(name, attachments.first());
-	} else if (!regexes.url.test(url)) {
+	} else if (regexes.emoji.test(last)) {
+		return fromNameAndEmoji(first, last);
+	} else if (!last && attachments.size) {
+		return fromNameAndAttachment(first, attachments.first());
+	} else if (!regexes.url.test(last)) {
 		throw new Error('That doesn\'t seem like a valid image URL.');
 	}
 
-	return { name, url };
-};
+	return { name: first, url: last };
+}
 
+module.exports.fromAny = fromAny;
 module.exports.fromEmoji = fromEmoji;
 module.exports.fromEmojiAndName = fromEmoji;
 module.exports.fromNameAndEmoji = fromNameAndEmoji;
