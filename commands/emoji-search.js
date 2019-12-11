@@ -1,6 +1,6 @@
 const { RichEmbed } = require('discord.js');
 const { Command } = require('discord-akairo');
-const { colors, prefix } = require('../config.js');
+const { colors } = require('../config.js');
 const emojiUtil = require('../util/emoji.js');
 
 module.exports = class EmojiSearchCommand extends Command {
@@ -32,7 +32,7 @@ module.exports = class EmojiSearchCommand extends Command {
 	}
 
 	formatResponse(emojis) {
-		const inviteText = `If you want an invite to any of these servers, use the \`${prefix}server\` command!`;
+		const inviteText = `If you want an invite to any of these servers, use the \`${this.handler.prefix()}server\` command!`;
 
 		if (emojis.size <= (25 / 3)) {
 			const embed = new RichEmbed().setColor(colors.pink).setDescription(inviteText);
