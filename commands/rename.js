@@ -84,7 +84,7 @@ module.exports = class RenameCommand extends Command {
 	async renameEmoji({ message, oldName, newName }) {
 		let selectedEmoji = null;
 		const { hubServer } = this.client;
-		const emojis = emojiUtil.search(message.client.emojis, emojiUtil.parseSearchQuery(oldName));
+		const emojis = emojiUtil.search(this.client.emojis, emojiUtil.parseSearchQuery(oldName));
 
 		if (!emojis.size) {
 			return message.util.send([
