@@ -6,3 +6,4 @@ module.exports.gif = /\.gif(\?v=\d*)?$/;
 module.exports.blob = /^a?b(lo|ol)b[a-z]+$/;
 module.exports.blobInit = /^a?b(lo|ol)b/i;
 module.exports.guildNameEnding = /\(ES#(\d+)\)$/;
+module.exports.galleryChannelNameEnding = /emoji\-gallery\-(\d+)$/;

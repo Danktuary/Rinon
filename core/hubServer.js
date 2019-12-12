@@ -1,4 +1,5 @@
 const { hubServerID } = require('../config.js');
+const regexes = require('../util/regexes.js');
 
 module.exports = class HubServer {
 	constructor(client) {
@@ -15,7 +16,9 @@ module.exports = class HubServer {
 	}
 
 	galleryChannel(number) {
-		return this.galleryChannels.find(channel => parseInt(channel.name.slice(-1)) === parseInt(number));
+		return this.galleryChannels.find(channel => {
+			return parseInt(channel.name.match(regexes.galleryChannelNameEnding)[1]) === parseInt(number);
+		});
 	}
 
 	get serverList() {

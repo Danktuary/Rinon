@@ -98,7 +98,7 @@ module.exports = class Sync {
 	}
 
 	async gallery(channel) {
-		const number = channel.name.slice(-1);
+		const [, number] = channel.name.match(regexes.galleryChannelNameEnding);
 		const guild = this.client.guilds.find(g => g.name.endsWith(`(ES#${number})`));
 		const [normal, animated] = guild.emojis.partition(emoji => !emoji.animated);
 
