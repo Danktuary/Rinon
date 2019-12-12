@@ -20,11 +20,15 @@ module.exports = class RenameCommand extends Command {
 					prefix: ['--mode=', '-m='],
 					'default': 'emoji',
 				},
+				{
+					id: 'reason',
+					match: 'rest',
+				},
 			],
 		});
 	}
 
-	async exec(message, { oldName, newName, mode }) {
+	async exec(message, { oldName, newName, mode, reason }) {
 		if (message.util.alias === 'rename-poll') mode = 'poll';
 		else if (message.util.alias === 'rename-emoji') mode = 'emoji';
 		else if (!['emoji', 'poll'].includes(mode)) mode = 'emoji';
@@ -41,7 +45,7 @@ module.exports = class RenameCommand extends Command {
 			return message.util.send('An emoji name needs to be between 2 and 32 characters long.');
 		}
 
-		return this[`rename${textUtil.capitalize(mode)}`]({ message, oldName, newName });
+		return this[`rename${textUtil.capitalize(mode)}`]({ message, oldName, newName, reason });
 	}
 
 	async renamePoll({ message, oldName, newName }) {
@@ -82,7 +86,7 @@ module.exports = class RenameCommand extends Command {
 		return message.channel.send('Done renaming your poll!');
 	}
 
-	async renameEmoji({ message, oldName, newName }) {
+	async renameEmoji({ message, oldName, newName, reason }) {
 		let selectedEmoji = null;
 		const { hubServer } = this.client;
 		const emojis = emojiUtil.search(this.client.emojis, emojiUtil.parseSearchQuery(oldName));
@@ -119,7 +123,7 @@ module.exports = class RenameCommand extends Command {
 			throw new Error('The new emoji name can\'t be the same as the old one!');
 		}
 
-		await hubServer.polls.rename.create({ message, emoji: selectedEmoji, newName });
+		await hubServer.polls.rename.create({ message, emoji: selectedEmoji, newName, reason });
 
 		const response = [`Done! Others can now vote on your request in ${hubServer.votingChannel}.`];
 

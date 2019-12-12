@@ -9,12 +9,13 @@ module.exports = class RenameVotingPoll extends Poll {
 		this.model = models.RenamePoll;
 	}
 
-	async create({ message, emoji, newName }) {
+	async create({ message, emoji, newName, reason }) {
 		const sent = await this.sendEmbed({
 			channel: this.client.hubServer.votingChannel,
 			author: message.author,
 			thumbnail: emoji.url,
 			description: `\`${message.author.tag}\` wants to rename ${emoji} from \`${emoji.name}\` to \`${newName}\`.`,
+			fields: reason ? [{ title: 'Reason', value: reason }] : [],
 		});
 
 		await sent.react(emojis.approve);
