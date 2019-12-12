@@ -89,7 +89,7 @@ module.exports = class InitializeCommand extends Command {
 		const [, guildNumber] = guild.name.match(regexes.guildNameEnding);
 		const permissionOverwrites = [
 			{ id: guild.me.id, allow: ['SEND_MESSAGES'] },
-			{ id: guild.defaultRole.id, deny: ['SEND_MESSAGES'] },
+			{ id: guild.id, deny: ['SEND_MESSAGES'] },
 		];
 
 		const galleriesCategory = hubServer.guild.channels.find(channel => {
