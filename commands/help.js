@@ -1,4 +1,8 @@
+const { RichEmbed } = require('discord.js');
 const { Command } = require('discord-akairo');
+const { colors } = require('../config.js');
+const textUtil = require('../util/text.js');
+const permissionsUtil = require('../util/permissions.js');
 
 module.exports = class HelpCommand extends Command {
 	constructor() {
@@ -6,37 +10,62 @@ module.exports = class HelpCommand extends Command {
 			aliases: ['help'],
 			args: [
 				{
-					id: 'helpCommand',
-					match: 'word',
+					id: 'command',
+					type: 'commandAlias',
+					prompt: {
+						start: 'which command would you like more info about?',
+						retry: message => {
+							return [
+								`That\'s not a valid command! Send \`!cancel\` and then \`${message.util.command.handler.prefix()}help\` to get a list of all commands.`,
+								'Which command would you like more info about?',
+							].join('\n');
+						},
+						optional: true,
+						cancelWord: '!cancel',
+					},
 				},
 			],
+			options: {
+				help: {
+					examples: ['', 'add'],
+				},
+			},
 		});
 	}
 
-	async exec(message, { helpCommand }) {
-		const data = [];
-		const commands = this.handler.modules;
+	async exec(message, { command }) {
+		const { modules: commands } = this.handler;
 		const prefix = this.handler.prefix();
 
-		if (!helpCommand) {
-			data.push('Here\'s a list of all my commands:');
-			data.push(commands.map(command => command.id).join(', '));
-			data.push(`\nYou can send \`${prefix}help [command name]\` to get info on a specific command!`);
-		} else {
-			const command = commands.find(c => c.aliases.includes(helpCommand.toLowerCase()));
-
-			if (!command) {
-				return message.util.reply(`that's not a valid command! Send \`${prefix}help\` to get a list of all commands.`);
-			}
-
-			const { aliases, description, id, options: { usage } } = command;
-
-			data.push(`**Name:** ${id}`);
-			if (aliases.length > 1) data.push(`**Aliases:** ${aliases.slice(1).join(', ')}`);
-			if (description) data.push(`**Description:** ${description}`);
-			if (usage) data.push(`**Usage:** \`${prefix}${id} ${usage}\``);
+		if (!command) {
+			return message.util.send([
+				`Here\'s a list of all my commands: ${commands.map(cmd => cmd.id).join(', ')}\n`,
+				`You can send \`${prefix}help [command name]\` to get info on a specific command!`,
+			]);
 		}
 
-		return message.util.send(data, { split: true });
+		const { help: helpData = {} } = command.options;
+
+		const embed = new RichEmbed()
+			.setColor(colors.pink)
+			.setAuthor(`${textUtil.capitalize(command.id)} command`, this.client.user.displayAvatarURL)
+			.addField('Aliases', command.aliases.join(', '), true);
+
+		if (command.description) embed.setDescription(command.description);
+		if (command.ownerOnly) embed.addField('Owner Only', 'Yes', true);
+
+		if (command.channelRestriction) {
+			embed.addField('Restricted to', textUtil.capitalize(command.channelRestriction), true);
+		}
+
+		if (command.userPermissions) {
+			embed.addField('User permissions needed', permissionsUtil.formatNames(command.userPermissions), true);
+		}
+
+		if (helpData.examples && helpData.examples.length) {
+			embed.addField('Examples', helpData.examples.map(example => `${prefix}${command.id} ${example}`).join('\n'));
+		}
+
+		return message.util.send(embed);
 	}
 };
