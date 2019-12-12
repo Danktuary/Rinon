@@ -13,7 +13,7 @@ module.exports = class SyncCommand extends Command {
 					id: 'mode',
 					type: ['all', 'invites', 'info', 'galleries', 'gallery', 'status'],
 					prompt: {
-						start: () => 'Choose what you\'d like to sync: invites, info, galleries, gallery, status, or all.',
+						start: () => 'choose what you\'d like to sync: invites, info, galleries, gallery, status, or all.',
 						retry: () => `That's not a valid answer! Please choose from: invites, info, galleries, gallery, status, or all.`,
 					},
 				},
@@ -21,7 +21,7 @@ module.exports = class SyncCommand extends Command {
 					id: 'serverNumber',
 					type: 'serverNumber',
 					prompt: {
-						start: message => `Which server would you like to sync? Pick a number 1-${message.client.guilds.size}.`,
+						start: message => `which server would you like to sync? Pick a number 1-${message.client.guilds.size}.`,
 						retry: message => `That's not a valid answer! Pick a number 1-${message.client.guilds.size}.`,
 						optional: true,
 					},

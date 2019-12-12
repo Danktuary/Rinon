@@ -12,7 +12,7 @@ module.exports = class EmojiSearchCommand extends Command {
 				{
 					id: 'query',
 					prompt: {
-						start: () => 'What emoji would you like to search for?',
+						start: () => 'what emoji would you like to search for?',
 						retry: () => 'That\'s not a valid search term! Please send the emoji or an emoji name you\'d like to search for.',
 					},
 				},
