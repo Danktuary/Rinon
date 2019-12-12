@@ -15,6 +15,15 @@ module.exports = class DenyCommand extends Command {
 					'default': 'emoji',
 				},
 			],
+			options: {
+				help: {
+					examples: [
+						'EmojiName (if `--mode=x` argument is omitted, defaults to `emoji`)',
+						'EmojiName --mode=emoji (approves a pending emoji poll)',
+						'EmojiName --mode=rename (approves a pending rename poll)',
+					],
+				},
+			},
 		});
 	}
 

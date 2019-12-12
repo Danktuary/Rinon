@@ -17,6 +17,11 @@ module.exports = class ServerCommand extends Command {
 					},
 				},
 			],
+			options: {
+				help: {
+					examples: ['1'],
+				},
+			},
 		});
 	}
 

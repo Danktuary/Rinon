@@ -20,6 +20,19 @@ module.exports = class AddCommand extends Command {
 					prefix: ['--reverse', '-r'],
 				},
 			],
+			options: {
+				help: {
+					examples: [
+						':emojiName:',
+						'EmojiName :emojiName:',
+						':emojiName: EmojiName',
+						'EmojiName https://i.imgur.com/8jGJzmd.png',
+						'https://i.imgur.com/8jGJzmd.png EmojiName',
+						'EmojiName https://i.imgur.com/8jGJzmd.png --reverse',
+						'EmojiName (supply only a name with an image attachment)',
+					],
+				},
+			},
 		});
 	}
 

@@ -32,6 +32,18 @@ module.exports = class SyncCommand extends Command {
 					prefix: ['--force', '-f'],
 				},
 			],
+			options: {
+				help: {
+					examples: [
+						'all',
+						'invites',
+						'info 2 (`1` is invalid)',
+						'galleries',
+						'gallery 2',
+						'status',
+					],
+				},
+			},
 		});
 	}
 
