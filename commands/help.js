@@ -8,6 +8,7 @@ module.exports = class HelpCommand extends Command {
 	constructor() {
 		super('help', {
 			aliases: ['help'],
+			description: 'Display a list of all available commands, or display info about a single command.',
 			args: [
 				{
 					id: 'command',
