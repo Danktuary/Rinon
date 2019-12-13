@@ -52,7 +52,7 @@ module.exports = class SyncCommand extends Command {
 		const syncMethod = force ? 'force-synced' : 'synced';
 		const embed = new RichEmbed()
 			.setColor(colors.pink)
-			.setAuthor('Sync Action: ', this.client.user.displayAvatarURL);
+			.setAuthor('Sync Action: ', hubServer.guild.iconURL);
 
 		if (mode === 'all') {
 			if (force) {
