@@ -45,6 +45,8 @@ function fromAny({ first, last, attachments = new Collection() }) {
 		return fromNameAndEmoji(first, last);
 	} else if (!last && attachments.size) {
 		return fromNameAndAttachment(first, attachments.first());
+	} else if (regexes.embedlessUrl.test(last)) {
+		last = last.slice(1, -1);
 	} else if (!regexes.url.test(last)) {
 		throw new Error('That doesn\'t seem like a valid image URL.');
 	}
