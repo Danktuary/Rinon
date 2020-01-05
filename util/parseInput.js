@@ -39,6 +39,8 @@ function fromAny({ first, last, attachments = new Collection() }) {
 		return fromEmojiAndName(first, last);
 	} else if (regexes.url.test(first) && regexes.wordsOnly.test(last)) {
 		return fromUrlAndName(first, last);
+	} else if (regexes.embedlessUrl.test(first) && regexes.wordsOnly.test(last)) {
+		return fromUrlAndName(first.slice(1, -1), last);
 	} else if (!regexes.wordsOnly.test(first)) {
 		throw new RangeError('Only alphanumeric characters are allowed!');
 	} else if (regexes.emoji.test(last)) {
