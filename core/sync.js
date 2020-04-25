@@ -58,18 +58,31 @@ module.exports = class Sync {
 	}
 
 	async serverList() {
-		let content = '';
+		const content = [];
 		const { guilds, hubServer } = this.client;
 
 		for (const [id, url] of this.cachedInvites.entries()) {
 			const guild = guilds.get(id);
 			const [, number] = guild.name.match(regexes.guildNameEnding);
-			content += `Invite link for **${guild.name}**:\n${url} (View gallery: ${hubServer.galleryChannel(number)})\n\n`;
+			content.push(`Invite link for **${guild.name}**:\n${url} (View gallery: ${hubServer.galleryChannel(number)})\n\n`);
 		}
 
+		const contentChunks = chunk(content, 5);
 		const messages = await hubServer.serverList.fetchMessages();
-		if (messages.size) return messages.first().edit(content);
-		return hubServer.serverList.send(content);
+
+		if (!messages.size) {
+			for (const contentChunk of contentChunks) await hubServer.serverList.send(contentChunk.join(''));
+			return;
+		}
+
+		for (const [index, contentChunk] of contentChunks.entries()) {
+			if (index + 1 > messages.size) {
+				await hubServer.serverList.send(contentChunk.join(''));
+				continue;
+			}
+
+			await messages.last(index + 1)[0].edit(contentChunk.join(''));
+		}
 	}
 
 	async infoChannel(guild) {
