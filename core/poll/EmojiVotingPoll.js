@@ -12,6 +12,7 @@ module.exports = class EmojiVotingPoll extends Poll {
 
 	async create({ message, name, url }) {
 		const guild = emojiUtil.nextAvailableGuild({ guilds: this.client.guilds, imageURL: url });
+		if (!guild) throw new Error('There aren\'t any open servers!');
 		const emoji = await guild.createEmoji(url, name);
 
 		const sent = await this.sendEmbed({

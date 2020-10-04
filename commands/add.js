@@ -56,7 +56,14 @@ module.exports = class AddCommand extends Command {
 			url = this.reverseImage(imageData, url);
 		}
 
-		await hubServer.polls.emoji.create({ message, name, url });
+		try {
+			await hubServer.polls.emoji.create({ message, name, url });
+		} catch (error) {
+			const owner = await this.client.fetchUser(this.client.ownerID);
+			const anger = ['tch', 'meguAngry', 'angry', 'nyanrage', 'WeebRage'];
+			const angryEmoji = this.client.emojis.filter(emoji => anger.includes(emoji.name)).random();
+			return message.channel.send(`<@${owner.id}>: ${error.message} ${angryEmoji}`);
+		}
 
 		const response = [`Done! Others can now vote on your request in ${hubServer.votingChannel}.`];
 
