@@ -10,7 +10,7 @@ module.exports = class RawListener extends Listener {
 		if (eventName !== 'MESSAGE_REACTION_ADD') return;
 
 		const { client } = this;
-		const user = client.users.get(data.user_id);
+		const user = client.users.get(data.user_id) || await client.fetchUser(data.user_id);
 		const channel = client.channels.get(data.channel_id) || await user.createDM();
 
 		if (channel.messages.has(data.message_id)) return;
