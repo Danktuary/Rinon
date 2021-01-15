@@ -32,8 +32,8 @@ module.exports = class RenameVotingPoll extends Poll {
 
 	async approve({ message }) {
 		const pollData = await this.model.findOne({ where: { messageID: message.id } });
-		const author = await message.client.fetchUser(pollData.authorID);
-		const emoji = message.client.emojis.get(pollData.emojiID);
+		const author = await message.client.users.fetch(pollData.authorID);
+		const emoji = message.client.emojis.cache.get(pollData.emojiID);
 
 		await message.delete();
 		await emoji.edit({ name: pollData.newName });
@@ -60,8 +60,8 @@ module.exports = class RenameVotingPoll extends Poll {
 		await message.delete();
 
 		const pollData = await this.model.findOne({ where: { messageID: message.id } });
-		const author = await message.client.fetchUser(pollData.authorID);
-		const emoji = message.client.emojis.get(pollData.emojiID);
+		const author = await message.client.users.fetch(pollData.authorID);
+		const emoji = message.client.emojis.cache.get(pollData.emojiID);
 
 		pollData.status = 'denied';
 		await pollData.save();

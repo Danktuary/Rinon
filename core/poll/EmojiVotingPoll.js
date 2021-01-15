@@ -11,9 +11,9 @@ module.exports = class EmojiVotingPoll extends Poll {
 	}
 
 	async create({ message, name, url }) {
-		const guild = emojiUtil.nextAvailableGuild({ guilds: this.client.guilds, imageURL: url });
+		const guild = emojiUtil.nextAvailableGuild({ guilds: this.client.guilds.cache, imageURL: url });
 		if (!guild) throw new Error('There aren\'t any open servers!');
-		const emoji = await guild.createEmoji(url, name);
+		const emoji = await guild.emojis.create(url, name);
 
 		const sent = await this.sendEmbed({
 			channel: this.client.hubServer.votingChannel,
@@ -37,12 +37,12 @@ module.exports = class EmojiVotingPoll extends Poll {
 
 	async approve({ message }) {
 		const pollData = await this.model.findOne({ where: { messageID: message.id } });
-		const author = await this.client.fetchUser(pollData.authorID);
-		const guild = emojiUtil.nextAvailableGuild({ guilds: this.client.guilds, imageURL: pollData.imageURL });
+		const author = await this.client.users.fetch(pollData.authorID);
+		const guild = emojiUtil.nextAvailableGuild({ guilds: this.client.guilds.cache, imageURL: pollData.imageURL });
 
 		await message.delete();
 
-		const emoji = await guild.createEmoji(pollData.imageURL, pollData.emojiName);
+		const emoji = await guild.emojis.create(pollData.imageURL, pollData.emojiName);
 
 		pollData.status = 'approved';
 		await pollData.save();
@@ -66,7 +66,7 @@ module.exports = class EmojiVotingPoll extends Poll {
 		await message.delete();
 
 		const pollData = await this.model.findOne({ where: { messageID: message.id } });
-		const author = await this.client.fetchUser(pollData.authorID);
+		const author = await this.client.users.fetch(pollData.authorID);
 
 		pollData.status = 'denied';
 		await pollData.save();

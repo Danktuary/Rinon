@@ -1,4 +1,4 @@
-const { RichEmbed } = require('discord.js');
+const { MessageEmbed } = require('discord.js');
 const { Command } = require('discord-akairo');
 const parseInput = require('../util/parseInput.js');
 const textUtil = require('../util/text.js');
@@ -81,9 +81,9 @@ module.exports = class RenameCommand extends Command {
 
 		pollData.emojiName = newName;
 
-		const embed = new RichEmbed(pollMessage.embeds[0]);
-		const guild = emojiUtil.nextAvailableGuild({ guilds: this.client.guilds, imageURL: pollData.imageURL });
-		const previewEmoji = await guild.createEmoji(pollData.imageURL, newName);
+		const embed = new MessageEmbed(pollMessage.embeds[0]);
+		const guild = emojiUtil.nextAvailableGuild({ guilds: this.client.guilds.cache, imageURL: pollData.imageURL });
+		const previewEmoji = await guild.emojis.create(pollData.imageURL, newName);
 
 		embed.fields = [];
 		embed
@@ -99,7 +99,7 @@ module.exports = class RenameCommand extends Command {
 	async renameEmoji({ message, oldName, newName, reason }) {
 		let selectedEmoji = null;
 		const { hubServer } = this.client;
-		const emojis = emojiUtil.search(this.client.emojis, emojiUtil.parseSearchQuery(oldName));
+		const emojis = emojiUtil.search(this.client.emojis.cache, emojiUtil.parseSearchQuery(oldName));
 
 		if (!emojis.size) {
 			return message.util.send([
@@ -121,10 +121,10 @@ module.exports = class RenameCommand extends Command {
 
 			try {
 				const reactions = await sent.awaitReactions(filter, options);
-				await sent.clearReactions();
+				await sent.reactions.removeAll();
 				selectedEmoji = reactions.first().emoji;
 			} catch (error) {
-				await sent.clearReactions();
+				await sent.reactions.removeAll();
 				return message.channel.send('You didn\'t react in time; cancelling the request.');
 			}
 		}

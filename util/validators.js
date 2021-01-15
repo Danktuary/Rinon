@@ -56,7 +56,7 @@ function blobs(emojiName, imageURL, imageData) {
 }
 
 async function duplicates(message, emojiName) {
-	const duplicatedEmojis = message.client.emojis.filter(emoji => {
+	const duplicatedEmojis = message.client.emojis.cache.filter(emoji => {
 		return emojiName.toLowerCase() === emoji.name.toLowerCase();
 	});
 

@@ -19,7 +19,7 @@ module.exports = class MessageReactionAddListener extends Listener {
 
 		const poll = this._getPoll(message);
 		const pollData = await poll.model.findOne({ where: { messageID: message.id } });
-		const endAmount = reaction.users.has(pollData.authorID) ? voteEndAmount + 2 : voteEndAmount + 1;
+		const endAmount = reaction.users.cache.has(pollData.authorID) ? voteEndAmount + 2 : voteEndAmount + 1;
 
 		if (reaction.count < endAmount) return;
 		if (reaction.emoji.id === emojis.deny) return poll.deny({ message });

@@ -4,11 +4,11 @@ const regexes = require('../util/regexes.js');
 module.exports = class HubServer {
 	constructor(client) {
 		this.client = client;
-		this.guild = client.guilds.get(hubServerID);
+		this.guild = client.guilds.cache.get(hubServerID);
 	}
 
 	_getChannel(name) {
-		return this.guild.channels.find(channel => channel.name.toLowerCase() === name.toLowerCase());
+		return this.guild.channels.cache.find(channel => channel.name.toLowerCase() === name.toLowerCase());
 	}
 
 	get galleryChannels() {

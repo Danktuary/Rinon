@@ -1,4 +1,4 @@
-const { RichEmbed } = require('discord.js');
+const { MessageEmbed } = require('discord.js');
 const { Command } = require('discord-akairo');
 const { colors } = require('../config.js');
 const textUtil = require('../util/text.js');
@@ -44,9 +44,9 @@ module.exports = class HelpCommand extends Command {
 			]);
 		}
 
-		const embed = new RichEmbed()
+		const embed = new MessageEmbed()
 			.setColor(colors.pink)
-			.setAuthor(`${textUtil.capitalize(command.id)} command`, this.client.user.displayAvatarURL)
+			.setAuthor(`${textUtil.capitalize(command.id)} command`, this.client.user.displayAvatarURL({ format: 'png', dynamic: true }))
 			.addField('Aliases', command.aliases.join(', '), true);
 
 		if (command.description) embed.setDescription(command.description);

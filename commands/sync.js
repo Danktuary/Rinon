@@ -1,4 +1,4 @@
-const { RichEmbed } = require('discord.js');
+const { MessageEmbed } = require('discord.js');
 const { Command } = require('discord-akairo');
 const { colors } = require('../config.js');
 
@@ -50,9 +50,9 @@ module.exports = class SyncCommand extends Command {
 	async exec(message, { mode, force, serverNumber }) {
 		const { hubServer, sync } = this.client;
 		const syncMethod = force ? 'force-synced' : 'synced';
-		const embed = new RichEmbed()
+		const embed = new MessageEmbed()
 			.setColor(colors.pink)
-			.setAuthor('Sync Action: ', hubServer.guild.iconURL);
+			.setAuthor('Sync Action: ', hubServer.guild.iconURL({ format: 'png', dynamic: true }));
 
 		if (mode === 'all') {
 			if (force) {
@@ -90,8 +90,8 @@ module.exports = class SyncCommand extends Command {
 				return message.channel.send('Server #1 doesn\'t have an info channel.');
 			}
 
-			const guild = this.client.guilds.find(g => g.name.endsWith(`(ES#${serverNumber})`));
-			const channel = guild.channels.find(c => c.name === 'info');
+			const guild = this.client.guilds.cache.find(g => g.name.endsWith(`(ES#${serverNumber})`));
+			const channel = guild.channels.cache.find(c => c.name === 'info');
 
 			if (force) await sync.clearChannel(channel);
 			await sync.infoChannel(guild);

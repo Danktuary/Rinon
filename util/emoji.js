@@ -5,7 +5,7 @@ const boostedEmojisLimits = { 0: 50, 1: 100, 2: 150, 3: 250 };
 
 function nextAvailableGuild({ guilds, imageURL }) {
 	return guilds.find(guild => {
-		const [normal, animated] = guild.emojis.partition(emoji => !emoji.animated);
+		const [normal, animated] = guild.emojis.cache.partition(emoji => !emoji.animated);
 		const boostAmount = boostedEmojisLimits[guild.premiumTier];
 		return regexes.gif.test(imageURL) ? animated.size < boostAmount : normal.size < boostAmount;
 	});

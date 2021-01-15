@@ -28,7 +28,7 @@ module.exports = class InitializeCommand extends Command {
 			return message.channel.send(`I'm missing the following permissions: ${permissionsUtil.formatNames(missingPermissions)}`);
 		}
 
-		if (guild.channels.some(channel => channel.name === 'info') || this.client.hubServer.galleryChannel(guildNumber)) {
+		if (guild.channels.cache.some(channel => channel.name === 'info') || this.client.hubServer.galleryChannel(guildNumber)) {
 			return message.util.send('I\'m already good to go!');
 		}
 
@@ -87,23 +87,33 @@ module.exports = class InitializeCommand extends Command {
 	async setupChannels(guild) {
 		const { hubServer, sync } = this.client;
 		const [, guildNumber] = guild.name.match(regexes.guildNameEnding);
-		const permissionOverwrites = [
-			{ id: guild.me.id, allow: ['SEND_MESSAGES'] },
-			{ id: guild.id, deny: ['SEND_MESSAGES'] },
-		];
 
-		const galleriesCategory = hubServer.guild.channels.find(channel => {
+		for (const channel of guild.channels.cache.filter(c => c.type !== 'text' && c.name !== 'general').values()) {
+			await channel.delete();
+		}
+
+		await guild.channels.cache
+			.find(channel => channel.name.toLowerCase() === 'general')
+			.createOverwrite(guild.roles.everyone.id, { MENTION_EVERYONE: false });
+
+		await guild.channels.create('info', {
+			type: 'text',
+			permissionOverwrites: [
+				{ id: this.client.user.id, allow: ['SEND_MESSAGES'] },
+				{ id: guild.roles.everyone.id, deny: ['SEND_MESSAGES'] },
+			],
+		});
+
+		const galleriesCategory = hubServer.guild.channels.cache.find(channel => {
 			return channel.type === 'category' && channel.name.toLowerCase() === 'galleries';
 		});
 
-		await guild.channels
-			.find(channel => channel.name.toLowerCase() === 'general')
-			.overwritePermissions(guild.defaultRole.id, { MENTION_EVERYONE: false });
-
-		await guild.createChannel('info', { type: 'text', permissionOverwrites });
-		const galleryChannel = await hubServer.guild.createChannel(`emoji-gallery-${guildNumber}`, {
+		const galleryChannel = await hubServer.guild.channels.create(`emoji-gallery-${guildNumber}`, {
 			type: 'text',
-			permissionOverwrites,
+			permissionOverwrites: [
+				{ id: this.client.user.id, allow: ['SEND_MESSAGES'] },
+				{ id: hubServer.guild.roles.everyone.id, deny: ['SEND_MESSAGES'] },
+			],
 			parent: galleriesCategory,
 		});
 

@@ -1,4 +1,4 @@
-const { RichEmbed } = require('discord.js');
+const { MessageEmbed } = require('discord.js');
 const { Command } = require('discord-akairo');
 const { colors } = require('../config.js');
 
@@ -27,11 +27,11 @@ module.exports = class ServerCommand extends Command {
 
 	async exec(message, { number }) {
 		const { guilds, hubServer, sync } = this.client;
-		const guild = guilds.find(g => g.name.endsWith(`(ES#${number})`));
-		const [normal, animated] = guild.emojis.partition(emoji => !emoji.animated);
+		const guild = guilds.cache.find(g => g.name.endsWith(`(ES#${number})`));
+		const [normal, animated] = guild.emojis.cache.partition(emoji => !emoji.animated);
 		const gallery = hubServer.galleryChannel(number);
 
-		const embed = new RichEmbed()
+		const embed = new MessageEmbed()
 			.setColor(colors.pink)
 			.setDescription(`${normal.size} normal emojis, ${animated.size} animated emojis. (View gallery: ${gallery})`);
 

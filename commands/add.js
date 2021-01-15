@@ -1,6 +1,6 @@
 const { Command } = require('discord-akairo');
 const Canvas = require('canvas');
-const snekfetch = require('snekfetch');
+const fetch = require('node-fetch');
 const parseInput = require('../util/parseInput.js');
 const validators = require('../util/validators.js');
 const regexes = require('../util/regexes.js');
@@ -53,15 +53,15 @@ module.exports = class AddCommand extends Command {
 				name = await this.modifyEmojiName(message, name);
 			}
 
-			url = this.reverseImage(imageData, url);
+			url = this.reverseImage(await imageData.buffer(), url);
 		}
 
 		try {
 			await hubServer.polls.emoji.create({ message, name, url });
 		} catch (error) {
-			const owner = await this.client.fetchUser(this.client.ownerID);
+			const owner = await this.client.users.fetch(this.client.ownerID);
 			const anger = ['tch', 'meguAngry', 'angry', 'nyanrage', 'WeebRage'];
-			const angryEmoji = this.client.emojis.filter(emoji => anger.includes(emoji.name)).random();
+			const angryEmoji = this.client.emojis.cache.filter(emoji => anger.includes(emoji.name)).random();
 			return message.channel.send(`<@${owner.id}>: ${error.message} ${angryEmoji}`);
 		}
 
@@ -89,11 +89,11 @@ module.exports = class AddCommand extends Command {
 			throw new RangeError('An emoji name needs to be between 2 and 32 characters long.');
 		}
 
-		const imageData = await snekfetch.get(imageURL);
+		const imageData = await fetch(imageURL);
 
 		if (!imageData.ok) {
 			throw new Error('That image link doesn\'t seem to be working.');
-		} else if (imageData.headers['content-length'] > (256 * 1024)) {
+		} else if (imageData.headers.get('content-length') > (256 * 1024)) {
 			throw new RangeError('That file surpasses the 256kb file size limit! Please resize it and try again.');
 		}
 
@@ -115,7 +115,7 @@ module.exports = class AddCommand extends Command {
 		const ctx = canvas.getContext('2d');
 
 		const image = new Canvas.Image();
-		image.src = imageData.body;
+		image.src = imageData;
 
 		canvas.width = image.width;
 		canvas.height = image.height;

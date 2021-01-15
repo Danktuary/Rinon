@@ -1,4 +1,4 @@
-const { RichEmbed } = require('discord.js');
+const { MessageEmbed } = require('discord.js');
 const { Op } = require('sequelize');
 const { colors } = require('../../config.js');
 
@@ -8,8 +8,8 @@ module.exports = class Poll {
 	}
 
 	async sendEmbed({ channel, author, thumbnail, description, fields = [], color = 'pink' }) {
-		const embed = new RichEmbed()
-			.setAuthor(`Request by ${author.tag} (${author.id})`, author.displayAvatarURL)
+		const embed = new MessageEmbed()
+			.setAuthor(`Request by ${author.tag} (${author.id})`, author.displayAvatarURL({ format: 'png', dynamic: true }))
 			.setDescription(description)
 			.setThumbnail(thumbnail)
 			.setColor(colors[color]);
@@ -37,7 +37,7 @@ module.exports = class Poll {
 
 		return {
 			pollData,
-			message: await this.client.hubServer.votingChannel.fetchMessage(pollData.messageID),
+			message: await this.client.hubServer.votingChannel.messages.fetch(pollData.messageID),
 		};
 	}
 };

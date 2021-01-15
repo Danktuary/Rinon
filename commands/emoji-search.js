@@ -1,4 +1,4 @@
-const { RichEmbed } = require('discord.js');
+const { MessageEmbed } = require('discord.js');
 const { Command } = require('discord-akairo');
 const { colors } = require('../config.js');
 const emojiUtil = require('../util/emoji.js');
@@ -32,7 +32,7 @@ module.exports = class EmojiSearchCommand extends Command {
 			return message.util.send('A search term needs to be between 2 and 32 characters long.');
 		}
 
-		const emojis = emojiUtil.search(message.client.emojis, searchTerm);
+		const emojis = emojiUtil.search(message.client.emojis.cache, searchTerm);
 		if (!emojis.size) return message.util.send('I couldn\'t find any requests that match your search term!');
 		return message.util.send(this.formatResponse(emojis));
 	}
@@ -41,7 +41,7 @@ module.exports = class EmojiSearchCommand extends Command {
 		const inviteText = `If you want an invite to any of these servers, use the \`${this.handler.prefix}server\` command!`;
 
 		if (emojis.size <= (25 / 3)) {
-			const embed = new RichEmbed().setColor(colors.pink).setDescription(inviteText);
+			const embed = new MessageEmbed().setColor(colors.pink).setDescription(inviteText);
 
 			for (const emoji of emojis.values()) {
 				embed
