@@ -9,7 +9,7 @@ const RenameVotingPoll = require('./poll/RenameVotingPoll.js');
 
 module.exports = class RinonClient extends AkairoClient {
 	constructor() {
-		super({ ownerID });
+		super({ ownerID }, { partials: ['MESSAGE', 'CHANNEL', 'REACTION'] });
 
 		this.commandHandler = new CommandHandler(this, {
 			prefix,

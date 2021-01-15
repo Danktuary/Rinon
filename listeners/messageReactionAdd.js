@@ -10,13 +10,16 @@ module.exports = class MessageReactionAddListener extends Listener {
 	}
 
 	async exec(reaction, user) {
+		if (user.partial) await user.fetch();
 		if (user.bot) return;
+		if (reaction.partial) await reaction.fetch();
 
 		const { message } = reaction;
 
 		if (message.channel.id !== this.client.hubServer.votingChannel.id) return;
 		if (![emojis.approve, emojis.deny].includes(reaction.emoji.id)) return;
 
+		await reaction.users.fetch();
 		const poll = this._getPoll(message);
 		const pollData = await poll.model.findOne({ where: { messageID: message.id } });
 		const endAmount = reaction.users.cache.has(pollData.authorID) ? voteEndAmount + 2 : voteEndAmount + 1;
