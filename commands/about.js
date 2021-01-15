@@ -22,7 +22,7 @@ module.exports = class AboutCommand extends Command {
 			.setThumbnail(client.user.displayAvatarURL)
 			.setFooter(`Author: ${owner.tag}`, owner.displayAvatarURL)
 			.setDescription([
-				`Use \`${this.handler.prefix()}help\` to get a list of all my commands!`,
+				`Use \`${this.handler.prefix}help\` to get a list of all my commands!`,
 				`[Invite](${invite}) | [GitHub](https://github.com/Danktuary/Rinon)`,
 			].join('\n'))
 			.addField('Servers', `${client.guilds.size} (${client.hubServer.serverList})`, true)

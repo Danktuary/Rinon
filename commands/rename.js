@@ -10,14 +10,14 @@ module.exports = class RenameCommand extends Command {
 		super('rename', {
 			aliases: ['rename', 'rename-poll', 'rename-emoji'],
 			description: 'Rename an existing emoji or poll.',
-			channelRestriction: 'guild',
+			channel: 'guild',
 			args: [
 				{ id: 'oldName' },
 				{ id: 'newName' },
 				{
 					id: 'mode',
-					match: 'prefix',
-					prefix: ['--mode=', '-m='],
+					match: 'option',
+					flag: ['--mode=', '-m='],
 					'default': 'emoji',
 				},
 				{
@@ -39,8 +39,8 @@ module.exports = class RenameCommand extends Command {
 	}
 
 	async exec(message, { oldName, newName, mode, reason }) {
-		if (message.util.alias === 'rename-poll') mode = 'poll';
-		else if (message.util.alias === 'rename-emoji') mode = 'emoji';
+		if (message.util.parsed.alias === 'rename-poll') mode = 'poll';
+		else if (message.util.parsed.alias === 'rename-emoji') mode = 'emoji';
 		else if (!['emoji', 'poll'].includes(mode)) mode = 'emoji';
 
 		if (mode === 'emoji' && regexes.emoji.test(oldName)) {
@@ -67,7 +67,7 @@ module.exports = class RenameCommand extends Command {
 		} catch (error) {
 			return message.util.send([
 				'I couldn\'t find any requests that match your search term!',
-				`If you want to rename an existing emoji, use the \`${this.handler.prefix()}rename-emoji <emoji name> <new name>\` command.`,
+				`If you want to rename an existing emoji, use the \`${this.handler.prefix}rename-emoji <emoji name> <new name>\` command.`,
 			].join('\n'));
 		}
 
@@ -104,7 +104,7 @@ module.exports = class RenameCommand extends Command {
 		if (!emojis.size) {
 			return message.util.send([
 				'I couldn\'t find any emojis that match your search term!',
-				`If you want to rename a current poll, use the \`${this.handler.prefix()}rename-poll <old name> <new name>\` command.`,
+				`If you want to rename a current poll, use the \`${this.handler.prefix}rename-poll <old name> <new name>\` command.`,
 			].join('\n'));
 		} else if (emojis.size === 1) {
 			selectedEmoji = emojis.first();
@@ -139,7 +139,7 @@ module.exports = class RenameCommand extends Command {
 
 		if (message.guild.id !== hubServer.guild.id) {
 			response[0] = `${response[0].slice(0, -1)} in **${hubServer.guild.name}**.`;
-			response.push(`If you can\'t open the channel link, send \`${this.handler.prefix()}server 1\` for an invite.`);
+			response.push(`If you can\'t open the channel link, send \`${this.handler.prefix}server 1\` for an invite.`);
 		}
 
 		return message.channel.send(response.join('\n'));

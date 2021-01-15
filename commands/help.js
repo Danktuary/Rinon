@@ -17,7 +17,7 @@ module.exports = class HelpCommand extends Command {
 						start: 'which command would you like more info about?',
 						retry: message => {
 							return [
-								`That\'s not a valid command! Send \`!cancel\` and then \`${message.util.command.handler.prefix()}help\` to get a list of all commands.`,
+								`That\'s not a valid command! Send \`!cancel\` and then \`${message.util.parsed.command.handler.prefix}help\` to get a list of all commands.`,
 								'Which command would you like more info about?',
 							].join('\n');
 						},
@@ -35,8 +35,7 @@ module.exports = class HelpCommand extends Command {
 	}
 
 	async exec(message, { command }) {
-		const { modules: commands } = this.handler;
-		const prefix = this.handler.prefix();
+		const { modules: commands, prefix } = this.handler;
 
 		if (!command) {
 			return message.util.send([
@@ -44,8 +43,6 @@ module.exports = class HelpCommand extends Command {
 				`You can send \`${prefix}help [command name]\` to get info on a specific command!`,
 			]);
 		}
-
-		const { help: helpData = {} } = command.options;
 
 		const embed = new RichEmbed()
 			.setColor(colors.pink)
@@ -55,17 +52,20 @@ module.exports = class HelpCommand extends Command {
 		if (command.description) embed.setDescription(command.description);
 		if (command.ownerOnly) embed.addField('Owner Only', 'Yes', true);
 
-		if (command.channelRestriction) {
-			embed.addField('Restricted to', textUtil.capitalize(command.channelRestriction), true);
+		if (command.channel) {
+			embed.addField('Restricted to', textUtil.capitalize(command.channel), true);
 		}
 
 		if (command.userPermissions) {
 			embed.addField('User permissions needed', permissionsUtil.formatNames(command.userPermissions), true);
 		}
 
-		if (helpData.examples && helpData.examples.length) {
-			embed.addField('Examples', helpData.examples.map(example => `${prefix}${command.id} ${example}`).join('\n'));
-		}
+		// NOTE: `Command.options` has been removed; need to approach this differently
+		// const { help: helpData = {} } = command.options;
+
+		// if (helpData.examples && helpData.examples.length) {
+		// 	embed.addField('Examples', helpData.examples.map(example => `${prefix}${command.id} ${example}`).join('\n'));
+		// }
 
 		return message.util.send(embed);
 	}

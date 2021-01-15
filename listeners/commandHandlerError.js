@@ -1,10 +1,10 @@
 const { Listener } = require('discord-akairo');
 
-module.exports = class ReadyListener extends Listener {
+module.exports = class CommandHandlerErrorListener extends Listener {
 	constructor() {
 		super('error', {
 			emitter: 'commandHandler',
-			eventName: 'error',
+			event: 'error',
 		});
 	}
 

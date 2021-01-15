@@ -9,7 +9,7 @@ module.exports = class ReloadCommand extends Command {
 			args: [
 				{
 					id: 'alias',
-					match: 'word',
+					match: 'phrase',
 				},
 			],
 		});

@@ -10,14 +10,14 @@ module.exports = class AddCommand extends Command {
 		super('add', {
 			aliases: ['add', 'request', 'vote', 'poll', 'reverse'],
 			description: 'Create a poll to add a new emoji to one of the emoji servers.',
-			channelRestriction: 'guild',
+			channel: 'guild',
 			args: [
 				{ id: 'name' },
 				{ id: 'url' },
 				{
 					id: 'reverse',
 					match: 'flag',
-					prefix: ['--reverse', '-r'],
+					flag: ['--reverse', '-r'],
 				},
 			],
 			options: {
@@ -48,7 +48,7 @@ module.exports = class AddCommand extends Command {
 
 		let { name, url, imageData } = validatedArgs;
 
-		if (message.util.alias === 'reverse' || args.reverse) {
+		if (message.util.parsed.alias === 'reverse' || args.reverse) {
 			if (!name.toLowerCase().endsWith('reverse')) {
 				name = await this.modifyEmojiName(message, name);
 			}
@@ -69,7 +69,7 @@ module.exports = class AddCommand extends Command {
 
 		if (message.guild.id !== hubServer.guild.id) {
 			response[0] = `${response[0].slice(0, -1)} in **${hubServer.guild.name}**.`;
-			response.push(`If you can\'t open the channel link, send \`${this.handler.prefix()}server 1\` for an invite.`);
+			response.push(`If you can\'t open the channel link, send \`${this.handler.prefix}server 1\` for an invite.`);
 		}
 
 		return message.channel.send(response.join('\n'));
@@ -79,7 +79,7 @@ module.exports = class AddCommand extends Command {
 		if (!name && !url) {
 			throw new Error([
 				'You need to provide: an emoji, a name and an emoji, a name and an image URL, or a name and an image file!',
-				`For example: \`${this.handler.prefix()}add AiSmug https://i.imgur.com/8jGJzmd.png\`.`,
+				`For example: \`${this.handler.prefix}add AiSmug https://i.imgur.com/8jGJzmd.png\`.`,
 			].join('\n'));
 		}
 

@@ -3,7 +3,10 @@ const { emojis, voteEndAmount } = require('../config.js');
 
 module.exports = class MessageReactionAddListener extends Listener {
 	constructor() {
-		super('messageReactionAdd', { eventName: 'messageReactionAdd' });
+		super('messageReactionAdd', {
+			emitter: 'client',
+			event: 'messageReactionAdd',
+		});
 	}
 
 	async exec(reaction, user) {

@@ -5,13 +5,13 @@ module.exports = class DenyCommand extends Command {
 		super('deny', {
 			aliases: ['deny', 'deny-emoji', 'deny-rename', 'cancel', 'cancel-emoji', 'cancel-rename'],
 			description: 'Deny/cancel a pending emoji or rename poll.',
-			channelRestriction: 'guild',
+			channel: 'guild',
 			args: [
 				{ id: 'input' },
 				{
 					id: 'mode',
-					match: 'prefix',
-					prefix: ['--mode=', '-m='],
+					match: 'option',
+					flag: ['--mode=', '-m='],
 					'default': 'emoji',
 				},
 			],
@@ -28,8 +28,8 @@ module.exports = class DenyCommand extends Command {
 	}
 
 	async exec(message, { input, mode }) {
-		if (['deny-emoji', 'cancel-emoji'].includes(message.util.alias)) mode = 'emoji';
-		else if (['deny-rename', 'cancel-rename'].includes(message.util.alias)) mode = 'rename';
+		if (['deny-emoji', 'cancel-emoji'].includes(message.util.parsed.alias)) mode = 'emoji';
+		else if (['deny-rename', 'cancel-rename'].includes(message.util.parsed.alias)) mode = 'rename';
 		else if (!['emoji', 'rename'].includes(mode)) mode = 'emoji';
 
 		const { hubServer, ownerID } = this.client;

@@ -7,13 +7,13 @@ module.exports = class InitializeCommand extends Command {
 		super('initialize', {
 			aliases: ['initialize', 'init'],
 			description: 'Initialize a new guild with the proper settings to make it function as needed.',
-			channelRestriction: 'guild',
+			channel: 'guild',
 			userPermissions: ['MANAGE_GUILD'],
 			args: [
 				{
 					id: 'skipConfirmation',
 					match: 'flag',
-					prefix: ['--yes', '-y'],
+					flag: ['--yes', '-y'],
 				},
 			],
 		});
@@ -59,7 +59,7 @@ module.exports = class InitializeCommand extends Command {
 			]);
 		}
 
-		return message.channel.send(`Done! You can now use the \`${this.handler.prefix()}add\` command to create polls.`);
+		return message.channel.send(`Done! You can now use the \`${this.handler.prefix}add\` command to create polls.`);
 	}
 
 	async confirmInit(message) {

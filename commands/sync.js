@@ -21,15 +21,15 @@ module.exports = class SyncCommand extends Command {
 					id: 'serverNumber',
 					type: 'serverNumber',
 					prompt: {
-						start: message => `which server would you like to sync? Pick a number 1-${message.client.guilds.size}.`,
-						retry: message => `That's not a valid answer! Pick a number 1-${message.client.guilds.size}.`,
+						start: message => `which server would you like to sync? Pick a number 1-${message.client.guilds.cache.size}.`,
+						retry: message => `That's not a valid answer! Pick a number 1-${message.client.guilds.cache.size}.`,
 						optional: true,
 					},
 				},
 				{
 					id: 'force',
 					match: 'flag',
-					prefix: ['--force', '-f'],
+					flag: ['--force', '-f'],
 				},
 			],
 			options: {

@@ -5,14 +5,14 @@ module.exports = class ApproveCommand extends Command {
 		super('approve', {
 			aliases: ['approve', 'approve-emoji', 'approve-rename'],
 			description: 'Approve a pending emoji or rename poll.',
-			channelRestriction: 'guild',
+			channel: 'guild',
 			ownerOnly: true,
 			args: [
 				{ id: 'input' },
 				{
 					id: 'mode',
-					match: 'prefix',
-					prefix: ['--mode=', '-m='],
+					match: 'option',
+					flag: ['--mode=', '-m='],
 					'default': 'emoji',
 				},
 			],
@@ -29,8 +29,8 @@ module.exports = class ApproveCommand extends Command {
 	}
 
 	async exec(message, { input, mode }) {
-		if (message.util.alias === 'approve-emoji') mode = 'emoji';
-		else if (message.util.alias === 'approve-rename') mode = 'rename';
+		if (message.util.parsed.alias === 'approve-emoji') mode = 'emoji';
+		else if (message.util.parsed.alias === 'approve-rename') mode = 'rename';
 		else if (!['emoji', 'rename'].includes(mode)) mode = 'emoji';
 
 		const poll = this.client.hubServer.polls[mode];
