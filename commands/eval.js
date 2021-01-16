@@ -1,5 +1,5 @@
-const { inspect } = require('util');
-const { Command } = require('discord-akairo');
+const { inspect } = require('util')
+const { Command } = require('discord-akairo')
 
 module.exports = class EvalCommand extends Command {
 	constructor() {
@@ -13,28 +13,28 @@ module.exports = class EvalCommand extends Command {
 					match: 'content',
 				},
 			],
-		});
+		})
 	}
 
 	exec(message, { code }) {
-		const { client } = message;
+		const { client } = message
 
 		try {
-			let evalResult = eval(code);
-			const tokenRegex = new RegExp(client.token);
+			let evalResult = eval(code) // eslint-disable-line no-eval
+			const tokenRegex = new RegExp(client.token)
 
 			if (typeof evalResult !== 'string') {
-				evalResult = inspect(evalResult, false, 0);
+				evalResult = inspect(evalResult, false, 0)
 			}
 
 			if (tokenRegex.test(evalResult)) {
-				evalResult = evalResult.replace(client.token, '[TOKEN]');
+				evalResult = evalResult.replace(client.token, '[TOKEN]')
 			}
 
-			return message.util.send(evalResult, { code: 'js' });
+			return message.util.send(evalResult, { code: 'js' })
 		} catch (error) {
-			console.error(inspect(error));
-			return message.util.send(error, { code: 'js' });
+			console.error(inspect(error))
+			return message.util.send(error, { code: 'js' })
 		}
 	}
-};
+}

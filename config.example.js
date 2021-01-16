@@ -23,4 +23,4 @@ module.exports = {
 		red: 14042180,
 		pink: 16746911,
 	},
-};
+}

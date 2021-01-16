@@ -1,7 +1,7 @@
-const { MessageEmbed } = require('discord.js');
-const { Command } = require('discord-akairo');
-const { colors } = require('../config.js');
-const emojiUtil = require('../util/emoji.js');
+const { MessageEmbed } = require('discord.js')
+const { Command } = require('discord-akairo')
+const { colors } = require('../config.js')
+const emojiUtil = require('../util/emoji.js')
 
 module.exports = class EmojiSearchCommand extends Command {
 	constructor() {
@@ -22,43 +22,43 @@ module.exports = class EmojiSearchCommand extends Command {
 					examples: ['EmojiName', ':emoji:'],
 				},
 			},
-		});
+		})
 	}
 
 	async exec(message, { query }) {
-		const searchTerm = emojiUtil.parseSearchQuery(query);
+		const searchTerm = emojiUtil.parseSearchQuery(query)
 
 		if (searchTerm.length < 2 || searchTerm.length > 32) {
-			return message.util.send('A search term needs to be between 2 and 32 characters long.');
+			return message.util.send('A search term needs to be between 2 and 32 characters long.')
 		}
 
-		const emojis = emojiUtil.search(message.client.emojis.cache, searchTerm);
-		if (!emojis.size) return message.util.send('I couldn\'t find any requests that match your search term!');
-		return message.util.send(this.formatResponse(emojis));
+		const emojis = emojiUtil.search(message.client.emojis.cache, searchTerm)
+		if (!emojis.size) return message.util.send('I couldn\'t find any requests that match your search term!')
+		return message.util.send(this.formatResponse(emojis))
 	}
 
 	formatResponse(emojis) {
-		const inviteText = `If you want an invite to any of these servers, use the \`${this.handler.prefix}server\` command!`;
+		const inviteText = `If you want an invite to any of these servers, use the \`${this.handler.prefix}server\` command!`
 
 		if (emojis.size <= (25 / 3)) {
-			const embed = new MessageEmbed().setColor(colors.pink).setDescription(inviteText);
+			const embed = new MessageEmbed().setColor(colors.pink).setDescription(inviteText)
 
 			for (const emoji of emojis.values()) {
 				embed
 					.addField('Name', emoji.name, true)
 					.addField('Emoji', emoji.toString(), true)
-					.addField('Found in', emoji.guild.name, true);
+					.addField('Found in', emoji.guild.name, true)
 			}
 
-			return { embed };
+			return { embed }
 		}
 
-		const content = [`${inviteText}\n`];
+		const content = [`${inviteText}\n`]
 
 		for (const emoji of emojis.values()) {
-			content.push(`${emoji.name}: ${emoji} (Found in **${emoji.guild.name}**)`);
+			content.push(`${emoji.name}: ${emoji} (Found in **${emoji.guild.name}**)`)
 		}
 
-		return { content: content.join('\n'), split: '\n' };
+		return { content: content.join('\n'), split: '\n' }
 	}
-};
+}

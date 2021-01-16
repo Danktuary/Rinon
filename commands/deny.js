@@ -1,4 +1,4 @@
-const { Command } = require('discord-akairo');
+const { Command } = require('discord-akairo')
 
 module.exports = class DenyCommand extends Command {
 	constructor() {
@@ -24,27 +24,27 @@ module.exports = class DenyCommand extends Command {
 					],
 				},
 			},
-		});
+		})
 	}
 
 	async exec(message, { input, mode }) {
-		if (['deny-emoji', 'cancel-emoji'].includes(message.util.parsed.alias)) mode = 'emoji';
-		else if (['deny-rename', 'cancel-rename'].includes(message.util.parsed.alias)) mode = 'rename';
-		else if (!['emoji', 'rename'].includes(mode)) mode = 'emoji';
+		if (['deny-emoji', 'cancel-emoji'].includes(message.util.parsed.alias)) mode = 'emoji'
+		else if (['deny-rename', 'cancel-rename'].includes(message.util.parsed.alias)) mode = 'rename'
+		else if (!['emoji', 'rename'].includes(mode)) mode = 'emoji'
 
-		const { hubServer, ownerID } = this.client;
-		const poll = hubServer.polls[mode];
-		const { pollData, message: pollMessage } = await poll.search(input);
+		const { hubServer, ownerID } = this.client
+		const poll = hubServer.polls[mode]
+		const { pollData, message: pollMessage } = await poll.search(input)
 
 		if (![pollData.authorID, ownerID].includes(message.author.id)) {
-			return message.util.reply('you can\'t cancel polls you didn\'t create.');
+			return message.util.reply('you can\'t cancel polls you didn\'t create.')
 		}
 
 		await poll.deny({
 			message: pollMessage,
 			reason: `Cancelled by ${message.author.id === pollData.authorID ? 'poll author' : 'bot owner'}.`,
-		});
+		})
 
-		return message.channel.send('Done!');
+		return message.channel.send('Done!')
 	}
-};
+}

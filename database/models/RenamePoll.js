@@ -33,5 +33,5 @@ module.exports = (database, DataTypes) => {
 		},
 	}, {
 		underscored: true,
-	});
-};
+	})
+}

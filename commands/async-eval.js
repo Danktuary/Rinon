@@ -1,4 +1,4 @@
-const { Command } = require('discord-akairo');
+const { Command } = require('discord-akairo')
 
 module.exports = class AsyncEvalCommand extends Command {
 	constructor() {
@@ -12,11 +12,11 @@ module.exports = class AsyncEvalCommand extends Command {
 					match: 'content',
 				},
 			],
-		});
+		})
 	}
 
 	async exec(message, args) {
-		const code = `(async () => { ${args.code} })()`;
-		return this.client.commandHandler.findCommand('eval').exec(message, { code });
+		const code = `(async () => { ${args.code} })()`
+		return this.client.commandHandler.findCommand('eval').exec(message, { code })
 	}
-};
+}

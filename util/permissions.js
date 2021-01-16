@@ -1,5 +1,5 @@
-const { Permissions } = require('discord.js');
-const { capitalize } = require('./text.js');
+const { Permissions } = require('discord.js')
+const { capitalize } = require('./text.js')
 
 const required = [
 	'ADD_REACTIONS',
@@ -14,8 +14,9 @@ const required = [
 	'SEND_MESSAGES',
 	'USE_EXTERNAL_EMOJIS',
 	'VIEW_CHANNEL',
-];
+]
 
-module.exports.required = required;
-module.exports.requiredNumber = Permissions.resolve(required);
-module.exports.formatNames = names => names.map(name => name.toLowerCase().split('_').map(capitalize).join(' '));
+module.exports.required = required
+module.exports.requiredNumber = Permissions.resolve(required)
+module.exports.formatNames = names => names.map(name => name.toLowerCase().split('_').map(capitalize)
+	.join(' '))

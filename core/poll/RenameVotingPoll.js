@@ -1,12 +1,12 @@
-const Poll = require('./index.js');
-const { emojis } = require('../../config.js');
-const regexes = require('../../util/regexes.js');
-const models = require('../../database/models/index.js');
+const Poll = require('./index.js')
+const { emojis } = require('../../config.js')
+const regexes = require('../../util/regexes.js')
+const models = require('../../database/models/index.js')
 
 module.exports = class RenameVotingPoll extends Poll {
 	constructor(client) {
-		super(client);
-		this.model = models.RenamePoll;
+		super(client)
+		this.model = models.RenamePoll
 	}
 
 	async create({ message, emoji, newName, reason }) {
@@ -16,10 +16,10 @@ module.exports = class RenameVotingPoll extends Poll {
 			thumbnail: emoji.url,
 			description: `\`${message.author.tag}\` wants to rename ${emoji} from \`${emoji.name}\` to \`${newName}\`.`,
 			fields: reason ? [{ title: 'Reason', value: reason }] : [],
-		});
+		})
 
-		await sent.react(emojis.approve);
-		await sent.react(emojis.deny);
+		await sent.react(emojis.approve)
+		await sent.react(emojis.deny)
 
 		return this.model.create({
 			messageID: sent.id,
@@ -27,24 +27,24 @@ module.exports = class RenameVotingPoll extends Poll {
 			emojiID: emoji.id,
 			oldName: emoji.name,
 			newName,
-		});
+		})
 	}
 
 	async approve({ message }) {
-		const pollData = await this.model.findOne({ where: { messageID: message.id } });
-		const author = await message.client.users.fetch(pollData.authorID);
-		const emoji = message.client.emojis.cache.get(pollData.emojiID);
+		const pollData = await this.model.findOne({ where: { messageID: message.id } })
+		const author = await message.client.users.fetch(pollData.authorID)
+		const emoji = message.client.emojis.cache.get(pollData.emojiID)
 
-		await message.delete();
-		await emoji.edit({ name: pollData.newName });
+		await message.delete()
+		await emoji.edit({ name: pollData.newName })
 
-		pollData.status = 'approved';
-		await pollData.save();
+		pollData.status = 'approved'
+		await pollData.save()
 
-		const [, number] = emoji.guild.name.match(regexes.guildNameEnding);
-		const galleryChannel = this.client.hubServer.galleryChannel(number);
-		await this.client.sync.gallery(galleryChannel);
-		await this.client.sync.status();
+		const [, number] = emoji.guild.name.match(regexes.guildNameEnding)
+		const galleryChannel = this.client.hubServer.galleryChannel(number)
+		await this.client.sync.gallery(galleryChannel)
+		await this.client.sync.status()
 
 		return this.sendEmbed({
 			channel: this.client.hubServer.logsChannel,
@@ -53,24 +53,24 @@ module.exports = class RenameVotingPoll extends Poll {
 			description: `\`${pollData.oldName}\` has been renamed to \`${emoji.name}\`! ${emoji}`,
 			fields: [{ title: 'Belongs to', value: `${emoji.guild.name} (${galleryChannel})` }],
 			color: 'green',
-		});
+		})
 	}
 
 	async deny({ message, reason }) {
-		await message.delete();
+		await message.delete()
 
-		const pollData = await this.model.findOne({ where: { messageID: message.id } });
-		const author = await message.client.users.fetch(pollData.authorID);
-		const emoji = message.client.emojis.cache.get(pollData.emojiID);
+		const pollData = await this.model.findOne({ where: { messageID: message.id } })
+		const author = await message.client.users.fetch(pollData.authorID)
+		const emoji = message.client.emojis.cache.get(pollData.emojiID)
 
-		pollData.status = 'denied';
-		await pollData.save();
+		pollData.status = 'denied'
+		await pollData.save()
 
-		const [, number] = emoji.guild.name.match(regexes.guildNameEnding);
-		const galleryChannel = this.client.hubServer.galleryChannel(number);
+		const [, number] = emoji.guild.name.match(regexes.guildNameEnding)
+		const galleryChannel = this.client.hubServer.galleryChannel(number)
 
-		const fields = [{ title: 'Belongs to', value: `${emoji.guild.name} (${galleryChannel})` }];
-		if (reason) fields.push({ title: 'Reason', value: reason });
+		const fields = [{ title: 'Belongs to', value: `${emoji.guild.name} (${galleryChannel})` }]
+		if (reason) fields.push({ title: 'Reason', value: reason })
 
 		return this.sendEmbed({
 			channel: this.client.hubServer.logsChannel,
@@ -79,10 +79,10 @@ module.exports = class RenameVotingPoll extends Poll {
 			description: `Renaming ${emoji} from \`${emoji.name}\` to \`${pollData.newName}\` has been denied. :(`,
 			fields,
 			color: 'red',
-		});
+		})
 	}
 
 	async search(searchTerm) {
-		return super.search(searchTerm, { column: /\d+/.test(searchTerm) ? 'message_id' : 'new_name' });
+		return super.search(searchTerm, { column: /\d+/.test(searchTerm) ? 'message_id' : 'new_name' })
 	}
-};
+}

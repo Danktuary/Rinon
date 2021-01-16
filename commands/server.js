@@ -1,6 +1,6 @@
-const { MessageEmbed } = require('discord.js');
-const { Command } = require('discord-akairo');
-const { colors } = require('../config.js');
+const { MessageEmbed } = require('discord.js')
+const { Command } = require('discord-akairo')
+const { colors } = require('../config.js')
 
 module.exports = class ServerCommand extends Command {
 	constructor() {
@@ -22,19 +22,19 @@ module.exports = class ServerCommand extends Command {
 					examples: ['1'],
 				},
 			},
-		});
+		})
 	}
 
 	async exec(message, { number }) {
-		const { guilds, hubServer, sync } = this.client;
-		const guild = guilds.cache.find(g => g.name.endsWith(`(ES#${number})`));
-		const [normal, animated] = guild.emojis.cache.partition(emoji => !emoji.animated);
-		const gallery = hubServer.galleryChannel(number);
+		const { guilds, hubServer, sync } = this.client
+		const guild = guilds.cache.find(g => g.name.endsWith(`(ES#${number})`))
+		const [normal, animated] = guild.emojis.cache.partition(emoji => !emoji.animated)
+		const gallery = hubServer.galleryChannel(number)
 
 		const embed = new MessageEmbed()
 			.setColor(colors.pink)
-			.setDescription(`${normal.size} normal emojis, ${animated.size} animated emojis. (View gallery: ${gallery})`);
+			.setDescription(`${normal.size} normal emojis, ${animated.size} animated emojis. (View gallery: ${gallery})`)
 
-		return message.util.send(sync.cachedInvites.get(guild.id), embed);
+		return message.util.send(sync.cachedInvites.get(guild.id), embed)
 	}
-};
+}
