@@ -1,10 +1,16 @@
 const { hubServerID } = require('../config.js')
 const regexes = require('../util/regexes.js')
+const EmojiVotingPoll = require('./poll/EmojiVotingPoll.js')
+const RenameVotingPoll = require('./poll/RenameVotingPoll.js')
 
 module.exports = class HubServer {
 	constructor(client) {
 		this.client = client
 		this.guild = client.guilds.cache.get(hubServerID)
+		this.polls = {
+			emoji: new EmojiVotingPoll(client),
+			rename: new RenameVotingPoll(client),
+		}
 	}
 
 	_getChannel(name) {

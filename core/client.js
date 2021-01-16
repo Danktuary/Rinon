@@ -1,11 +1,7 @@
 const path = require('path')
 const { AkairoClient, CommandHandler, ListenerHandler } = require('discord-akairo')
-const Sync = require('./sync.js')
-const HubServer = require('./hubServer.js')
 const database = require('../database/index.js')
 const { ownerID, prefix } = require('../config.js')
-const EmojiVotingPoll = require('./poll/EmojiVotingPoll.js')
-const RenameVotingPoll = require('./poll/RenameVotingPoll.js')
 
 module.exports = class RinonClient extends AkairoClient {
 	constructor() {
@@ -45,13 +41,8 @@ module.exports = class RinonClient extends AkairoClient {
 		this.commandHandler.useListenerHandler(this.listenerHandler)
 		this.listenerHandler.loadAll()
 
-		this.once('ready', () => {
-			this.sync = new Sync(this)
-			this.hubServer = new HubServer(this)
-			// NOTE: This stays here because the 2 classes depend on the `hubServer[votingChannel]` props
-			this.hubServer.polls = { emoji: new EmojiVotingPoll(this), rename: new RenameVotingPoll(this) }
-			this.sync.status()
-		})
+		this.sync = null
+		this.hubServer = null
 	}
 
 	async login(token) {
