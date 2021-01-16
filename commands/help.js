@@ -1,6 +1,7 @@
 const { MessageEmbed } = require('discord.js')
 const { Command } = require('discord-akairo')
 const { colors } = require('../config.js')
+const examples = require('./data/examples.js')
 const textUtil = require('../util/text.js')
 const permissionsUtil = require('../util/permissions.js')
 
@@ -26,11 +27,6 @@ module.exports = class HelpCommand extends Command {
 					},
 				},
 			],
-			options: {
-				help: {
-					examples: ['', 'add'],
-				},
-			},
 		})
 	}
 
@@ -60,12 +56,11 @@ module.exports = class HelpCommand extends Command {
 			embed.addField('User permissions needed', permissionsUtil.formatNames(command.userPermissions), true)
 		}
 
-		// NOTE: `Command.options` has been removed; need to approach this differently
-		// const { help: helpData = {} } = command.options;
+		const { [command]: commandExamples } = examples
 
-		// if (helpData.examples && helpData.examples.length) {
-		// 	embed.addField('Examples', helpData.examples.map(example => `${prefix}${command.id} ${example}`).join('\n'));
-		// }
+		if (commandExamples && commandExamples.length) {
+			embed.addField('Examples', commandExamples.map(example => `${prefix}${command.id} ${example}`).join('\n'))
+		}
 
 		return message.util.send(embed)
 	}

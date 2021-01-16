@@ -25,16 +25,6 @@ module.exports = class RenameCommand extends Command {
 					match: 'rest',
 				},
 			],
-			options: {
-				help: {
-					examples: [
-						'oldName newName (if `--mode=x` argument is omitted, defaults to `emoji`)',
-						'oldName newName --mode=poll (renames a pending poll you\'ve made)',
-						':oldEmoji: newName',
-						'newName :oldEmoji:',
-					],
-				},
-			},
 		})
 	}
 

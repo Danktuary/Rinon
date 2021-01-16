@@ -17,11 +17,6 @@ module.exports = class EmojiSearchCommand extends Command {
 					},
 				},
 			],
-			options: {
-				help: {
-					examples: ['EmojiName', ':emoji:'],
-				},
-			},
 		})
 	}
 
